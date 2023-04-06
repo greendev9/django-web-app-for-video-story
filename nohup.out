@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+  File "manage.py", line 8, in <module>
+    from django.core.management import execute_from_command_line
+ModuleNotFoundError: No module named 'django'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "manage.py", line 14, in <module>
+    import django
+ModuleNotFoundError: No module named 'django'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "manage.py", line 17, in <module>
+    "Couldn't import Django. Are you sure it's installed and "
+ImportError: Couldn't import Django. Are you sure it's installed and available on your PYTHONPATH environment variable? Did you forget to activate a virtual environment?

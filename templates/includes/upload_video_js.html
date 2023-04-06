@@ -1,0 +1,526 @@
+<script>
+    $j = jQuery.noConflict()
+    $j(document).ready(function() {
+        var form;
+        form = jQuery("#skigit_form1");
+        $j("#id_bought_at").on("keyup", function(e) {
+            $j(this).val().trim()
+        });
+        
+        $j("#id_video_link").on("keyup", function(e) {
+            var str;
+            str = $j(this).val();
+            $j('#file_upload_guidance, #id_upload_link_guidance').hide();
+            if (!(str == ' ' || str == '')) {$j('#id_upload_link_guidance').show();} else {
+                str = str.replace(/\s/g, '');
+                $j(this).val(str);
+                $j('#fileUploadform').show()
+                $j('#file_uplod_div').show()
+                $j('#file_uplode_note').show()
+                $j('#file_upload_guidance, #id_upload_link_guidance').show();
+            }
+        });
+
+        $j("#id_title, #id_made_by_option, #id_why_rocks").on("keyup", function(e) {
+            var str;
+            str = $j(this).val().trim();
+            if (!(str == ' ' || str == '')) {} else {
+                str = str.replace(/\s/g, '');
+                $j(this).val(str);
+            }
+        });
+
+        /*** Progress Bar ***/
+        var val = 0;
+        
+
+        function hide_error_animation(elem) {
+            elem.fadeOut('fast');
+        }
+
+        $j('#skigit_form1').bind('input', 'keydown', function() {
+            if ($j('#msg').text() == '✔ Your video was successfully uploaded! You will be notified when posted.') {
+                $j('#msg').hide()
+            }
+        });
+
+        $j('input[name=add_logo]').change(function() {
+            if ($j("input[type='radio'][name='add_logo']:checked").val() !== '1') {
+                $j('#msg_donate').hide()
+                $j('#target').hide()
+                $j('#id_donate_skigit').val('');
+                $j('input[type="radio"][name="receive_donate_sperk"]').prop('checked', false);
+            } else {
+                $j('input[type="radio"][name="receive_donate_sperk"][value="1"]').prop('checked', true);
+            }
+        });
+
+        $j("#id_add_logo_1").click(function() {
+            $j('#msg_donate').hide()
+        });
+
+        $j("#id_receive_donate_sperk_1").click(function() {
+            if ($j("input[type='radio'][name=receive_donate_sperk]:checked").val() === '2') {
+                if ($j("#id_donate_skigit").val()) {
+                    $j('#msg_donate').hide()
+                } else {
+                    $j('#msg_donate').empty()
+                    $j('#msg_donate').show()
+                    $j('#id_earn-block-error').html('').show();
+                }
+            }
+        });
+
+        $j("#id_receive_donate_sperk_0").click(function() {
+            $j('#msg_donate').hide()
+        });
+
+        Dropzone.autoDiscover = false;
+        myDropzone = new Dropzone("#myId", {
+            url: UPLOAD_VIDEO_DIRECT_URL,
+            maxFiles: 1,
+            createImageThumbnails: true,
+            uploadMultiple: false,
+            paramName: "file_on_server",
+            autoProcessQueue: false,
+            previewsContainer: null,
+            hiddenInputContainer: "body",
+            addRemoveLinks: "true",
+            thumbnailWidth: "250",
+            thumbnailHeight: "250",
+            maxFilesize: 100,
+            acceptedFiles: 'video/*,.3gpp,.mp4,.WMV,.mpeg4,.wmv, .avi, .flv, .wbem, .mov, .wvx, .wm, .wmx, .3ggp2, .3gp, 3g2',
+            dictDefaultMessage: "Drag Files here or Click to Upload",
+            dictFallbackMessage: "Your browser does not support drag'n'drop file uploads.",
+            dictFallbackText: "Please use the fallback form below to upload your files like in the olden days.",
+            dictFileTooBig: 'File is too big. Max filesize:100MB.',
+            dictInvalidFileType: 'This file is not an accepted format.',
+            dictCancelUpload: "Cancel upload",
+            dictCancelUploadConfirmation: "Are you sure you want to cancel this upload?",
+            dictRemoveFile: "Remove",
+            dictRemoveFileConfirmation: null,
+            dictMaxFilesExceeded: "You can not upload any more files.",
+            error: function(file, response) {
+                $j('.box_fulllodar').hide();
+                if ($j.type(response) === "string") {
+                    //dropzone sends it's own error messages in
+                    $j('#msg').empty()
+                    if(response == 'This file is not an accepted format.'){
+                        var host = window.location.protocol + "//" + window.location.host;
+                        $j('#id_direct_upload-error').html('<img width="25" src="/static/images/error_icon_dark.png">This file is not an accepted format. Please visit the <a id="ref_link" href="'+host+'/guidelines/allowed-video_formats">Skigit Video Formats</a> page for a list of acceptable formats.');
+                    }
+                    else 
+                        $j('#id_direct_upload-error').html('<img width="25" src="/static/images/error_icon_dark.png">'+response);
+                } else {
+                    file.previewElement.classList.add("dz-error");
+                    _ref = file.previewElement.querySelectorAll("[data-dz-errormessage]");
+                    _results = [];
+                    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                        node = _ref[_i];
+                        _results.push(node.textContent = response.message);
+                    }
+                    $j('#msg').empty()
+                    if (_results.search('Title is already used') >= 0) {
+                        validator.showErrors({
+                            'title': _results
+                        });
+                    } else {
+                        $j('#id_direct_upload-error').html('<img width="25" src="/static/images/error_icon_dark.png">'+_results);
+                        setTimeout(hide_error_animation($j('#id_direct_upload-error')), 10000);
+                    }
+                    return _results;
+                }
+            }
+        });
+
+        myDropzone.on("removedfile", function(file) {
+            $j("#msg, #id_direct_upload-error, #id_video_link-error").empty();
+            $j('#file_upload_guidance, #id_upload_link_guidance').show();
+        });
+
+        myDropzone.on("processing", function(file) {
+            $j("#msg, #id_direct_upload-error, #id_video_link-error").empty();
+            $j('#file_upload_guidance').show();
+            $j('#id_upload_link_guidance').hide();
+        });
+
+        myDropzone.on("addedfile", function(file) {
+            $j('#id_video_link-error').empty();
+            $j('#file_upload_guidance').show();
+            $j('#id_upload_link_guidance').hide();
+        });
+
+        myDropzone.on("uploadprogress", function(file, progress_value, bytesSent) {
+            var fixed_progress = Math.floor(progress_value)
+            $j('.progress-bar').css('width', fixed_progress+'%').attr('aria-valuenow', fixed_progress);
+             if (fixed_progress == 100) $j('.box_fulllodar').hide()   
+        });
+
+        function clearrecord() {
+            $j('.form-control').removeClass('error')
+            validator.resetForm();
+            $j('#skigit_form1')[0].reset()
+            $j("#id_made_by").removeAttr('disabled');
+            $j("#id_made_by").empty();
+            $j('#fileUploadform').show();
+            $j('#file_uplod_div').show();
+            $j('#file_uplode_note').show();
+            $j("input[type='radio'][name='receive_donate_sperk']").prop("checked", false);
+            $j("input[type='radio'][name='select_logo']").prop("checked", false);
+            $j('#id_category').val(PLUG_CATEGORY)
+            $j('#id_subject_category').val(SUB_CATEGORY)
+            $j('#id_video_link, #id_bought_at').val('')
+            speark_logo()
+            $j('#target, #show-me, #logos').hide();
+            $j("#id_made_by_option").removeAttr('disabled');
+        }
+
+        var validator = form.validate({
+            //errorLabelContainer: '#errors',
+            rules: {
+                'title': {
+                    required: true,
+                    maxlength: 40,
+                    remote: "{% url 'video-title-exist' %}"
+                },
+                'category': {
+                    required: true
+                },
+                'subject_category': {
+                    required: true
+                },
+                'made_by': {
+                    required: false
+                },
+                'made_by_option': {
+                    required: false
+                },
+                'bought_at': {
+                    required: true,
+                    minlength: 5,
+                    remote: "{% url 'url-exist' %}"
+                },
+                'why_rocks': {
+                    required: true,
+                    maxlength: 200
+                },
+                'donate_skigit': {
+                    required: true
+                },
+                'video_link': {
+                    required: true
+                }
+            },
+            messages: {
+                'title': {
+                    required: '<img width="25" src="/static/images/error_icon_dark.png">My Skigit Title is required',
+                    maxlength: '<img width="25" src="/static/images/error_icon_dark.png">Enter no more than 40 characters',
+                    url: '<img width="25" src="/static/images/error_icon_dark.png">Title is already used. Please enter a different one.'
+                },
+                'category': {
+                    required: '<img width="25" src="/static/images/error_icon_dark.png">My Skigit Category is required.',
+
+                },
+                'subject_category': {
+                    required: '<img width="25" src="/static/images/error_icon_dark.png">My Subject Category is required.',
+
+                },
+                'made_by': {
+                    required: '<img width="25" src="/static/images/error_icon_dark.png">My Awesome Thing Was Made By is required. (You must either select a name from dropdown list or if the name does not exist, enter the appropriate name in the text entry box)',
+
+                },
+                'made_by_option': {
+                    required: ' '
+
+                },
+                'bought_at': {
+                    required: '<img width="25" src="/static/images/error_icon_dark.png">I Bought My Awesome Thing At is required.',
+                    minlength: '<img width="25" src="/static/images/error_icon_dark.png">Please enter at least 5 characters.',
+                    url: '<img width="25" src="/static/images/error_icon_dark.png">A valid I Bought My Awesome Thing URL is required. Please try again.'
+                },
+                'why_rocks': {
+                    required: '<img width="25" src="/static/images/error_icon_dark.png">Why My Awesome Thing Rocks is required.',
+                    maxlength: '<img width="25" src="/static/images/error_icon_dark.png">Enter no more than 200 characters.'
+                },
+                'donate_skigit': {
+                    required: '<img width="25" src="/static/images/error_icon_dark.png">Please select a cause to donate your Skitbit value to'
+                },
+                'video_link': {
+                    required: '<img width="25" src="/static/images/error_icon_dark.png">Link video from other website is required.'
+                }
+            }
+        });
+
+        $j('#vidsubmit').click(function() {
+            var add_logo = $j("input[type='radio'][name=add_logo]:checked");
+            var receive_sperk = $j("input[type='radio'][name=receive_donate_sperk]:checked");
+            var select_logo = $j("input[type='radio'][name=select_logo]:checked");
+            var receive_sperk_block = $j('#show-me').is(':visible');
+            form.valid();
+
+            if ($j('#id_made_by').val()) {
+
+                if (add_logo.length > 0 && add_logo.val() == '1') {
+
+                    if (receive_sperk_block && receive_sperk.length > 0) {
+                        if (receive_sperk.val() == '2' && !$j("#id_donate_skigit").val()) {
+                            $j('#id_earn-block-error').html('').show();
+                            return false;
+                        } else if (!select_logo.length) {
+                            if (receive_sperk.val() == '2') {
+                                $j('#id_earn-block-error').html('<img width="25" src="/static/images/error_icon_dark.png">If donating a Skitbit, you must select a logo to display').show();
+                            } else {
+                                $j('#id_earn-block-error').html('<img width="25" src="/static/images/error_icon_dark.png">If receiving a Skitbit, you must select a logo to display').show();
+                            }
+                            return false;
+                        }
+                    }
+
+                    if (receive_sperk_block && !receive_sperk.length) {
+                        $j('#id_earn-block-error').html('<img width="25" src="/static/images/error_icon_dark.png">Please select to receive or donate your Skitbit.').show();
+                        return false;
+                    } else if (receive_sperk_block && !select_logo.length) {
+                        if (receive_sperk.val() == '2') {
+                            $j('#id_earn-block-error').html('<img width="25" src="/static/images/error_icon_dark.png">If donating a Skitbit, you must select a logo to display').show();
+                        } else {
+                            $j('#id_earn-block-error').html('<img width="25" src="/static/images/error_icon_dark.png">If receiving a Skitbit, you must select a logo to display').show();
+                        }
+                        return false;
+                    }
+
+                    if (!select_logo.length) {
+                        $j('#id_earn-block-error').html('<img width="25" src="/static/images/error_icon_dark.png">You must select a logo to display').show();
+                        return false;
+                    }
+                }
+            }
+
+            if ($j('#id_bought_at').val() != '' && urlVerify($j('#id_bought_at').val()) == false) {
+                validator.showErrors({
+                    'bought_at': '<img width="25" src="/static/images/error_icon_dark.png">A valid I Bought My Awesome Thing URL is required.'
+                });
+                return false;
+            } else if ($j('#id_video_link').val() != '' && urlVerify($j('#id_video_link').val()) == false) {
+                $j("#id_video_link-error").show();
+                $j("#id_video_link-error").html('<img width="25" src="/static/images/error_icon_dark.png">You must enter valid video URL in order to proceed');
+                //return false;
+            } else if ($j('#id_video_link').val() != '' && urlVerify($j('#id_video_link').val()) == true && !($j('#id_video_link').val().includes('youtube') || $j('#id_video_link').val().includes('youtu.be'))) {
+                $j("#id_video_link-error").show();
+                $j("#id_video_link-error").html('<img width="25" src="/static/images/error_icon_dark.png">Your link is not a valid YouTube link. Check the link and try again');
+
+            } else if ($j('#id_video_link').val() != '' && urlVerify($j('#id_video_link').val()) == true && ($j('#id_video_link').val().includes('list'))) {
+                $j("#id_video_link-error").show();
+                $j("#id_video_link-error").html('<img width="25" src="/static/images/error_icon_dark.png">You have uploaded an incorrect link. Make sure you copy and paste the YouTube SHARE link only. Please try again.');
+                return false
+                
+            } else if ($j('#id_video_link').val() == '' && myDropzone.files.length === 0) {
+                $j("#id_video_link-error").show();
+                $j("#id_video_link-error").html('<img width="25" src="/static/images/error_icon_dark.png">You must either upload a video or link to a video file in order to proceed');
+            } else if ($j('#id_video_link').val() == '' && urlVerify($j('#id_video_link').val()) == true && myDropzone.getQueuedFiles().length !== 0) {
+                $j("#msg, #id_direct_upload-error, #id_video_link-error").empty();
+                $j("#id_video_link-error").hide();
+            }
+
+            if ($j('#id_made_by').val() && $j("input[type='radio'][name=receive_donate_sperk]:checked").val() === '2') {
+                if ($j("#id_donate_skigit").val()) {
+                    $j('#id_earn-block-error').empty();
+                } else {
+                    /*$j('#msg_donate').show()
+                    $j('#msg_donate').html('').addClass('f_type')*/
+                    $j('#id_earn-block-error').html('').show();
+                    return false;
+                }
+            }
+
+            $j.ajax({
+                url: YOUTUBE_VIDEO_CHECK_API,
+                type: "POST", // http method
+                data: {'youtube_link':$j('#id_video_link').val()}, // data sent with the post request
+                success: function(res) {
+                    if(res['res'] == false){
+                        $j("#id_video_link-error").show();
+                        $j("#id_video_link-error").html('<img width="25" src="/static/images/error_icon_dark.png">Your Link is in the correct format but is unavailable on YouTube. Please contact YouTube or try another link to upload.');
+                        return;
+                    }
+                    else {
+                        if (form.valid()) {
+                            var file_size;
+                            file_size = 0;
+                            myDropzone.on("sending", function(file, xhr, formData) {
+                                file_size = parseInt(file.size, 10) / 1048576;
+                                $j("#msg, #id_direct_upload-error, #id_video_link-error").empty();
+                                if (file_size > 100) {
+                                    $j('#id_direct_upload-error').html('<img width="25" src="/static/images/error_icon_dark.png">File is too big. Max filesize:100MB.');
+                                    setTimeout(hide_error_animation($j('#id_direct_upload-error')), 10000);
+                                    return false;
+                                }
+
+                                formData.append("title", $j('#id_title').val());
+                                formData.append("why_rocks", $j("#id_why_rocks").val());
+                                formData.append("category", $j('#id_category').val());
+                                formData.append("subject_category", $j('#id_subject_category').val());
+                                formData.append("made_by", $j('#id_made_by').val());
+                                formData.append("made_by_option", $j('#id_made_by_option').val());
+                                formData.append("bought_at", $j('#id_bought_at').val().trim());
+                                formData.append("add_logo", $j("input[type='radio'][name=add_logo]:checked").val());
+                                formData.append("receive_donate_sperk", $j("input[type='radio'][name=receive_donate_sperk]:checked").val());
+                                formData.append("select_logo", $j("input[type='radio'][name='select_logo']:checked").val());
+                                formData.append("donate_skigit", $j('#id_donate_skigit').val());
+                                formData.append("video_link", $j("#id_video_link").val());
+                            });
+
+                            if ($j('#id_video_link').val() == '' && $j('#id_title').val() != '' &&
+                                $j('#id_category').val() != '' &&
+                                $j('#id_subject_category').val() != '' &&
+                                ($j('#id_made_by').val() != '' || $j('#id_made_by_option').val()) &&
+                                $j('#id_why_rocks').val() != '' &&
+                                myDropzone.getQueuedFiles().length !== 0
+                            ) {
+                                /* VIDEO DIRECT UPLOADING DROP-ZONE PROCESSING CALL */
+
+                                $j('#msg_donate').empty()
+                                $j('#msg_donate').hide()
+                                $j('#msg').hide()
+                                $j('.box_fulllodar').show();
+                                $j(".dz-progress").remove();
+                                $j(".dz-remove").remove();
+                                myDropzone.processQueue();
+                            } else {
+                                if ($j('#id_video_link').val() != '' &&
+                                    $j('#id_title').val() != '' &&
+                                    $j('#id_bought_at').val().trim() != '' &&
+                                    ($j('#id_made_by').val() != '' || $j('#id_made_by_option').val()) &&
+                                    $j('#id_category').val() != '' &&
+                                    $j('#id_why_rocks').val() != '' &&
+                                    $j('#id_subject_category').val() != '' && urlVerify($j('#id_bought_at').val().trim()) == true &&
+                                    urlVerify($j('#id_video_link').val()) == true) {
+                                    var video_data;
+                                    video_data = {
+                                        "title": $j('#id_title').val(),
+                                        "category": $j('#id_category').val(),
+                                        "subject_category": $j('#id_subject_category').val(),
+                                        "made_by": $j('#id_made_by').val(),
+                                        "made_by_option": $j('#id_made_by_option').val(),
+                                        "bought_at": $j('#id_bought_at').val().trim(),
+                                        "add_logo": $j("input[type='radio'][name=add_logo]:checked").val(),
+                                        "receive_donate_sperk": $j("input[type='radio'][name=receive_donate_sperk]:checked").val(),
+                                        "select_logo": $j("input[type='radio'][name='select_logo']:checked").val(),
+                                        "why_rocks": $j("#id_why_rocks").val(),
+                                        "video_link": $j("#id_video_link").val(),
+                                        "donate_skigit": $j("#id_donate_skigit").val()
+                                    }
+
+                                    /* VIDEO LINK UPLODING AJEX CALL */
+                                    $j('#msg_donate').empty()
+                                    $j('#msg_donate').hide()
+                                    $j('#msg').hide()
+                                    $j('#id_earn-block-error').empty();
+                                    videolink_ajax(video_data)
+                                }
+                            }
+
+                            myDropzone.on("success", function(file, responseText) {
+
+                                if (responseText.is_success == true) {
+                                    $j("#msg, #id_direct_upload-error, #id_video_link-error").empty();
+                                    $j("#msg, #id_direct_upload-error, #id_video_link-error").show();
+                                    $j("#uploadBox").addClass('open');
+                                    $j("#confirm_upload_text").text(responseText.message)
+                                    $j('.overlay').addClass('open')
+                                } else {
+                                    $j('.box_fulllodar').hide();
+                                    myDropzone.removeAllFiles();
+                                    $j("#msg, #id_direct_upload-error, #id_video_link-error").empty();
+                                    if (responseText.message.search('Title is already used') >= 0) {
+                                        validator.showErrors({
+                                            'title': responseText.message
+                                        });
+                                    } else {
+                                        $j('#id_direct_upload-error').html('<img width="25" src="/static/images/error_icon_dark.png">'+responseText.message);
+                                        setTimeout(hide_error_animation($j('#id_direct_upload-error')), 10000);
+                                    }
+                                }
+                            });
+
+                            function videolink_ajax(video_data) {
+                                /*** VIDEO LINK UPLODING AJEX CALL***/
+                                $j.ajax({
+                                    url: UPLOAD_VIDEO_LINK_URL,
+                                    type: "POST", // http method
+                                    data: video_data, // data sent with the post request
+                                    success: function(data) {
+                                        if (data.is_success == true) {
+                                            $j('.box_fulllodar').hide()
+                                            $j("#uploadBox").addClass('open');
+                                            $j("#confirm_upload_text").text(data.message)
+                                            $j('.overlay').addClass('open')
+                                        } else {
+                                            $j('.box_fulllodar').hide()
+                                            $j("#msg").show()
+                                            if (data.message.search('Title is already used') >= 0) {
+                                                validator.showErrors({
+                                                    'title': data.message
+                                                });
+                                            } else {
+                                                $j("#msg").html(data.message).css('color', '#dd1818')
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    }
+                }
+            });
+        });
+
+        function urlVerify(url_value) {
+            var regexp = /^(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})?$/;
+            return regexp.test(url_value);
+        }
+
+        $j('#id_video_link').on('input', function() {
+
+            if ($j("#id_video_link").val() == '') {
+                /* Display the DROP ZONE FIELD if Link field is empty or not provided */
+                $j("#video-upload-div").show()
+                $j("#msg, #id_direct_upload-error, #id_video_link-error").empty();
+                $j("#msg").hide();
+            } else {
+                /* HIDES THE DROP ZONE FIELD IF VIDEO IS UPLOADED BY LINK */
+                $j("#video-upload-div").hide()
+                myDropzone.removeAllFiles();
+                $j("#msg, #id_direct_upload-error, #id_video_link-error").empty();
+            }
+        });
+
+        /* CANCEL BUTTON CLICK CLEAR DROP ZONE FIELD <FILE UPLOAD FIELD> */
+        $j('#clear_form').click(function() {
+            if ($j('#id_video_link').val() == '') {
+              $j('.fileUpload').show();
+            }
+            myDropzone.removeAllFiles();
+            $j("#msg, #id_direct_upload-error, #id_video_link-error").empty();
+            $j("#msg").hide();
+            $j("#msg_donate").hide();
+            $j("#errors").empty();
+            $j('#target').hide();
+            $j('.cancel').removeClass();
+            clearrecord();
+        });
+
+        $j('#id_made_by_option').on('change keyup', function() {
+            if ($j('#id_made_by_option').val() == '') {
+                $j("#id_made_by").removeAttr('disabled');
+                $j('#id_made_by').rules('add','required');
+                speark_logo()
+            }
+        });
+
+    });
+    function close_uploadBox(){
+        jQuery("#uploadBox").removeClass('open');
+        jQuery(".overlay").removeClass('open');
+        window.location.reload(true);
+    }
+</script>

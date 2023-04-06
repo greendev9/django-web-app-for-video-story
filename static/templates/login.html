@@ -1,0 +1,158 @@
+<head>
+  <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer>
+   
+  </script>
+  <script>
+     var onloadCallback = function() {
+      grecaptcha.render('google_recaptcha', {
+        'sitekey' : '6Lew6HcjAAAAAGyiryrlfmXSSKToJS5HnEpMQAOz'
+      });
+    };
+  </script>
+</head>
+
+
+<style>
+
+#type_check  {
+  color: #000 !important;
+    background-color: #fff !important;
+    margin-bottom: 15px;
+    display: inline;
+    margin-left: -70px;
+    margin-top: -5px;
+}
+
+span.account-error a{
+    color: #0381c3;
+    font-weight:bold;
+}
+
+#form_login .login_fields.form-group {
+    margin-top: 20px;
+}
+
+</style>
+
+
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 padd_zero" id="login_section_wwlcme" ng-hide="succ">
+
+<div class="app-store-group">
+    <div id="get_app_login" >Get the Apps!</div>
+      <!--Apple store image and link  -->
+       <a class="mobile-app-link-apple" href="#" onclick="window.open(encodeURI('https://apps.apple.com/app/instagram/id389801252?vt=lo'), '_blank', 'location=yes,enableViewPortScale=yes');">
+          <span class="mobile-app-span">
+            <img class="image-app-apple" alt="-" src="/static/images/landing/AppleStore.png" width="120">
+          </span>
+        </a>
+ 
+     <!--Google play store image and link-->        
+        <a class="mobile-app-link-google" href="#" onclick="window.open(encodeURI('https://play.google.com/store/apps/details?id=com.instagram.android&referrer=utm_source%3Dinstagramweb%26utm_campaign%3DloginPage%26ig_mid%3D996C2F48-94F0-4CE2-BD02-A31A40B588E0%26utm_content%3Dlo%26utm_medium%3Dbadge'), '_blank', 'location=yes,enableViewPortScale=yes');">
+         
+        <span class="mobile-app-span">
+        <img class="image-app-google" alt="-" src="/static/images/landing/GoogleStore.png" width="120">
+         </span>
+       </a>
+	      <div id="get_app_login_footer" ></div>
+  </div>
+
+  <div class="mar_zero">
+  
+  
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 top_login_section padd_zero">
+      <h3>&nbsp;</h3>
+    </div>
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" >
+      <form name="loginForm" id="form_login" role="form">
+        <div class="username form-group">
+          <label for="user_login">
+            Email </label>
+          <input type="text" class="input form-control" tabindex="0"
+                 id="user_login" size="20" value="" ng-model="data.email" ng-disabled="sync" required />
+        </div>
+    
+    
+        <div class="password form-group">
+          <label for="user_pass">
+            Password </label>
+          <input type="password" class="input_password form-control" tabindex="0" id="user_pass" size="20"
+                 ng-model="data.password" ng-disabled="sync" required />
+     </div>
+     
+    <!-- Password: <input type="password" value="FakePSW" id="myInput"><br><br>-->
+    <input type="checkbox" id="type_check" onclick="myFunction()">
+  <span id="login_pwd_span" style="font-size:13px; color:#fff;top: 160px;position: absolute;left: 75px;">Show Password </span>
+
+  <div class="pl-2 pt-2">
+    <div id="google_recaptcha"></div>
+  </div>
+
+  <script>
+    function myFunction() {
+    var x = document.getElementById("user_pass");
+    if (x.type === "password") {
+    x.type = "text";
+    } else {
+    x.type = "password";
+      }
+    }
+    </script>
+        <div class="login_fields form-group">
+          <input type="submit" tabindex="3" value="Login" id='login_btn' ng-click="ok(loginForm)" ng-disabled="sync"
+                 class="btn btn-default btn-sm" name="Login">
+        </div>
+        <div class="lost-password text-center form-group">
+          <a tabindex="4" class="sign-up" href="/register/">Sign Up?</a>&nbsp;&nbsp;
+          <a tabindex="5" href="/reset/">Forgot Password?</a>
+        </div>
+
+        <span id="wp-social-login-connect-with">OR Connect with:</span>
+
+        <div class="social_ul">
+          <a tabindex="" class="social_sing_ups" href="/accounts/facebook/login/">
+            <img alt="Facebook" id="facebook_img" title="Facebook" src="/static/images/facebook.png"/>
+          </a>
+      
+ 
+      
+          <a tabindex="" class="social_sing_ups" href="/accounts/twitter/login/">
+            <img alt="Twitter" id="twitter_img" title="Twitter" src="/static/images/twitter.png"/>
+          </a>
+          <a tabindex="" class="social_sing_ups" href="/accounts/instagram/login/">
+            <img alt="Instagram" id="instagram_img" title="Instagram" src="/static/images/instagram.png"/>
+          </a>
+          <a tabindex="" class="social_sing_ups" href="/accounts/linkedin_oauth2/login/">
+            <img alt="LinkedIn" id="linkedin_img" title="LinkedIn" src="/static/images/linkedin.png"/>
+          </a>
+      
+      <span id="tos_banner">By continuing, you agree to Skigit's <a class="blue" href="/about-us/terms-of-service/" target="_blank" style="color: #f3e9a6">Terms
+                            of Service,</a><a class="blue" href="/about-us/business-terms-of-service/" target="_blank" style="color: #f3e9a6"> Business Terms
+                            of Service,</a><a class="blue" href="/about-us/acceptable-use-policy/" target="_blank" style="color: #f3e9a6;"> Acceptable Use Policy,</a><a class="blue" href="/about-us/privacy-policy/" target="_blank" style="color: #f3e9a6;"> Privacy Policy</a> and affirm that you are 13 years of age or older.</span>
+      
+          <!--
+          <a tabindex="" class="social_sing_ups" href="">
+            <img alt="Yahoo!" title="Yahoo!" src="/static/images/yahoo.png"/>
+          </a>-->
+        </div>
+
+      </form>
+      <div class="form-group" style="text-align: center;" id="login_info_msg">
+        <p class="success_msg" style="margin-left:-20px" ng-show="success">
+        <span class='sign-error'>
+          <i class='glyphicon glyphicon-ok-circle' style="display: none;"/>
+        </span>
+        <span class='text-error'>{{ success }}</span>
+        </p>
+        <p class="error_msg" ng_show="msg!=''"></p>
+        <p class="error_msg" ng-show="erro!=''">
+        <span class='sign-error' ng-show="error!=''">
+          <i class="glyphicon glyphicon-remove-circle"  style="margin-left: 25px; display: none;"/>
+        </span>
+        <span class="text-error account-error"  style="color: #ff8585; display: block; width: 80%;padding-top: 5px; " ng-bind-html="error"></span>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+ 

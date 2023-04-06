@@ -1,0 +1,279 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load category_list %}
+
+{% block title %}{{ block.super }}General User Register{% endblock %}
+
+{% block css %}
+    <style>
+	 a#cancel_logout {
+		color: #fff;
+		background-color: #d9534f;
+		border-color: #d43f3a;
+		}
+
+	a#cancel_logout:hover {
+		background-color: #f75757;
+		}
+		
+        #type_check, #usepolicy_check, #ageconfirm_check {
+          color: #555 !important;
+		   position:relative;
+		   top: 0!important;
+		   left:90px;
+        }
+
+		.error {
+			color: #ffa2a2
+		}
+		
+        .error_msg, .errorlist li, .form_error_message {
+          color: #c01020;
+          display: -webkit-inline-box !important;
+        }
+
+        <!--.error_msg {
+          color: #ed1b2e !important;
+          font-family: Segoe_Print !important;
+        }-->
+
+      li {
+          font-family: inherit !important;
+        }
+
+        .dropdown {
+          position: relative;
+          cursor: pointer;
+          display: inline-block;
+        }
+
+        .dropdown-menu p {
+          white-space: initial;
+        }
+
+        .dropdown .dropdown-menu {
+          position: absolute;
+          top: 100%;
+          left: 0;
+          margin: 0;
+          border: 1px solid #ccc !important;
+          width: 189px !important;
+        }
+
+        .dropdown .dropdown-menu .pop {
+          padding: 1px 7px 1px 16px;
+          margin: 0px 1px -16px -1px !important;
+        }
+
+        .dropdown .dropdown-menu h2 {
+          font-weight: bold;
+          font-size: 12px;
+          color: #000 !important;
+          margin: 0 0 4px 0 !important;
+          padding: 0 !important;
+        }
+
+        .dropdown .dropdown-menu p {
+          display: block;
+          line-height: 17px;
+          font-size: 11px;
+          font-family: "segoe_print" !important;
+          font-weight: normal !important;
+        }
+
+        .dropdown .dropdown-menu p a {
+          color: #037bb8;
+          text-decoration: underline !important;
+        }
+
+        .dropdown .dropdown-menu p a:hover {
+          color: #037bb8;
+          text-decoration: none;
+        }
+
+        .dropdown .dropdown-menu p span {
+          color: #E40003;
+        }
+
+#id_username {
+    background-color: #fff!important;
+ 
+}
+        .target-div h2 {
+          font-size: 14px;
+          color: #3abe75 !important;
+          margin: 0px 0 8px 0 !important;
+          padding: 0 !important;
+          text-align: center;
+          font-weight: bold;
+        }
+
+        .donation-content input[type="radio"], .donation-content label {
+          font-family: "segoe_print" !important;
+          text-align: left;
+        }
+
+        .form-control.error {
+          top: inherit !important;
+        }
+
+        .form-control.valid {
+          top: inherit !important;
+        }
+
+        .form-group .checkbox-label {
+            top: 0px;
+            display: inline-block !important;
+            float: left;
+    
+        }
+
+    #type_check1,  #type_check2  {
+        color: #000 !important;
+        background-color: #fff !important;
+        margin-bottom: 15px;
+		float: left;
+        margin-left: 2px;
+        margin-top: 5px;
+    }
+
+	input[type="text"], input[type="email"], textArea, select, select option, label {
+		color: #fff;
+		}
+
+    input[type="checkbox"] + label::before {
+        border: 1px solid #a4a4a4;
+    }
+
+        .checkbox-error-msg {
+    position: absolute;
+    margin-left: 14%;
+    font-size: 14px;
+    margin-top: 20px;
+        }
+
+    </style>
+{% endblock css %}
+
+{% block content %}
+  <div class="row mar_zero" id="main" style="min-height: 700px;background-color: #fff;">
+    <h2 class="margin_top_15 sego word_space_2 text-center margin_top_30">Register Here!</h2>
+    <div class="margin_top_30">
+      <div class="row mar_zero">
+        <form id='registration_form' action="{% url 'register_type' %}" method="POST" name="reg_type">
+          <div class="row mar_zero">
+            <div class="col-lg-3 col-md-3 col-sm-3 hidden-xs padd_zero">
+              &nbsp;
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" id="user_register_type">
+              {% csrf_token %}
+
+              {% if form.non_field_errors %}
+                  <div class="form-group">
+                    {% for err in form.non_field_errors %}
+                      <div class="form_error_message">{{ err }}</div>
+                    {% endfor %}
+                  </div>
+              {% endif %}
+
+              <div class="row mar_zero">
+                <!--  <label class="pull-right">
+                     <span class="pull-right">&nbsp;= Required</span>
+                     <span class="pull-right" style=" margin-top: 2px;">
+                        <span class="red">*</span>
+                     </span>
+                 </label> -->
+                  <div class="form-group" id="username" style="width:95%">
+                    <label for="{{ form.username.id_for_label }}">Username
+                      <span class="red">*</span>
+<span id="reg_username_help_text" >Your username must contain only letters, numbers and underscores. Spaces are NOT allowed.</span>
+                    </label>
+                    {{ form.username|addcss:"form-control" }}
+                  </div>
+              </div>
+
+              <div class="form-group">
+                    <label for="{{ form.email.id_for_label }}">Email
+                      <span class="red">*</span>
+                    </label>
+                    {{ form.email|addcss:"form-control" }}
+              </div>
+
+           <div class="form-group" id="pwd_group">
+                    <label for="{{ form.password1.id_for_label }}">Password
+                      <span class="red">*</span>
+					  <span id="reg_password_help_text" >Your password must contain between 8 and 16 characters with at least 1 number and 1 upper case letter. Special characters are allowed.</span>
+                    </label>
+                    <div class="input-group" style="font-family: inherit;">
+                      {{ form.password1|addcss:"form-control" }}
+                     <span class="input-group-addon" id="password-addon1"></span>
+					</div>
+			</div>
+			
+            <!---<div id="pwd1_error_label">
+				<label id="id_password1-error" class="error" for="id_password1" style="top: -34px;"></label>
+            </div>-->
+				  
+			<div class="form-group" id = "reg_pwd_1">
+				<input type="checkbox" id="type_check1" onclick="myFunction1()" >
+				<label id="type_check-show-pwd" class="checkbox-label error" style="top: 0px;" for="type_check1"></label>
+				<span id="login_pwd_span" style="font-size:13px;color:#fff;" >Show Password </span>
+			</div>
+			
+			<!--<div class="form-group" id="retype_pwd">
+			   <input type="checkbox" id="type_check2" onclick="myFunction2()" style="display: none;">
+			   <label id="type_check-show-pwd" class="checkbox-label error" style="top: 0px;" for="type_check2"></label>
+				<span id="login_pwd_span" style="font-size:13px" >Show Password </span>
+			 </div>-->
+		
+					<!--<div>
+				  	 <p style="Font-size:10px; margin-top:-30px">Your password must contain between 8 and 16 characters with at least 1 number and 1 upper case letter. Special characters are allowed.</p>
+					 </div>-->
+					 
+               <div class="form-group">
+                    <label for="{{ form.password2.id_for_label }}" id="id_password_retype_general">Re-type Password
+                      <span class="red">*</span>
+                    </label>
+                    {{ form.password2|addcss:"form-control" }}
+              </div>
+				  
+			<div class="form-group" id="retype_pwd">
+			   <input type="checkbox" id="type_check2" onclick="myFunction2()"  >
+			   <label id="type_check-show-pwd" class="checkbox-label error" style="top: 0px;" for="type_check2"></label>
+				<span id="login_pwd_span" style="font-size:13px;color:#fff ;" >Show Password </span>
+			 </div>
+			 
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" >
+                  <div class="form-group">
+				  
+                    {% include 'includes/registration_terms.html' %}
+
+
+                    <div class="form-group for-button text-center" style="margin: 0 auto 0 auto;">
+  				              <a href="#" onclick="location.href = '/'" class="btn" id="cancel_logout" style="margin: 10px 0px 12px 10px;">Cancel</a>
+                      <button type="submit" id='form_submit' class="btn" name="register_as_general_user" style="margin: 10px 0px 12px 10px;">
+                        &nbsp;Next&nbsp;</button>
+                     
+                    </div>
+		</div>
+                  </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        username_error = "{{ form.username.errors.0 }}";
+        email_error = "{{ form.email.errors.0 }}";
+        password1_error = "{{ form.password1.errors.0 }}";
+        password2_error = "{{ form.password2.errors.0 }}";
+        password1_label_text = "{{ form.password1.id_for_label }}";
+        password2_label_text = "{{ form.password2.id_for_label }}";
+    </script>
+    <script type="text/javascript" src="{% static 'js/registration.js' %}"></script>
+{% endblock js %}

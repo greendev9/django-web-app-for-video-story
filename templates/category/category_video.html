@@ -1,0 +1,46 @@
+{% load static %}
+<div class="col-md-2 col-lg-2 hidden-xs hidden-sm"></div>
+
+<div class="section-box">
+       <div class="section-content grid-small">
+            {% if category_current.cat_name|safe == "Just here for the Drama" %}
+              {% if video_detail %}
+                <div id="CategoryImage" class="categories-video-logo">
+                  <p>Just here for the Drama</p>
+                </div>
+              {% endif %}
+
+            {% elif category_current.cat_name|safe == "Let Me Show You Where to Put That" %}
+              {% if video_detail %}
+                <div class="categories-video-logo">
+                  <p>Let Me Show You Where to Put That</p>
+                </div>
+              {% endif %}
+			  
+            {% elif category_current.cat_name|safe == 'I\'ll do Me, You do You' %}
+              {% if video_detail %}
+                <div class="categories-video-logo">
+                 <p>I'll do Me, You do You</p>
+                </div>
+              {% endif %}
+             
+            {% elif category_current.cat_name|safe == "Where Words Fail, Music Speaks" %}
+              {% if video_detail %}
+                <div class="categories-video-logo">
+                 <p>Where Words Fail, Music Speaks</p>
+                </div>
+              {% endif %}
+              
+            {% elif category_current.cat_name|safe == "Normal is Overrated" %}
+              {% if video_detail %}
+                <div class="categories-video-logo">
+				<p>Normal is Overrated</p>
+                </div>
+              {% endif %}
+
+            {% endif %}
+
+          </div>
+        </div>
+
+<div class="col-md-2 col-lg-2 hidden-xs hidden-sm"></div>

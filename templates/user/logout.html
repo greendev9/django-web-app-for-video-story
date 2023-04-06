@@ -1,0 +1,16 @@
+<html>
+{% load static %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script>
+  $(document).ready(function () {
+    var x = location.hostname;
+    window.location = '/';
+  });
+</script>
+<body>
+<div>
+  <center><img src="{% static 'images/loading.gif' %} " style="margin-top: 25%"></center>
+</div>
+</body>
+</html>
+

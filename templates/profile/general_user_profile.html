@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}{{ block.super }}{{ request_user.username }} Profile{% endblock %}
+
+<style>
+ .container-fluid {
+  background-color: #e0e7ee;
+}
+  
+</style>
+
+{% block content %}
+<div class="row mar_zero" id="main" style = "  background-color: #e0e7ee">
+  <div id="main_profile" style="background-color: transparent;" >
+    <div id="content">
+      <div class="padder">
+
+        <div role="complementary" id="item-header">
+
+          <div style="display:none;" class="bp-template-notice error" id="ErrorProfile">
+          </div>
+
+        </div><!-- #item-header -->
+
+        <!-- #item-nav -->
+        <div class="clearfix"></div>
+		
+		
+        <div id="item-body">
+
+			<div class="main-wrap" id="profile_image"> 
+	          
+			  <img  width="100" alt="Profile picture of {{ request_user.username }}"
+              class="avatar user-644-avatar avatar- photo" id="profile_photo" 
+             {% if request_user_profile.profile_img %}src="{{ request_user_profile.profile_img.url }}" {% else %}
+             src='{% static "images/noimage_user.png" %}'{% endif %}"></div>
+			 
+			 <div id="username_text_profile">
+                    {{ request_user.username }}
+                  </div>
+				  
+		<!--<div id="profile_page_display_line">
+			<img  width="80%" height="60px"src="https://static.skigit.com/images/nav_bg_2.png" style="transform: scale(0.6);">
+		</div>-->
+	 
+	               
+				  
+			 
+</div>
+
+            <div class="gen-user-prof gen-user-prof1">
+			
+            <!-- <div class="col-md-4 col-sm-4 col-xs-12">
+                <div class="main-wrap">
+                  <div class="bl-text">Gender</div>
+                  <div class="blck-text" id="user_text">
+                    {% if request_user_profile.gender != None %}
+                      {% if request_user_profile.gender == 0 %}Male{% endif %}
+                      {% if request_user_profile.gender == 1 %}Female{% endif %}
+                    {% else %}
+                      ----
+                    {% endif %}
+                  </div>
+                </div>
+			</div>-->
+
+
+              <!--<div class="col-md-4 col-sm-4 col-xs-12">-->
+                
+				<div class="main-wrap">
+                 <!-- <div class="bl-text">Date of birth</div>-->
+                  <div class="blck-text" id="profile_birthdate">
+                    {% if request_user_profile.birthdate %}
+                      {{ request_user_profile.birthdate }}
+                    {% else %}
+                      ----
+                    {% endif %}
+                  </div>
+                </div>
+				
+				 <div class="main-wrap">
+                  <!--<div class="bl-text">City</div>-->
+                  <div class="blck-text" id="profile_city">
+                    {% if request_user_profile.city %}
+                      {{ request_user_profile.city }}
+                    {% else %}
+                      ----
+                    {% endif %}
+                  </div>
+                </div>
+				
+			<div class="main-wrap">
+                  <!--<div class="bl-text">State</div>-->
+                  <div class="blck-text" id="profile_state">
+                    {% if request_user_profile.state %}
+                      {{ request_user_profile.state }}
+                    {% else %}
+                      ----
+                    {% endif %}
+
+                  </div>
+                </div>
+				
+                <div class="main-wrap">
+                 <!-- <div class="bl-text">Country</div>-->
+                  <div class="blck-text" id="profile_country">
+                    {% if request_user_profile.country %}
+                      {{ request_user_profile.country }}
+                    {% else %}
+                      ----
+                    {% endif %}
+                  </div>
+               </div>
+
+
+            <!-- </div>-->
+		 </div>
+			 
+			 <div class="main-wrap">
+		  		 <a href="{% url 'user_profile_display' request_user.username %}">
+	 	        </a>
+ 	         </div>
+
+
+		  <div class="profile_aboutme">
+            <h1>About Me</h1>
+              <div class="clearfix"></div>
+                            <span class="gen-prof-content" >
+                                {% if request_user_profile.about_me %}
+                                  {{ request_user_profile.about_me }}
+                                {% else %}
+                                  ----
+                                {% endif %}
+                            </span>
+              <div class="clearfix"></div>
+              <div class="Reg_Error" id="editprofile_Error" style="display: none;"></div>
+	      </div>
+			
+           <div class="profileImageBusiness">
+                <div class="sk_bus_photos">
+				<div style="text-align:left; font-size: 22px; font-weight:bold;margin: 10px 15px;">My Images</div>
+			<div class="line-1" style="margin-left: 15px;"></div>
+                 <!-- <div class="profile_aboutme"><h1 id="my_images">My Images</h1></div>-->
+                  <ul>
+                    {% for logo in extra_profile_img_url %}
+                      <li class="col-md-2 col-lg-2 col-sm-3 col-xs-12 text-center" id="my_images_{{ forloop.counter }}">
+                        <img class="img-responsive" src="{{ logo }}">
+                      </li>
+                    {% endfor %}
+                  </ul>
+              </div>
+            </div>
+			
+
+          </div><!-- #item-body -->
+        </div><!-- padder -->
+        <div class="clearfix"></div>
+  </div>
+  </div>
+ </div>
+{% endblock %}

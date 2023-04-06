@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{{ block.super }}Skigit Length{% endblock %}
+
+{% block main-header-block %}
+    {% if not mobile_api_request %}
+        {{ block.super }}
+    {% endif %}
+{% endblock main-header-block %}
+
+{% block head_inline_css_block %}
+<style>
+  .innerPageContent span.imgRight{padding-top:0;}l
+</style>
+{% endblock %}
+
+{% block content %}
+    <div class="row mar_zero" id="main">
+      <div class="wrap cf">
+        <div id="content" role="main">
+          <div class="post-718 page type-page status-publish hentry" id="post-718">
+
+            <div class="page-content rich-content innerPageContent">
+              <h1 class="sageo" style="font-size:28px;">How long should my Skigit run?</h1>
+              <p>Many people may weigh the pros and cons of using different length skigits however, we’ve decided to provide you guidelines that will give you some idea on which skigit run length may work best for you.</p>
+              <p><em>Note that only uploaded skigits of 30MB or less are allowed. Linked skigits can be as long as you wish but we recommend no longer than 3 minutes.</em></p>
+
+              <h3>5 and 10 seconds</h3>
+              <span class="imgRight">
+                <img src="{% static 'images/5-10.png' %}" width="29"
+                                          height="29"
+                                          alt=""/></span>
+              <div class="clearfix"></div>
+              <h4>Pros</h4>
+              <ol><li>Over before audiences can make an escape</li>
+                <li>Still long enough to make a mighty fine impression</li>
+                <li>A good way to quickly piggy-back your skigits</li>
+                <li>Better in reaching the masses</li>
+                <li>Recall averages of a 10 second skigit can be 78% as effective as a 30 second skigit</li></ol>
+
+              <h4>Cons</h4>
+              <ol><li>May be too short to be effective for some skigit topics</li></ol>
+
+              <h3>15 Seconds</h3>
+              <span class="imgRight">
+                <img src="{% static 'images/15.png' %}" width="29" height="29" alt=""/></span>
+              <div class="clearfix"></div>
+              <h4>Pros</h4>
+             <ol><li>Roughly 80% as effective in terms of recall and likeability as a 30-second skigit</li>
+                <li>For item recognition, the performance of a 15 second skigit is equal to that of a 30</li>
+                <li>Can be 80% as effective in terms of recall</li>
+                <li>More focused and rational in execution (i.e. more  information about your awesome thing)</li>
+                <li>Good for easy-to-explain things</li>
+                <li>Suited to the limited modern attention span</li>
+                <li>Great for awesome things that already have high awareness</li>
+                <li>Good for quick demonstrations of your awesome thing</li>
+                <li>Long enough to be noticed even in fast-forward mode</li>
+                <li>More shareable; 15 second skigits are likely to be shared 37% more often than 30 second or one-minute skigits.</li></ol>
+
+              <h4>Cons</h4>
+              <ol><li>Not all awesome things can be communicated in 15 seconds</li>
+                <li>Can be difficult to convey complex propositions and emotions</li>
+                <li>Not suited to your image-shaping needs</li>
+                <li>Lower probability of gaining viewer attention</li>
+                <li>skigits with lots of visual clutter may have reduced effectiveness</li>
+                <li>Half the time to convey a marketing message vs. a 30-second skigit</li></ol>
+
+              <h3>30 seconds</h3>
+              <span class="imgRight"><img src="
+              {% static 'images/30.png' %}" width="29" height="29" alt=""/></span>
+              <div class="clearfix"></div>
+              <h4>Pros</h4>
+              <ol><li>More time to tell the complete story of your awesome thing</li>
+                <li>Better for building followers</li>
+                <li>Good for humorous skigits</li>
+                <li>75-80% the recall of 60 second skigit</li>
+<li>Skigits that use entertaining elements of humor and cuteness especially with toddlers earn higher recall</li>
+                <li>More memorable that its shorter in length counterparts</li></ol>
+
+              <h4>Cons</h4>
+              <ol><li>Format may be longer than needed for skigits that have simple messages</li></ol>
+
+              <h3>31 - 45 seconds</h3>
+              <span class="imgRight"><img src="{% static 'images/31-3.png' %}" width="29"
+                                          height="29"
+                                          alt=""/></span>
+              <div class="clearfix"></div>
+
+              <h4>Pros</h4>
+              <ol><li>Higher recall than a 30 second skigit</li>
+                <li>Plenty of time to tell the story about your awesome thing and build followers; more appropriate for Demoskigits and Dramaskigits</li>
+                <li>Longer skigits allow viewers time to understand, empathize and emotionally connect with you.</li></ol>
+
+              <h4>Cons</h4>
+              <ol><li>Can be too long for some awesome things and there may be high risk of losing viewer attention</li>
+                <li>Can take up large amounts of memory and without the return in interest</li></ol>
+
+            </div>
+          </div>
+          <!--end .hentry-->
+
+        </div>
+        <!--end #content-->
+
+
+      </div>
+    </div>
+{% endblock %}

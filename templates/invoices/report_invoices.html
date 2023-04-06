@@ -1,0 +1,140 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_list admin_urls static admin_modify %}
+{% if not is_popup %}
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+&rsaquo; Reports
+&rsaquo; New report
+</div>
+{% endblock %}
+{% endif %}
+
+{% block coltype %}flex{% endblock %}
+
+{% block content %}
+  <div id="content-main">
+    <div class="inner-center-column">
+      <div class="module filtered" id="changelist">
+        <div class="toolbar-content clearfix">
+          <form id="changelist-search" action="" method="get" class="form-inline">
+            {% csrf_token %}
+            <div class="search-container">
+              <span class="search-filters">
+                <select name="year" class="auto-width">
+                    <option value="">Year</option>
+                    {% for year in years %}
+                      <option value="{{ year }}"{% if year == sel_year %} selected {% endif %}>{{ year }}</option>
+                    {% endfor %}
+                </select>
+              </span>
+              <span class="search-filters">
+                <select name="month" class="auto-width">
+                  <option value="">Month</option>
+                  {% for key,value in months.items %}
+                      <option value="{{ key }}"{% if key == sel_month %} selected {% endif %}>{{ value }}</option>
+                    {% endfor %}
+                </select>
+              </span>
+              <span class="search-filters">
+                <select name="buser" class="auto-width">
+                  <option value>User</option>
+                  {% for user in users %}
+                    {% if sel_user == user.id %}
+                      <option value="{{ user.id }}" selected>{{ user.name }}</option>
+                    {% else %}
+                      <option value="{{ user.id }}">{{ user.name }}</option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
+              </span>
+              <!-- <input type="checkbox" name="export_csv" /> Export to CSVss -->
+              <input type="submit" value="Search" name="search" class="btn btn-info" style="margin-left: 1em;" />
+              <input type="submit" value="Export to CSV" name="export_csv" class="btn btn-info" style="margin-left: 1em;"/>
+              <input type="submit" value="Export to TXT" name="export_txt" class="btn btn-info" style="margin-left: 1em;"/>
+            </div>
+          </form>
+          
+
+        </div>
+        <div class="results">
+          <table id="results" class="table table-striped table-bordered table-hover table-condensed">
+            <thead>
+              <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Business Name</th>
+                <th scope="col">Membership Start Date</th>
+                <th scope="col">Membership End Date</th>
+                <th scope="col">Membership Months (Running)</th>
+                <th scope="col">Business Logo</th>
+                <th scope="col">Logo Upload Date</th>
+                <th scope="col">Logo Delete Date</th>
+                <th scope="col">Skigit Creator</th>
+                <th scope="col">Skigit Uploaded</th>
+                <th scope="col">Skigit ID</th>
+                <th scope="col">Skigit Uploaded Date</th>
+                <th scope="col">Skigit Removal Date</th>
+                <th scope="col">Logo Click Throught Count</th>
+                <th scope="col">Learn More View Count</th>
+                <th scope="col">#Shares of Video</th>
+                <th scope="col">#Plug-ins of Video</th>
+                <th scope="col">#Likes of Video</th>
+                <th scope="col">#View of Video</th>
+                <th scope="col">#Times Video Was Added as Favorite</th>
+                <th scope="col">#Times Video Was Embeded to Skigit</th>
+                <th scope="col">#Times Video Was Embeded to External Site</th>
+                <th scope="col">Sperk Value ($,USD)</th>
+                <th scope="col">Sperk Donated (D) or Received (R)</th>
+                <th scope="col">Choice of Charity by Creator</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for result in data %}
+              <tr>
+                <td>{{ result.id }} </td>
+                <td>{{ result.business_name }} </td>
+                <td>{{ result.m_start_date }} </td>
+                <td>{{ result.m_end_date }} </td>
+                <td>{{ result.m_months_running }} </td>
+                <td>{{ result.business_logo }} </td>
+                <td>{{ result.logo_upload_date }} </td>
+                <td>{{ result.logo_delete_date }} </td>
+                <td>{{ result.skigit_creator }} </td>
+                <td>{{ result.skigit_uploaded }} </td>
+                <td>{{ result.skigit_id }} </td>
+                <td>{{ result.skigit_upload_date }} </td>
+                <td>{{ result.skigit_upload_delete }} </td>
+                <td>{{ result.logo_click }} </td>
+                <td>{{ result.learn_more }} </td>
+                <td>{{ result.shares }} </td>
+                <td>{{ result.plugins }} </td>
+                <td>{{ result.likes }} </td>
+                <td>{{ result.views }} </td>
+                <td>{{ result.favorites }} </td>
+                <td>{{ result.embedded_internal }} </td>
+                <td>{{ result.embedded_external }} </td>
+                <td>{{ result.sperk_value }} </td>
+                <td>{{ result.sperk_donate_receive }} </td>
+                <td>{{ result.charity }} </td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {% block pagination %}
+      {% if cl.result_count %}
+        {% if action_form and actions_on_bottom and cl.full_result_count %}
+        <div class="below-actions">
+          {% endif %}
+          {% pagination cl %}
+          {% if action_form and actions_on_bottom and cl.full_result_count %}
+            </div>
+          {% endif %}
+      {% endif %}
+
+      {% endblock %}
+    </div>
+  </div>
+
+{% endblock %}

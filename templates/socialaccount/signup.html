@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load category_list %}
+
+{% block title %}{{ block.super }}Social signup{% endblock %}
+
+{% block content %}
+  <div class="row mar_zero" id="main" style="min-height: 500px;">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 margin_top_30">
+      <h2 class="margin_top_15 sego word_space  _2 text-center" style="font-size: 42px;">Social Sign-up</h2>
+      <p id="social_signup" style="font-size: 18px;">{% blocktrans with provider_name=account.get_provider.name site_name=site.name %}You are about to use your {{provider_name}} account to login to
+{{site_name}}. As a final step, please complete the form below.{% endblocktrans %}</p>
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 margin_top_30">
+        <div class="row mar_zero">
+          <form class="signup" id="signup_form" method="post" action="{% url 'socialaccount_signup' %}">
+            {% csrf_token %}
+            <div class="row mar_zero">
+              <div class="col-lg-3 col-md-3 col-sm-3 hidden-xs padd_zero">
+                &nbsp;
+              </div>
+              <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" id="user_register_type">
+
+                {% if form.non_field_errors %}
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                      {% for err in form.non_field_errors %}
+                        <div class="form_error_message">{{ err }}</div>
+                      {% endfor %}
+                    </div>
+                  </div>
+                {% endif %}
+
+                <div class="row mar_zero">
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                      <label for="{{ form.username.id_for_label }}" style="color: #fff;">Username
+                        <span class="red">*</span>
+                      </label>
+                      {{ form.username|addcss:"form-control" }}
+
+                      {% if form.username.errors %}
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 error_msg padd_zero" style="margin-left: 20px;margin-top: 10px;">
+                          {{ form.username.errors }}
+                        </div>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row mar_zero">
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                      <label for="{{ form.email.id_for_label }}" style="color: #fff;">Email
+                        <span class="red">*</span>
+                      </label>
+                      {{ form.email|addcss:"form-control" }}
+
+                      {% if form.email.errors %}
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 error_msg padd_zero" style="margin-left: 20px;margin-top: 10px;">
+                          {{ form.email.errors }}
+                        </div>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+                <div class="row mar_zero">
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center margin_tb_10">
+                    <div class="form-group">
+					  <a href="{% url 'index' %}" onclick="location.href = '/'" class="btn" style="margin: 10px;padding:4px">Cancel</a>
+                      {% if redirect_field_value %}
+                        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                      {% endif %}
+                      <button type="submit" class="btn" style="margin: 10px;">Submit</button>
+                      <!--<a href="{% url 'index' %}" onclick="location.href = '/'" class="btn" style="margin: 10px;padding:4px">Cancel</a>-->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

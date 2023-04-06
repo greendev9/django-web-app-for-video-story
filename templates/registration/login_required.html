@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ block.super }}Live, Share... Make a Difference!{% endblock %}
+
+{% block content %}
+<div>{% csrf_token %}</div>
+{% endblock %}
+
+{% block js %}
+{{ block.super }}
+    <script type="text/javascript">
+        $j(document).ready(function() {
+        {% if next %}
+            var next_page = "{{ next }}";
+        {% else %}
+            var next_page = "/";
+        {% endif %}
+        document.querySelectorAll("[data='user']")[0].setAttribute('redirect', next_page);
+        document.querySelectorAll("[data='user']")[0].click();
+        });
+    </script>
+{% endblock js %}

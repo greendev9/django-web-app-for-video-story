@@ -1,0 +1,321 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ block.super }}Sperk - Profile{% endblock %}
+
+{% block content %}
+
+ 
+
+<script>
+
+  $j = jQuery.noConflict();
+
+    $j(document).ready(function () {
+      $j(document)[0].oncontextmenu = function () {
+        return false;
+      };
+      $j(document).keydown(function (event) {
+        if (event.ctrlKey == true && (event.which == '118' || event.which == '86')) {
+          event.preventDefault();
+        }
+        if (event.button == 2) {
+          alert('Sorry, this functionality is disabled!');
+          return false;
+        } else {
+          return true;
+        }
+        if (event.which === 123) {
+          return false;
+        }
+      });
+    });
+
+
+</script>
+
+<script>
+    $j = jQuery.noConflict();
+    $j(document).ready(function () {
+      $j("body").css("-webkit-user-select", "none");
+      $j("body").css("-moz-user-select", "none");
+      $j("body").css("-ms-user-select", "none");
+      $j("body").css("-o-user-select", "none");
+      $j("body").css("user-select", "none");
+    });
+
+
+</script>
+
+<script>
+    jQuery('body').bind('copy paste', function (e) {
+      e.preventDefault();
+      return false;
+    });
+
+    webLink = function (link_user, web_url) {
+
+      var message;
+      jQuery.ajax({
+        url: "/invoice/web-link/",
+        type: "POST",
+        data: {'link_user': link_user, 'web_link': web_url},
+        success: function (data) {
+          if (data.is_success) {
+            window.open(web_url)
+          }
+          else {
+            message = data.message;
+          }
+        }
+      });
+    }
+
+
+
+</script>
+
+
+<div class="row mar_zero" id="main_sperk_profile">
+  <div id="content">
+    <!--<img style="height:45px; width:60px;" src={% static 'images/logo.png' %}>-->
+    <div class="padder">
+      <div role="complementary" id="item-header">
+        <div style="display:none;" class="bp-template-notice error" id="ErrorProfile"></div>
+      </div>
+      <div class="clearfix"></div>
+      <div id="item-body">
+        <div role="main" class="profile_list gen">
+          {% for bsperk in profile_list %}
+          <div class="col-md-12 mb-2">
+		  <div class="wrap cf" >
+            <div class="col-sm-6" style="width: 92.5%;">
+              <div class="main-wrap" >
+                <!--<div class="bl-text"><b>Company Name</b></div>-->
+                <div class="blck-text" id="skitbit_company_title">{{ bsperk.company_title| default:bsperk.user.get_full_name | default:bsperk.user.username }}
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+            <div class="bus_photos business_box">
+              <ul>
+                {% for bextra_img in busniess_logo %}
+                <li>
+                  <a href="{{ bextra_img.l_img }}" data-lightbox="example-set">
+                    <img src="{{ bextra_img.l_img }}" style="margin-right: 10px; " class="comLogoImg">
+                  </a>  
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+
+           <!-- <div class="bordered" style="border: 1px solid #f9663f;margin-top: -50px;margin-bottom: 50px;"></div>-->
+             
+            {% for bsperk in profile_list %}
+            <div class="bus_photos potfolio_box">
+              <ul style="margin-left: -50px;">
+                {% for extra_img in bsperk.extra_profile_img.all %}
+                <li>
+                  <a href="{{ extra_img.profile_img.url }}" data-lightbox="example-set">
+                    <img src="{{ extra_img.profile_img.url }}">
+                  </a>
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+
+
+            <div class="bus-user-prof">
+
+              <div class="row">
+                <!--<div class="col-md-12">
+                  <div class="col-sm-6" style="margin-bottom: 10px;">
+                    <div class="main-wrap">
+                      <div class="bl-text"><b>Company Name</b></div>
+                      <div class="blck-text">{{ bsperk.company_title| default:bsperk.user.get_full_name | default:bsperk.user.username }}</div>
+                    </div>
+                  </div>-->
+                <div class="col-sm-6" style="margin: 0 0 20px 30px;">
+                  <div class="main-wrap">
+                    <div class="bl-text" style="font-size:20px;margin-bottom: 10px;color: #fff;"><img class="aligncenter" src="{% static 'images/Skitbit_4x4.png' %}" width="60" height="auto" style="border-radius: 50%;margin-right: 10px;"><b> Skitbit Offered</b>
+</div>
+                    <div class="blck-text"><p style="text-align: justify;margin-left: 65px;font-size:20px;color: #baf3c9;">{% if bsperk.incentive and bsperk.skigit_incentive and bsperk.incetive_val %}{{ bsperk.skigit_incentive }}{% else %}None offered at this time{% endif %}</p></div>
+                  </div>
+                </div>
+
+                                <div class="col-sm-6" style="margin: 0 0 20px 30px;width:100%">
+                                    <div class="main-wrap">
+                                        <div class="bl-text" style="font-size:20px;margin-left: 65px;color: #fff;"><b>Skitbit Value &#36;(USD)</b>
+                                            <div class="blck-text" style="color: #baf3c9;background-color: #5b5c91;width: 20%;text-align: center;margin: 10px 0 0 0; border-radius: 6px;" FONT-WEIGHT: 600";"><p>&#36;
+											{% if bsperk.incentive and bsperk.incetive_val %}{{ bsperk.incetive_val }}{% else %}0{% endif %}
+											
+											<!--{% if bsperk.incetive_val %}{{
+                                                bsperk.incetive_val }}{% else %}u{% endif %}-->
+												
+												</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <a
+                               href="{% url 'direct_upload'  %}?sperk={{id}}",
+                               style="color:#3f55cc; margin: 0 0 20px 45px;font-size:24px">Click to Create a Skigit for these guys
+                            </a>
+
+
+                        </div>
+
+
+            <div class="col-md-12" style="margin: 15px 0 0 30px; width:90%;font-weight: 600;">
+              <div class="main-wrap">
+                <div class=" bl-text" style="font-size: 22px;"><b>About Us</b></div>
+				<br>
+                <div class="blck-text" id="about_us"><p style="text-align: justify;">{{ bsperk.about_me }}</p></div>
+              </div>
+            </div>
+
+            <div class="row">
+
+              <div class="col-md-12" style="margin-bottom: 20px;">
+
+                <div class="col-md-12" style="margin: 20px 0 0 30px;width: 40%;"">
+
+                  <div class="main-wrap">
+
+                    <div class=" bl-text" style="font-size: 22px;">
+                      <b> Awesome Company Links </b>
+                    </div>
+
+                    <div style="font-size: 18px;">
+                      <p style="text-align: justify;">
+                        {% for links in company_url %}
+                        {% if links.disc1 %}
+                      <div>{{ links.disc1|safe|capfirst }}
+                        <span>
+                          <a id="awesome_links" oncopy="return false" oncut="return false"
+                             onpaste="return false"
+                             onclick="webLink({{ links.user.id }}, '{{ links.url1 }}')">{{ links.url1|safe }}</a>
+                        </span >
+                      </div>
+                      {% endif %}
+                      {% if links.disc2 %}
+                      <div>{{ links.disc2|safe|capfirst }}
+                        <span>
+                          <a id="awesome_links" oncopy="return false" oncut="return false"
+                             onpaste="return false"
+                             onclick="webLink({{ links.user.id }}, '{{ links.url2 }}')">{{ links.url2|safe }}</a>
+                        </span>
+                                            </div>
+                                            {% endif %}
+                                            {% if links.disc3 %}
+                                            <div>{{ links.disc3|safe|capfirst }}
+                                                <span>
+                          <a id="awesome_links" oncopy="return false" oncut="return false"
+                             onpaste="return false"
+                             onclick="webLink({{ links.user.id }}, '{{ links.url3 }}')">{{ links.url3|safe }}</a>
+                        </span>
+                                            </div>
+                                            {% endif %}
+                                            {% if links.disc4 %}
+                                            <div>{{ links.disc4|safe|capfirst }}
+                                                <span>
+                          <a id="awesome_links" oncopy="return false" oncut="return false"
+                             onpaste="return false"
+                             onclick="webLink({{ links.user.id }}, '{{ links.url4}}')">{{ links.url4|safe }}</a>
+                        </span>
+                                            </div>
+                                            {% endif %}
+                                            {% if links.disc5 %}
+                                            <div>{{ links.disc5|safe|capfirst }}
+                                                <span>
+                          <a id="awesome_links" oncopy="return false" oncut="return false"
+                             onpaste="return false"
+                             onclick="webLink({{ links.user.id }}, '{{ links.url5}}')">{{ links.url5|safe }}</a>
+                        </span>
+                                            </div>
+                                            {% endif %}
+                                            {% endfor %}
+                                            </p>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="col-sm-6" style="margin: 20px 0 0 30px;">
+
+                                    <div class="main-wrap">
+
+                                        <div class="bl-text" style="font-size: 22px;">
+                                            <b>Contact Information</b>
+                                        </div>
+											<br>
+                                        <div class="blck-text" id="contact_info">
+                                            <span><strong>Name:</strong> &nbsp;</span><span>{{ bsperk.contact_name }}</span>
+                                            <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<strong>Email: </strong> &nbsp;</span><span>{{ bsperk.contact_email }}</span>
+                                            {% if bsperk.contact_phone %}
+                                            <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<strong>Phone: </strong> &nbsp;</span><span>{{ bsperk.contact_phone }}</span>
+                                            {% endif %}
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="col-sm-6" style="margin: 20px 0 0 30px;">
+                                    <div class="main-wrap">
+
+                                        <div class="bl-text" style="font-size: 22px;">
+                                            <b>Corporate location</b>
+                                        </div>
+										<br>
+                                        <div class="blck-text" id="corporate_loc">
+                                            <span>{{ bsperk.city }}, {{ bsperk.state }}, {{ bsperk.country }}</span>
+                                            {% if bsperk.zip_code %}
+                                            <span>{{ bsperk.zip_code }}</span>
+                                            {% endif %}
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                {% endfor %}
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+     </div>
+
+    <style>
+.close-skigit{
+	z-index:1!important;
+ 
+}
+
+    </style>
+
+    {% if video_detail and request.user %}
+    <hr>
+    <div class="endless_page_template ml-5 mr-5">
+        {#{% include 'includes/embed_skigit.html' %}#}
+        {% include 'includes/skigit_list.html' %}
+    </div>
+    {% endif %}
+
+    <script type="text/javascript" src="{% static 'js/lightbox-plus-jquery.min.js' %}"></script>
+</div>
+  
+
+{% endblock %}
+{% block js %}
+<script>jQuery.endlessPaginate({paginateOnScroll: true});</script>
+{% endblock %}

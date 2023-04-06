@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{{ block.super }}Guidelines{% endblock %}
+
+{% block main-header-block %}
+    {% if not mobile_api_request %}
+        {{ block.super }}
+    {% endif %}
+{% endblock main-header-block %}
+
+{% block content %}
+  <div class="row mar_zero" id="main">
+    <div class="wrap cf">
+      <div id="content" role="main">
+        <div class="post-718 page type-page status-publish hentry" id="post-718">
+          <div class="page-content rich-content innerPageContent" style="margin: 15px;">
+            <h1>
+			
+			<!--<span id="heart-logo"> <img src="https://static.skigit.com/images/giving_heart.png" width="125" style="/* margin-bottom:20px; *//* position: absolute; */" alt=""></span>-->
+			
+              <center style="border-radius: 40px;padding: 6px 6px 8px 6px;width: 75%;display: inline-block;margin-left: 10%;">This is What Makes <span style="font-family: segoe print;font-weight: bold;color: #1c6890;">Skigit</span> So Fun!&nbsp;
+                </center>
+            </h1>
+            <p> Skigits can be in any style but we recommend you depict the subject at
+              the heart of your experience. Make your Skigit about something, someone or someplace that has special
+              meaning to you. Let the whole world know about it in a way that allows others to connect with you and your
+              expressive style.</p>
+            <p>Think of it this way, you can use your favorite people, places, things and activities as props to</p>
+<br>
+           <ul>
+              <li>Highlight it's fantastic and remarkable value to the world.</li>
+              <li>Create a dramatic story depicting how it’s affected your life and why it means so much to you.</li>
+              <li>Create a fantasy using your awesome subject with the cast of your choosing.</li>
+              <li>Put your Skigit to music and harmonize your favorite thing.</li>
+              <li>Make others laugh hysterically with your special brand of wit and humor .</li>
+              <li>"Plug-in" to Skigits and create groups of like-minded followers.
+              </li>
+              <li>Show-off your favorite thing in any Skigit-friendly manner you wish.</li>
+            </ul>
+			<br>
+            <p>If you have any questions about how to sign up for Skigit or upload videos, visit Skigit’s FAQ page at <a
+                href="{% if mobile_api_request %}{% url 'aboutus_api_url:faq_view_api' %}{% else %}{% url 'about_us_url:faq_view' %}{% endif %}" style="color: #027bb8;">http://www.skigit.com/faq.</a></p>
+            <br>
+			<span class="imgLeft"><img src="{% static 'images/skigit_friendly.png' %}"   style="Margin-left:-12px; border-radius: 50%;" width="116.66" alt=""></span>
+			<h3 style="margin: 25px 0 0 0 !important;">Make your video “Skigit-Friendly”</h3>
+            <div class="clearfix"></div>
+            <p><br>Skigit is most fun when you</p>
+
+            <ul>
+              <li>categorize your Skigit appropriately in the <strong>My Skigit Category</strong> and <strong>My Subject
+                Category</strong> fields.
+              </li>
+              <li>identify makers, resellers and proprietors of your subject in the<strong> My awesome thing was made
+                by</strong> fields to help viewers learn more about the maker.
+              </li>
+              <li>add the makers logo in the <strong>Spice up your Skigit thumbnail... </strong> so that viewers can get
+                more information about you’re maker. The logo will appear in the thumbnail giving users a direct link to
+                the maker's profile page and your item's information.
+              </li>
+              <li>help viewers learn where to purchase your item by entering the website link in the <strong>I bought my
+                awesome thing at </strong>field.
+              </li>
+              <li>provide insight to viewers in your own words, in the <strong>Why my awesome thing rocks! </strong>field
+                and explain why your awesome thing is so awesome!
+              </li>
+            </ul>
+			
+			<br>
+			<span class="imgLeft"><img src="{% static 'images/skigit_unfriendly.png' %}"   style="Margin-left:-12px; border-radius: 50%;" width="106.6" alt=""></span>
+			<h3 style="margin: 25px 0 0 0 !important;">What is  “Skigit-Unfriendly?”</h3>
+            <div class="clearfix"></div>
+            <p><br>In addition to our Acceptable Use Policy, we at Skigit will not allow you to create Skigits that harm or damage a maker or person in any way. Harmful and unfriendly Skigits will be rejected as soon as we identify them. After all, we're about bringing people and their favorite things together.</p>
+			
+			
+			
+			<br>
+            <span class="imgLeft"><img src="{% static 'images/Drama-Wacki_4x4_fun.png' %}"   style="border-radius: 50%;  margin-left: -20px;" width="136.66" alt="" ></span>
+            <h3 style="margin: 50px 0 0 0 !important;border-radius: 50%;">Just here for the Drama</h3>
+            <div class="clearfix"></div>
+ 
+            <p>Create a story about your awesome thing. Add a plot, interesting characters and add your creativity for
+              others to see. Convey the heart-felt meaning of your awesome thing by evoking emotion, make a connection,
+              drawing viewers into your world.</p>
+			  <br>
+
+            <span class="imgLeft"><img src="{% static 'images/Demo_4x4_fun.png' %}"   style="border-radius: 50%;" width="116.66" alt=""></span>
+            <h3 style="margin: 50px 0 0 0 !important;">Let Me Show You Where to Put That</h3>
+            <div class="clearfix"></div>
+            <p>Provide a physical demonstration and highlight the features of your awesome thing. Show off all of it’s
+              great features for the whole world to see. Make use of flashy catchphrases, repeat basic ideas or employ
+              scientist-like characters, celebrities or a guest host in your Skigit. Be witty, creative, colorful and
+              innovative but remember to keep it tasteful.</p>
+			  <br>
+
+            <span class="imgLeft"><img src="{% static 'images/Selfie_4x4_fun.png' %}" style="border-radius: 50%;" width="116.66" alt=""></span>
+			<br>
+            <h3 style="margin: 20px 0 0 0 !important;">I'll do Me, You do You</h3>
+            <div class="clearfix"></div>
+            <p>Are you serious? A self-portrait video, typically taken with a hand-held digital camcorder or video
+              phone? We say “just do it” with your camcorder held at arm’s length or in a mirror, and include either
+              yourself or as many people as can be in focus. But don’t forget to include your awesome thing. Why not
+              even include your friends and make it a "Group Selfie"?</p>
+			  <br>
+
+            <span class="imgLeft"><img src="{% static 'images/Vibraskigit_4x4_fun.png' %}" style="border-radius: 50%;" width="116.66" alt=""></span>
+            <br>
+            <h3 style="margin: 25px 0 0 0 !important;"> Where Words Fail, Music Speaks</h3>
+  
+            <div class="clearfix"></div>
+            <p>Create a Skigit vibe using music, song and dance with a catchy melody,
+              mesmerizing harmony, a thunderous beat or all of the above. Get your friends, family or even coworkers to sing the praises
+              of your favorite thing. Let it all hang out - well, almost all of it!</p>
+            <span class="imgLeft"><img src="{% static 'images/Wacki_4x4_fun.png' %}" style="border-radius: 50%;margin-left:4px" width="106.66" alt=""></span>
+            <br>
+
+            <h3 style="margin: 20px 0 0 0 !important;">Normal is Overrated</h3>
+            <div class="clearfix"></div>
+ 
+            <p>Make your Skigit funny, zany or even kooky! Inject a healthy dose of side-splitting wackiness! Show off your lighter
+              side while letting others know why your thing is so cool. Don’t hold back any of that creative energy but
+              don’t get too carried away and remember to keep it tasteful.</p>
+			  <br>
+
+            <span class="imgLeft"><img src="{% static 'images/plug_fun.png' %}" style="border-radius: 50%;margin-left: 20px;" width="96.66" alt=""></span>
+			<h3 style="margin: 45px 0 0 130px !important;">Plug a Skigit</h3>
+            <div class="clearfix"></div>
+ 
+            <p>You can plug into existing Skigits by creating a "Plugin Skigit" that features either the same awesome
+              thing, brand, maker, proprietor, person, team, activity, place… you get the idea. Plug in and make one
+              ginormous Superskigit that connects you with others. That’s what we’re talkin’ ’bout!</p>
+
+          </div>
+        </div>
+        <!--end .hentry-->
+
+      </div>
+      <!--end #content-->
+
+    </div>
+  </div>
+{% endblock %}

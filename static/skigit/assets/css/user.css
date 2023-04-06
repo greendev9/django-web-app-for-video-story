@@ -1,0 +1,73 @@
+/* user css*/
+.sub-btn{width:100%}
+.left-bar{float:none;padding:0;}
+.thumb-up, .thumb-down, .rate-up, .rate-down{border:1px solid #CCCCCC;}
+.list-bkg{background-color:#8eb4e1 !important;}
+.rate-up{background-color:#92d14c;}
+.rate-down{background-color:#fe0000;}
+.border-top{border:none !important}
+.chart-box{width:100% !important;height:200px;border:1px solid #666666;}
+.chart-box-1{width:100% !important;height:425px;border:1px solid #666666;}
+.chart-txt{margin:5px;padding:0; text-align:center !important}
+.form-control-a{width:97% !important}
+.infobox-data{background-color: #fff;border:1px solid #d5d5d5;width:20% !important; height:116px;text-align:center;}
+.activeted{-moz-border-bottom-colors: none;-moz-border-left-colors: none;-moz-border-right-colors: none;-moz-border-top-colors: none;border-color: #ddd;border-image: none;border-style: solid;border-width: 2px 2px 2px 2px;}
+.dataTable{width:100% !important;}
+.sidebarexpand:before{    width: 190px !important;}
+.sidebarexpand{width: 190px !important;}
+.navbar{min-height: 60px;}
+.navbar .navbar-brand{padding-top: 18px;}
+.ace-nav>li{line-height: 62px;height: 59px;}
+.ace-nav>li>a>.badge{top: -2px;padding-right: 6px;padding-left: 6px;}
+.userDropDown{       width: 158px;
+    height: 30px !important;
+    margin-top: 2px;
+    margin-left: 22px;
+    padding-top: 0px;}
+	.sidebarexpand {
+    width: 190px !important;
+}
+.pricing-span{
+        width: 100%;
+    max-width: 340px !important;
+}
+input.editplanfields {
+    width: 96%;
+}
+.radioButton label,.myradioButton label{margin-bottom:0px;}
+li.radioButton {
+        padding: 10.6px 0px;
+}
+li.myradioButton {
+    padding: 11px 0px;
+}
+.marginB10{margin-bottom:10px;}
+.editPricingPanel:hover{    transform: inherit;}
+.message-navbar .nav-search{
+    left: 0px;
+    top: -24px;	
+	}
+	img.nav-user-photo.notificationUsers {
+    border-radius: 50%;
+    box-shadow: 0 0 2px 1px #9A9A9A;
+}
+.sortDropDown{left: -43px !important;}
+.adminMultiselect{    width: 285px;
+    text-align: left;    border-width: 1px !important;}
+.adminMultiselect .fa{float:right;} 	
+	.myMultiselect>li>a>label{    padding: 3px 20px 3px 6px !important;}
+	.marginR5{margin-right:5px;}
+	
+	.message-item .summary .text{    cursor: default;}
+	.message-item .summary .text:hover{text-decoration:none;}
+	.marginT50{margin-top:50px;}
+	.active{font-weight: 700;}
+	.height260{    height: 260px;}
+	.pricingBtn{
+	margin-left: 300px;
+    margin-top: 21px;
+    margin-bottom: 30px;
+	}
+	.pricing-box-small .price{
+	    height: 33px;	
+	}

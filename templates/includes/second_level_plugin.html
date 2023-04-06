@@ -1,0 +1,70 @@
+{% load static %}
+{% load thumbnail %}
+
+  {% if vid.second_level_plugins  %}
+{% for video in vid.second_level_plugins %}
+  <div class="single-plugin">
+    <a href="{% url 'skigit_data' video.pk %}"
+           title="Play {{ video.title }} Skigit" class="skigit_playback hidden-xs hidden-sm"
+           data-skigit="#{{video.pk}}">
+
+      <div class="mar_zero ">
+        <div class="padd_zero">
+          {% thumbnail video.skigit_id.thumbnails.all.0.get_absolute_url "x200" as im %}
+          <img alt="skigit" src="{{ im.url }}" class="lazy skigit-thumbnail">
+          {% endthumbnail %}
+
+        </div>
+        <div class="pull-right skigit_creator_logo" id="second_level_logo">
+          {% if video.business_logo.id %}
+            {% if video.made_by and video.business_logo.is_deleted == False %}
+              {% if request.user.is_authenticated %}
+                <a onclick="logoclick({{ video.business_logo.id }},'{% url 'sperk_profile' video.made_by.id video.business_logo.id %}')"
+                 id="profile_hover{{ video.id }}">
+              {% else %}
+                <a onclick="openMessage()">
+              {% endif %}
+                {% if video.business_logo %}
+                  {% thumbnail video.business_logo.logo "x200" as im %}
+                    <img class="img-responsive image-business lazy"   id="second_level_logo"
+                         src="{{ im.url }}" data-vid="{{ video.id }}"
+                         alt="{{ video.skigit_id.user.username }}"/>
+                  {% endthumbnail %}
+                {% endif %}
+              </a>
+            {% else %}
+              {% for def in default_logo %}
+                {% if def.made_by == video.made_by.id %}
+                  {% if video.business_logo %}
+                    {% if request.user.is_authenticated %}
+                      <a href="{% url 'sperk_profile' def.made_by def.business_logo.id %}"
+                       data-vid="{{ video.id }}"
+                       class="image-business">
+                    {% else %}
+                      <a onclick="openMessage()">
+                    {% endif %}
+                      {% thumbnail def.business_logo.logo "x200" as im %}
+                        <img class="img-responsive"
+                             src="{{ im.url }}" class="lazy"/>
+                      {% endthumbnail %}
+                    </a>
+                  {% endif %}
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+          {% endif %}
+
+        </div>
+      </div>
+
+    </a>
+  </div>
+{% endfor %}
+{% if vid.second_level_plugins_count > 8  %}
+  <div class="btn-more">
+    <a href="{% url 'skigit_plugins' vid.id %}"  class="btn btn-primary btn-xs">More</a>
+  </div>
+{% endif %}
+  {% else %}
+  <div class="col-lg-12">Displaying level-1 Plugins. No level-2 Plugins have been created at this time.</div>
+  {% endif %}

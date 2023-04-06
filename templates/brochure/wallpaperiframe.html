@@ -1,0 +1,63 @@
+{% load static %} {% load i18n %}
+<html>
+
+<head>
+  <script type="text/javascript" src="{% static 'js/jquery-2.2.4.min.js' %}"></script>
+    <title>
+        Brochure | Skigit
+    </title>
+    <link rel="shortcut icon" href="{% static 'skigit/favicon.ico' %}">
+    <link rel="apple-touch-icon" href="{% static 'skigit/apple-touch-icon.png' %}">
+    <link rel="stylesheet" href="{% static 'skigit/css/app.css' %}">
+</head>
+<style>
+
+/*--------------wallpaper print CSS---------------------*/
+
+    .wl_logo_1 {
+        position: absolute;
+        right: 17%;
+        top: 7%;
+        width: 10%;
+        height: 8%;
+        z-index: 100;
+        border-radius: 50%;
+    }
+    
+    .wl_qr {
+        position: absolute;
+        right: 30%;
+        top: 7%;
+        width: 11%;
+        height: 8%;
+        z-index: 100;
+        border-radius: 0.5em;
+    }
+    
+    .img_fit11 {
+        height: 1100px;
+        width: 100%;
+        border-radius: 0.5em;
+    }
+    
+    .box_wl {
+        margin: 0 auto;
+        display: table;
+        position: relative;
+        text-align: center;
+    }
+</style>
+
+<body>
+
+    <section style="margin: 15px;">
+        <div class="box_brocherr" id="post_canvas" style="text-align: center;">
+            <img class="img_fit11" src="{{poster_1}}" id="id_brochure_img" />
+            <img class="wl_logo_1" id="id_b_brochure" src="{{ poster_obj.b_logo }}">
+            <img class="wl_qr" id="id_qr_code_1" src="{% if profile.qr_code %}{{ profile.qr_code.url }}{% else %}#{% endif %}">
+        </div>
+    </section>
+
+</body>
+
+</html>

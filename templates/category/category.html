@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    
+  </head>
+  <body>
+ {% for cat in category%}
+    {{cat.cat_name}}<br/>
+    <small>[ <a href="{{ cat.get_absolute_url}} ">{{ cat.cat_name}}</a> ]</small><br>
+ {% endfor%}
+ 
+  </body>
+</html>

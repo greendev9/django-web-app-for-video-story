@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load category_list %}
+
+
+{% block content %}
+<style>
+        .profile-form{font-size:13px;}
+        .profile-form h4{ color:#000 !important; font-size:14px; line-height:20px;  }
+        .profile-form h5.note{color:#FF0000 !important; text-align:center; font-size:14px; font-weight:bold; font-family:"LaoUI"; }
+        .profile-form .btn{ border-radius:30px !important; -moz-border-radius:30px !important; -webkit-border-radius:30px !important; -o-border-radius:30px !important;color:#fff !important;  padding: 5px 25px !important;  }
+        .profile-form .btn:hover{  color:#ff0 !important;  }
+        .profile-form .btn.yel{ color:#ff0 !important;   }
+        .profile-form .btn.yel:hover{  color:#fff !important;  }
+        .profile-form .panel{margin-bottom:0px; border-radius:0; -moz-border-radius:0; -webkit-border-radius:0; -o-border-radius:0; box-shadow: none !important;}
+        .profile-form .panel.panel-primary{border:none !important;}
+        #enotification_div .profile-form .panel-primary > .panel-heading {   background:#eaeaea !important;     color: #000; border-radius:0; -moz-border-radius:0; -webkit-border-radius:0; -o-border-radius:0; font-size:15px; font-weight:bold; border-bottom:0 !important; padding:4px 15px;}
+        #enotification_div .profile-form .panel-primary > .panel-body{padding:4px 15px;}
+       
+         
+        .profile-form .blue-text{color:#037bb8; font-size:18px; line-height:70px;}
+        .profile-form .blue-text a{color:#037bb8;}
+        .profile-form .text-center{text-align:center;}
+		
+		.profile-content {
+		width:105.6%;
+      }
+
+.profile-sidebar {
+  width: 92.5%;
+}
+
+</style>
+<div class="row profile white-back">
+  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12" style="margin-left: -15px;">
+      <div class="profile-sidebar" id="adjust_2">
+        <div class="profile-usermenu padd-left ">
+          <ul class="nav">
+            <li><a href="{% url 'user_profile' %}">Member Profile </a></li>
+			
+   {% if is_business %}	  
+			   <div  class="hidden-xs hidden-sm" >
+					<li><a href="/brochure-preview" style="margin-left: 15px;">View/Print Brochure</a></li>
+					<li><a href="/wall-poster-preview" style="margin-left: 15px;">View/Print Wall Poster</a></li>
+				</div>
+                <li><a href="{% url 'user_payment_setup' %}">Invoice History</a></li>
+				 <li class="active"><a href="{% url 'business_analytics' %}">Business Analytics</a></li>
+              {% endif %}
+			  
+            <li><a href="{% url 'password_change' %}">Password and Security</a></li>
+            <li><a href="{% url 'user_profile_notifications' %}">Notification Settings</a></li>
+            <li><a href="{% url 'user_profile_delete' %}">Delete My Account</a></li>
+            <li class="active"><a href="{% url 'my_statistics' %}">My Skigistats</a></li>
+             
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" style="padding-top:40px;margin-left: -7px;">
+      <div class="profile-content col-lg-12 col-md-12 col-sm-12 col-xs-12" id ="mystatistcs_profile_form">
+        <div class="row mar_zero profile-form">
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 padd_zero margin_bottom_10">
+            <h3 class="mar margin_bottom_10 " >My Skigistats</h3>
+          </div>
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 padd_statistics_panel" style="margin-bottom:15px; ">
+            
+			<img src= "{% static 'images/my_skigit.png' %}"  alt="Home Page" width="53.33" id="skigistats1"</img>
+              <div id="statistics_line_item1"> 
+                <n id="stat_title_cell">My Skigits</n>
+                <n id="stat_num_cell">{{ skigit_count }}</n>
+              </div>
+			  
+			<img src="{% static 'images/skigitology_primary_icon.png' %}"
+			alt="Home Page" width="63.33" id="skigistats2">
+              <div id="statistics_line_item2"> 
+                <n id="stat_title_cell">Primary Skigits</n>
+                <n id="stat_num_cell">{{ primary_count }}</n>
+              </div>
+
+			<img src="{% static 'images/plug.png' %}"  alt="Home Page"  width="63.33" id="skigistats3" >
+			<div id="statistics_line_item3">
+                <n id="stat_title_cell">I Plugged</n>
+                <n id="stat_num_cell">{{ plug_in_count }}</n>
+              </div>
+			  
+			  <img src="{% static 'images/skigitology_plugin_icon.png' %}" alt="Home Page" width="63.33"  id="skigistats4">
+			  <div id="statistics_line_item4">
+                <n id="stat_title_cell">Plugged Me</n>
+                <n id="stat_num_cell">{{ plug_to_my_skigit }}</n>
+              </div>
+
+				<img src="{% static 'images/heart_liked.png' %}"  alt="Home Page" width="63.33" id="skigistats5">
+              <div id="statistics_line_item5">
+                <n id="stat_title_cell">Likes</n>
+                <n id="stat_num_cell">{{ like_count }}</n>
+              </div>
+			  
+				<img src="{% static 'images/favorites_golden.png' %}" alt="Home Page" width="63.33" id="skigistats6">
+              <div id="statistics_line_item6">
+                <n id="stat_title_cell">Favorites</n>
+                <n id="stat_num_cell">{{ favorite_count }}</n>
+              </div>
+
+			<img src= "{% static 'images/Friends_4x4.png' %}" alt="Home Page" width="63.33"  id="skigistats7">
+              <div id="statistics_line_item7">
+                <n id="stat_title_cell">Friends</n>
+                <n id="stat_num_cell">{{ friend_count }}</n>
+              </div>
+
+              <img src="{% static 'images/share.png' %}" alt="Home Page"  id="skigistats8"  width="63.33">
+			  <div id="statistics_line_item8">
+                <n id="stat_title_cell">Shares</n>
+                <n id="stat_num_cell">{{ share_count }}</n>
+              </div>
+
+               
+				<img src="{% static 'images/eye.png' %}" alt="Home Page" id="skigistats9" width="63.33">
+              <div id="statistics_line_item9">
+                <n id="stat_title_cell">I'm Following</n>
+                <n id="stat_num_cell">{{ follow_count}}</n>
+              </div>
+
+				<img src= "{% static 'images/follow.png' %}"alt="Home Page" width="63.33" id="skigistats10">
+              <div id="statistics_line_item10">
+                <n id="stat_title_cell">Following Me</n>
+                <n id="stat_num_cell">{{ follow_me_count}}</n>
+              </div>
+
+              <!--<div class="skigit-follow" title="I'm Following"><b>{{ follow_count }}</b></div>
+              <div class="skigit-follow-me" title="Following Me"><b>{{ follow_me_count }}</b></div>
+              <div class="skigit-like" title="My Likes"><b>{{ like_count }}</b></div>
+              <div class="skigit-friends" title="My Friends"><b>{{ friend_count }}</b></div>
+              <div class="skigit-shares" title="My Shares"><b>{{ share_count }}</b></div>
+              <div class="plug-in-skigits" title="Skigits I Plugged into"><b>{{ plug_to_my_skigit }}</b></div>
+              <div class="plug-in" title="I've been Plugged"><b>{{ plug_in_count }}</b></div>
+              <div class="favorites" title="My Favorites"><b>{{ favorite_count }}</b></div>
+              <div class="p-skigit" title="Primary Skigit"><b>{{ primary_count }}</b></div>
+<img style="margin: 255px 0px 0px 180px;height: 170px;width: 170px;" src="https://static.skigit.com/images/video-extenshion_d_star.gif">-->
+
+          
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

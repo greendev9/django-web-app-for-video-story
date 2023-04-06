@@ -1,0 +1,12 @@
+@charset "utf-8";
+/* CSS Document */
+
+.grid-small .item{
+	float:left !important;
+}
+
+.grid-small ul li{width:235px; float:left;}
+
+.profile_div_fileds input[type="textbox"]{ width:240px !important;}
+
+.or_div{top:0px !important;}

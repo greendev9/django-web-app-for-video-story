@@ -1,0 +1,668 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load compress %}
+
+  {% block css %}
+    <link rel="stylesheet" href="{% static 'css/jquery.bxslider.min.css' %}" type="text/css" media="all"/>
+    <link rel="stylesheet" href="{% static 'css/plugin_map.css' %}" type="text/css" media="all">
+    <link rel="stylesheet" href="{% static 'css/skigit_detail.css' %}" type="text/css" media="all">
+    <style>
+        /*  loading spinner  */
+        /* Center the loader */
+        .vjs-loading-spinner {
+          -webkit-animation: spin 2s linear infinite; /* Safari */
+          animation: spin 2s linear infinite;
+        }
+
+        /* Safari */
+        @-webkit-keyframes spin {
+          0% { -webkit-transform: rotate(0deg); }
+          100% { -webkit-transform: rotate(360deg); }
+        }
+
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        /*  end spinner */
+    </style>
+  {% endblock css %}
+
+
+{% block content %}
+  <div class="p_body js__p_body"></div>
+
+  {% with skigit_id=skigit.id skigit_video_id=skigit.skigit_id.id %}
+  <div class="modal-header no-mar" id="showModalpopup" >
+    <div class="row mar_zero">
+      <div class="col-xs-12 padd_zero ski_header">
+
+
+        <div class="col-xs-12 text-center padd_zero margin_top_10">
+
+          <div class=" col-xs-12 padd_zero">
+            <div class="col-xs-12 padd_zero text-center" id="skigit_title">
+              <h2 class="modal-title f_type" id="myModalLabel">{{ skigit.title }}</h2>
+        
+        <!-- Creator information--------------------->
+      
+      <div class="creator-info">
+          <small class="f_type" id="skigit_popup_create_date">By
+        {% if not is_anonymous %}
+          <a class="blue f_type user_name_font" target="_blank"
+          href="{% url 'user_profile_display' skigit.skigit_id.user.username %}">
+          {{ skigit.skigit_id.user.username }}</a>
+        {% else %}
+          <a onclick="openMessage()" class="user_name_font" id="creator">
+          {{ skigit.skigit_id.user.username }}
+          </a>
+        {% endif %}
+          on {{ skigit.published_at|date:"F d, Y"}}
+        </small>
+        <!-------------------plugin Map----------------------->
+     <div class="plugin-map">
+          <a title="View the Plugin Map for this Skigit" data-toggle="modal" data-target="#pluginMapModal" id="plugin_map_hover">
+            <img src="{% static 'images/Plugin_map.png' %}" class="img-responsive">
+          </a>
+        </div>
+    
+      <!-----Business embed features------------------------>
+  <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 padd_zero margin_top_10" id="business_embed">
+          {% if is_business %}
+            <a id='id_embed-skigit{{ skigit_id }}' onclick="internalEmbed{{ skigit_id }}()" title="Embed Skigit">
+              <img src="{% static 'images/embed_skigit_red.png' %}" class="embed-skigit internel-embed">
+            </a>
+
+            <div id="confirmBox{{ skigit_id }}" class="f_type confirmBox">
+              <center><p><img class="embed_logo_img" src="{% static 'images/Skigit_Logo_AI_master_white.png' %}" style="width:100px;display: none;"></p>
+                Are you sure you want to Embed this Skigit into your Skigit company profile page?
+              </center>
+              <div class="del-bott">
+                <button type="button" id="ok_embed_{{ skigit_id }}">Embed</button>
+                <button type="button" id="no_embed_{{ skigit_id }}" class="btn btn-danger" style="margin: -1px 0 0 5px;">Cancel</button>
+              </div>
+              <span id="embed_success_msg"></span>
+            </div>
+
+            <a id='id_internal_embed' title="Embed My Site">
+              <img src="{% static 'images/embed_mysite_red.png' %}" class="embed-skigit embed-skigit-img">
+            </a>
+
+            <div class="embed-skigit-target">
+              <img class="close_embed pull-right" src="{% static 'images/close(32x32).png' %}" height="30"
+                   width="32"/>
+              <hr>
+              {% if embed_skigit_vid %}
+                <div>
+                  <span class="f_type">Copy and paste this code into your website</span>
+                  <div id="id_embed_script" class="embed_script" contenteditable="true" spellcheck="false">
+                    &ltiframe src="{{ request.scheme }}://{{ request.get_host }}/skigit-embed/{{ skigit.skigit_id.video_id }}/?href=
+                    {% if default_logo %}{{ default_logo.logo.url }}{% endif %}" style="border: 0;
+                    overflow:scroll; height: 400px; width: 400px;"&gt&lt/iframe&gt
+                  </div>
+                </div>
+              {% else %}
+                <div id="id_embed_ex_box{{ skigit_id }}" hidden>
+                  <span class="f_type">Copy and paste this code into your website</span>
+                  <div id="id_embed_script" class="embed_script" contenteditable="true" spellcheck="false">
+                    &ltiframe
+                    src="{{ request.scheme }}://{{ request.get_host }}/skigit-embed/{{ skigit.skigit_id.video_id }}/?href=
+                      {% if default_logo %}{{ default_logo.logo.url }}{% endif %}" style="border: 0;
+                    overflow:scroll; height: 400px; width: 400px;"&gt&lt/iframe&gt
+                  </div>
+                </div>
+                <div id="id_embed_ex_info{{ skigit_id }}">
+                  <center>
+                    <p class="f_type" style="margin-top: -10px;"><img class="embed_logo" src="{% static 'images/Skigit_Logo_AI_master_white.png' %}" style="width:120px"></p>
+                    <p class="f_type embed_web" style="margin: 20px 0 10px;">Wanna embed this Skigit into your website?</p>
+                    <p class="f_type embed_web_copy" style="margin: 0px 0 20px;">Click the Copy button to copy the code. Then paste it into your website code to embed.</p>
+
+                    <div class="del-bott">
+                      <button type="button" id="id_ex_yes_embed_{{ skigit_id }}" class="copy_btn" style="margin: 0px 0px 10px 0px;">Copy</button>
+                    </div>
+                  </center>
+                </div>
+              {% endif %}
+              <div class="preview_blk">
+                <span class="embed_preview">
+                  <a id="show_preview{{ skigit_id }}">Show Preview</a>
+                </span>
+                <div id="_show_hide{{ skigit_id }}" style="display:none">
+                  <iframe id='embed_preview{{ skigit_id }}'
+                          src="/skigit-embed/{{ skigit.skigit_id.video_id }}/?href={% if default_logo %}{{ default_logo.logo.url }}{% endif %}"
+                          class="preview_iframe"></iframe>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+    
+        </div>  
+        
+     <!-- category section----------------------->
+      <div id="category_logo" class="col-lg-2 col-md-2 col-sm-6 col-xs-6 text-right">
+          {% if skigit_category == "Just here for the Drama" %}
+            <a href="/category/dramaskigit/" class="category_color">
+              <span>Just here for the Drama</span>
+            </a>
+          {% elif skigit_category == "Where Words Fail, Music Speaks" %}
+            <a href="/category/vibraskigit/" id="catid" class="category_color">
+              <span>Where Words Fail, Music Speaks</span>
+            </a>
+          {% elif skigit_category == "Let Me Show You Where to Put That" %}
+            <a href="/category/demoskigit/" id="catid" class="category_color">
+              <span>Let Me Show You Where to Put That</span>
+            </a>
+          {% elif skigit_category == 'I\'ll do Me, You do You' %}
+            <a href="/category/selfieskigit/" id="catid" class="category_color">
+              <span>I'll do Me, You do You</span>
+            </a>
+          {% elif skigit_category == "Normal is Overrated" %}
+            <a href="/category/wackiskigit/" id="catid" class="category_color">
+              <span>Normal is Overrated</span>
+            </a>
+          {% endif %}
+        </div>
+        
+        <!-----------Social Post Icon Group----------------------->
+ <ul class="share-ico text-center" id="post_to">
+       <!--<p id="post_to_title">Post To</p>-->
+            <li>
+              <a id="fb_post" title="Post to Facebook" style="background-color: transparent;"  onclick="socialPost({{ skigit_video_id }}, {{ skigit_user_id }}, 'facebook');">
+                <img src="{% static 'images/SN_Post_FB.png' %}"  style="background-color: transparent;"  width="45.33px">
+              </a>
+            </li>
+            <li>
+              <a title="Post to Twitter" style="background-color: transparent;"   onclick="socialPost({{ skigit_video_id }}, {{ skigit_user_id }}, 'twitter');">
+                <img src="{% static 'images/SN_Post_Twitter.png' %}" style="background-color: transparent;"  width="60.33px" >
+              </a>
+            </li>
+            <li>
+              <a title="Post to Tumblr" style="background-color: transparent;" onclick="socialPost({{ skigit_video_id }}, {{ skigit_user_id }}, 'tumblr');">
+              <img src="{% static 'images/SN_Post_Tumblr.png' %}" style="background-color: transparent;" width="60.33px">
+              </a>
+            </li>
+            <li>
+              <a title="Post to Linkedin"  style="background-color: transparent;" onclick="socialPost({{ skigit_video_id }}, {{ skigit_user_id }}, 'linkedin');" >
+                <img src="{% static 'images/SN_Post_LinkedIn.png' %}" style="background-color: transparent;" width="60.33px" >
+              </a>
+            </li>
+            <li>
+              <a title="Post to Pinterest" style="background-color: transparent;"  onclick="socialPost({{ skigit_video_id }}, {{ skigit_user_id }}, 'pinterest');">
+               <img src="{% static 'images/SN_Post_Pinterest.png' %}" style="background-color: transparent;" width="45.33px">
+              </a>
+            </li>
+          </ul>
+            </div>
+          </div>
+
+        
+     
+      
+      <div class=" col-xs-12 padd_zero" id="awesome_product_category">   <!-- class = "about_your_things"  -->
+          <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 padd_zero margin_top_10" id="Category_button">
+            <a href="{{ skigit.subject_category.get_absolute_url }}" title="{{ skigit.subject_category }}" class="button" id="button_skigit_popup">
+              {% if skigit.subject_category|wordcount >= 3 %}{{ skigit.subject_category|truncatewords:3 }}  {% else %}
+                {{ skigit.subject_category }}
+              {% endif %}
+            </a>
+        </div>
+    
+        <div id="about_your_things" class="col-lg-3 col-md-3 col-sm-3 col-xs-12 padd_zero margin_top_10"  >
+          <a onclick="learnMoreClick({{ skigit_user_id }}, {{ skigit_video_id }}, '{{ skigit.bought_at_url }}')"
+                   title="Learn More About my Awesome Thing" class="button" id="button_skigit_popup_learnmore"  >Learn More
+                </a>
+        </div>
+        </div>
+      </div>
+      </div>
+            
+    
+    </div>
+  
+
+  
+  
+    <div class="modal-body no-mar">
+      <div class="modal-body no-mar">
+        <div class="te">
+        </div>
+      </div>
+      <div class="row mar_zero">
+          <div id="statistics_bar">
+
+            <ul style="padding: 0; margin: 20px 0 -5px 0;color: #5a1100;">
+              <li style="display: inline;margin: 0 25px 0 25px;"><span><label id="id_plug_count">0</label> Plugs</span></li> 
+              <li style="display: inline;margin: 0 25px 0 25px;"><span><label id="id_view_count">0</label> Views</span></li>
+              <li style="display: inline;margin: 0 25px 0 25px;"><span><label id="id_favorites">0</label> Favorites</span></li>
+              <li style="display: inline;margin: 0 25px 0 25px;"><span><label id="id_likes">0</label> Likes</span></li>
+              <li style="display: inline;margin: 0 25px 0 25px;"><span><label id="id_share">0</label> Shares</span></li> 
+              
+            </ul>
+          </div>
+    
+    
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 padd_zero">
+          <section id="iframe_margin">
+            {% if skigit.skigit_id.youtube_url %}
+      <video style="border-radius: 16px;" id='id_homeframe{{ skigit_id }}' height="360" class='video-js vjs-default-skin vjs-fill vjs-big-play-centered' controls preload='auto'
+                   poster="{{ skigit_thumbnail }}"
+                   data-setup='{"controls": true, "autoplay": false, "preload": "auto", "fluid": true, "aspectRatio":"16:9"}'>
+                   <source src='{{ skigit.skigit_id.get_absolute_url }}' type="video/youtube" />
+              <p class='vjs-no-js'>
+                To view this video please enable JavaScript, and consider upgrading to a web browser that
+                <a href='https://videojs.com/html5-video-support/' target='_blank'>supports HTML5 video</a>
+              </p>
+            </video>
+
+            {% else %}
+            <video style="border-radius: 16px;" id='id_homeframe{{ skigit_id }}' class='homeframe video-js vjs-default-skin vjs-fill vjs-big-play-centered' controls preload='auto'
+                   poster="{{ skigit_thumbnail }}"
+                   data-setup='{"controls": true, "autoplay": false, "preload": "auto", "fluid": true, "aspectRatio":"16:9"}'>
+              <source src='{{ skigit.skigit_id.get_absolute_url }}' type="video/mp4" />
+              <p class='vjs-no-js'>
+                To view this video please enable JavaScript, and consider upgrading to a web browser that
+                <a href='https://videojs.com/html5-video-support/' target='_blank'>supports HTML5 video</a>
+              </p>
+            </video>
+            {% endif %}
+          </section>
+        </div>
+      </div>
+
+      <div class="row mar_zero">
+        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 padd_zero margin_top_10" style = "width:68%;margin: 5px 0 0 15%;">
+ 
+   <div class="col-lg-8 col-md-8 col-sm-6 col-xs-6 padd_zero text-center margin_top_10 skigit_content_wrap" id="video_actions_detail_page"  " data-skigt="{{ skigit_id }}">
+          <ul id="video_actions_ul" class="list-inline" id="videoAction">
+            <li id="bug_report" class="dropdown text-center">
+              <a title="Report a Bug" dropdown-toggle data-toggle="dropdown" id= "title_hover">
+                <img src="{% static 'images/bug-report_black.png' %}" class="img-responsive" id="bug_icon"/>
+         
+              </a>
+         
+              <ul class="dropdown-menu flag-drop bug_pop">
+                <div class="descibe bug_desc">
+                 <center><img src="{% static 'images/bug-report_white.png' %}" class="bug-report-img">
+                  <h2><span id="bug_popup_title">Report a Bug</span>
+                  </h2>
+                  
+          <div class="bug-box">
+                    <form class="form-horizontal" id='bug_report_form{{ skigit_id }}' role="form">
+                      {% csrf_token %}
+                      {% if not is_anonymous %}
+                        <div class="skigit_url">
+                          <span>Skigit ID / Page URL: {{ skigit_id }}</span>
+                        </div>
+                      {% endif %}
+                      <input type="hidden" id="id_bug_skigit" name="bug_skigit" value="{{ skigit_id }}"/>
+                      <input type="hidden" id="id_bug_title" name="bug_title" value="{{ skigit.skigit_id }}"/>
+                      <input type="hidden" value="{{ skigit.title }}" id="id_bug_skigit_title" name="bug_skigit_title"/>
+                      <input type="hidden" class="form-control" id="id_bug_url" name="bug_url"
+                             value="{{ request.get_full_path }}">
+                      <div class="form-group">
+                        <div>
+                          <!--<span>Please describe the problem in detail</span>-->
+                        </div>
+                        <textarea id="id_bug_description{{ skigit_id }}" name="bug_description"
+                                  placeholder="Bug description" rows=5 class="bug_desc_text" style="max-width: 310px;"></textarea>
+                      </div>
+                      <div class="form-group">
+                        <div class="reproduce_confirm">
+                          <span>Have you been able to reproduce the bug? </span>
+                        </div>
+                      </div>
+            
+              <div class="bug_check_blk">
+                         <input id="id_repeat_yes" name="repeat" class="bugpopupradiodrop" required="True"
+                                   type="radio" value="1">&nbsp;Yes
+                            <input id="id_repeat_no" name="repeat" class="bugpopupradiodrop bug_report_no" required="True"
+                                   type="radio" value="0">&nbsp;No
+                        </div>
+                    </form>
+                    <div class="form-group mrg-top bug_box_report">
+                      <input type="button" onclick="bugSubmit({{ skigit_id }})" id="id_bug_submit1" name="bug_submit"
+                             value="Submit"/>
+                      <input type="button" id="inapp_form_can" onclick="bugCancel({{ skigit_id }})" value="Cancel"/>
+                    </div>
+                    <label class="form-group bug_msg_label"
+                           id="bug_msg{{ skigit_id }}"/>
+                  </div>
+                </div>
+              </ul>
+        
+            </li>
+            {% if not is_anonymous %}
+              <li class="text-center nav-item nav-item-first" id="plug_in_icon_adjust" style="margin: 0;">
+                <a href="{% url 'skigit_plugin' skigit_id %}"
+                   title="Plug this Skigit" class="nav-link" id= "title_hover">
+                  <img id= "plug_thumb" src="{% static 'images/plug_thumb_black.png' %}" class="img-responsive" >
+           
+                </a>
+              </li>
+              <li class="text-center nav-item" id="creator_icon_adjust">
+                <a href="{% url 'my_skigits_view' skigit_user_id %}"
+                   title="View this Artist's other Skigits" id= "title_hover">
+                  <img id= "eye_black" src="{% static 'images/eye_black.png' %}" class="img-responsive" >
+                </a>
+              </li>
+              <input type="hidden" id="id_csrf_token" value="{{ csrf_token }}">
+
+              {% if video_liked %}
+                <li class="text-center">
+                  <a class="like"  onclick="like_unlike_entry_2('like_{{ skigit_video_id }}', {{ skigit_video_id }},{{skigit_id}})" id="like_{{ skigit_video_id }}"
+                     data-userid="1" title="Unlike" data-pid="{{ skigit_video_id }}" >
+                    <img  id= "heart_thumb" src="{% static 'images/heart_liked.png' %}" class="img-responsive"/>
+                  </a>
+                </li>
+              {% else %}
+                <li class="text-center">
+                  <a class="unlike" onclick="like_unlike_entry_2('like_{{ skigit_video_id }}', {{ skigit_video_id }}, {{skigit_id}})" id="like_{{ skigit_video_id }}"
+                     data-userid="1" title="Like" data-pid="{{ skigit_video_id }}" >
+                    <img id= "heart_thumb"src="{% static 'images/heart_unliked.png' %}" 
+                         class="img-responsive"  />
+                  </a>
+                </li>
+              {% endif %}
+              {% if video_follow %}
+                <li class="followspan">
+                  <a_follow  onclick="un_follow_follow()" id="follow_{{ skigit_user_id }}"
+                     class="unfollow" data-cuid="{{ skigit_user_id }}"
+                     title="Unfollow this Artist" >
+                    <img id= "follow-golden" src="{% static 'images/follow-golden.png' %}" class="img-responsive">
+                  </a_follow >
+                </li>
+              {% else %}
+                <li class="followspan">
+                  <a_follow onclick="un_follow_follow()" data-id="{{ request.user.id  }}" id="follow_{{ skigit_user_id }}"
+                     class="follow" data-cuid="{{ skigit_user_id }}"
+                     title="Follow this Artist">
+                    <img id= "follow-golden" src="{% static 'images/follow.png' %}" class="img-responsive">
+                  </a_follow >
+                </li>
+              {% endif %}
+              <li class="text-center libnk_skigitshair">
+                <a class="skigit_share" data-id={{skigit.id}}  data-target="#share-modal" title="Share this Skigit" id="title_hover"
+                    data-toggle="modal"
+                   id="share_popoverr1{{ skigit_id }}" >
+                  <img id="share_thumb" src="{% static 'images/share_thumb_black.png' %}"
+                       class="share text-center">
+              </li>
+
+              {% if not video_favorite %}
+                <li class="text-center">
+                  <a class="unfavorite" onclick="fav_un_fav()" id="fav_{{ skigit_video_id }}"
+                     data-userid="1" title="Favorite this Skigit" 
+                     data-pid="{{ skigit_video_id }}" >
+                    <img id= "favorites_golden" src="{% static 'images/favorites_golden.png' %}" class="img-responsive" />
+                  </a>
+                </li>
+              {% else %}
+                <li class="text-center">
+                  <a class="favorite" onclick="fav_un_fav()" id="fav_{{ skigit_video_id }}"
+                     data-userid="1" title="Unfavorite this Skigit"
+                     data-pid="{{ skigit_video_id }}">
+                    <img  id= "favorites_golden" src="{% static 'images/favorites.png' %}" class="img-responsive"/>
+                  </a>
+                </li>
+              {% endif %}
+            {% else %}
+              <li class="text-center plugin-adjust" id="plug_in_icon_adjust">
+                <a onclick="openMessage()" title="Plug this Skigit" id= "title_hover">
+                  <img  id= "plug_thumb" src="{% static 'images/plug_thumb_black.png' %}" class="img-responsive" style="margin-top: -2px;">
+ 
+        </a>
+         
+              </li>
+              <li class="text-center view-other-creators" id="creator_icon_adjust">
+                <a onclick="openMessage()"   title="View Artist's other Skigits" id= "title_hover">
+                  <img id= "eye_black" src="{% static 'images/eye_black.png' %}"  class="img-responsive">
+                </a>
+              </li>
+              <li class="text-center">
+                <a class="liked" onclick="openMessage()"  title="Like" >
+                  <img id= "heart_thumb"  src="{% static 'images/heart_unliked.png' %}" class="img-responsive" />
+                </a>
+              </li>
+
+              <li class="followspan">
+                <a onclick="openMessage()"  title="Follow this Artist"  >
+                  <img id= "follow-golden" src= "{% static 'images/follow.png' %}" class="img-responsive">
+                </a>
+              </li>
+              <li class="text-center" style="margin-top: 8px;">
+                <a onclick="openMessage()"  title="Share this Skigit" >
+                  <img  id= "share_thumb" style="margin-top: -8px;" src="{% static 'images/share_thumb_black.png' %}" class="img-responsive">
+                </a>
+              </li>
+              <li class="text-center">
+                <a class="favorites" onclick="openMessage()"
+                   title="Favorite this Skigit">
+                  <img id= "favorites_golden" src="{% static 'images/favorites_golden.png' %}" class="img-responsive" />
+                </a>
+              </li>
+            {% endif %}
+
+            <li class="text-center" id="statistic">
+              <!--<a id='id_statistic' title="Skigit Statistics" onclick="get_statistics_count({{ skigit.id }})">
+                <img src="{% static 'images/statistics.png' %}" class="img-responsive count-s" >
+              </a>-->
+
+              <div class="count-target">
+                <span class="glyphicon glyphicon glyphicon-triangle-top"></span>
+        
+        <p>
+              <img loading="lazy" alt="Skigit logo" src="{% static 'images/statistics.png' %}"  style="margin: 0 0 0 40%;background-color: #e1eef9;border-radius: 50%;padding: 6px;width: 48.333px;">
+            </p>
+        
+              </div>
+            </li>
+
+
+              <li class="text-center" id="copyright">
+                <a title="Submit a Copyright Complaint"  id="title_hover"  href="{% url 'copyright_infringement' skigit_id %}">
+                  <img
+                     id= "copyright_black"  src="{% static 'images/copyright_black.png' %}" class="img-responsive" >
+                </a>
+              </li>
+              <li id="inappropriate" class=" dropdown text-center"  >
+                <a title="Flag this Skigit as Inappropriate" id="title_hover" dropdown-toggle data-toggle="dropdown">
+                  <img
+                      id= "flag"  src="{% static 'images/flag.png' %}" class="img-responsive" id="flag_icon" >
+                </a>
+                <ul class="dropdown-menu flag-drop">
+                  <div class="descibe">
+                    <!--<span class="glyphicon glyphicon glyphicon-triangle-top"></span>-->
+                    <center><img  id= "flag"  src="{% static 'images/flag_white.png' %}" class="flag-icon-big-img">
+
+                    <h2>Inappropriate Skigit</h2>
+                    <div class="reason-box">
+                      <form action="" method="post" id="inapp_form{{ skigit_id }}">
+                        <!--<b style="font-weight: normal;"> Reason:</b>-->
+                        {% for reasion in all_reason %}
+                          <div class=" form-group list-group-item reason-blk">
+                            <label class="reason-label">
+                              <input type="radio" skigit_reasons="{{ reasion.id }}" skigit_id="{{ skigit_video_id }}"
+                                     value="{{ reasion.id }}" id="{{ reasion.id }}" name="skigit_reasons"/>
+                              {{ reasion.reason_title }}
+                            </label>
+                          </div>
+                        {% endfor %}
+                        <input type="hidden" name="csrfmiddlewaretoken" value="$csrf_token"/>
+                      </form>
+                      <div class="form-group mrg-top flag_btn">
+                        <input type="button" onclick="flagSubmit({{ skigit_id }})" id="inapp_form_sub" value="Submit">
+                        <input type="button" onclick="flagCancel({{ skigit_id }})" id="inapp_flag_can" value="Cancel">
+                      </div>
+                      <div class="form-group mrg-top flag_message">
+                        <label class="form-group print_family"
+                               id="flag_msg{{ skigit_id }}"/>
+                      </div>
+                    </div>
+                  </div>
+                </ul>
+              </li>
+
+              <li class="text-center" id="comments">
+                <a class="comments"
+                   title="Post Comments on Skigit and Facebook " data-toggle="modal" data-target="#commentsModal" >
+                  <img id="comments" src="{% static 'images/Comments.png' %}" class="img-responsive" />
+                </a>
+              </li>
+          </ul>
+        </div>
+       </div>
+     
+     {% if skigit.add_logo and default_logo.logo.url and skigit.get_profile_img.business_verified %}
+          <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6 padd_zero text-center margin_top_10" id="video_logo">
+                {% if not is_anonymous %}
+                  <a href="javascript:void(0);" onclick="logoclick({{ default_logo.id }}, '/sperk/{{ skigit.made_by.id }}/{{ default_logo.id }}/');return true;">
+                {% else %}
+                  <a onclick="openMessage()" >
+                {% endif %}
+                  <img class="img-responsive" id="bs_logo" src="{{ default_logo.logo.url }}"/>
+                </a>
+         </div>
+       {% endif %}
+
+      </div>
+      <div class="row mar_zero share-ico">
+        <div class="col-lg-3 col-md-3"></div>
+      </div>
+	  
+	           
+	  
+	        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 margin_top_10 padd_zero sm-txt" id="quote-block">
+<div  id="about_this_skigit" style="font-size:24px">About this Skigit</div>			
+        <p class="title_vediocontain" id="why_rocks_full" style="display:none">
+       
+          {{ skigit.why_rocks }}
+          <a onclick="hide_Text()" class="why_rock_more" id="hide_text" name="hide_text">
+            Show less
+          </a>
+        </p>
+    
+        <p class="title_vediocontain" id="why_rocks_half">
+           {{ skigit.why_rocks|truncatewords:40 }}
+          {% if skigit.why_rocks|wordcount > 40 %}
+            <a onclick="read_More()" class="read-more" id="read_more" name="read_more">
+              Read more
+            </a>
+          {% endif %}
+        </p>
+      </div>
+
+      <div class="row mar_zero">
+        <div id="" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+          <input type="hidden" id="id_time_zone" name="time_zone" value="">
+ 
+        </div>
+      </div>
+
+    </div>
+    <span class="hide" id="social-share-url">https://{{ request.get_host }}/skigit_data/{{ skigit_id }}/</span>
+    
+    <div class="row mar_zero f_type">
+    
+    </div>
+
+    <div class="txt_bxhead">
+      <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 pull-right">
+
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 recommended-text">
+          <span class="txt_bxsldhead">Recommended Just for You</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mar_zero f_type">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 padd_zero">
+        <div id="ca-container" class="ca-container">
+          <div class="ca-wrapper">
+            <div class="slider1">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<script>
+    $j = jQuery.noConflict();
+    $j('#showModalpopup').css('pointer-events','none');
+    $j('.vjs-big-play-button').css('display','none');
+    $j('.vjs-loading-spinner').css('display','block');
+    $j('.vjs-loading-spinner').css('visibility','visible');
+    if(document.readyState === 'ready' || document.readyState === 'complete') {
+      $j('#showModalpopup').css('pointer-events','auto');
+      $j('.vjs-big-play-button').css('display','block');
+      $j('.vjs-loading-spinner').css('display','none');
+    } else {
+      document.onreadystatechange = function () {
+        if (document.readyState == "complete") {
+          $j('#showModalpopup').css('pointer-events','auto');
+          $j('.vjs-big-play-button').css('display','block');
+          $j('.vjs-loading-spinner').css('display','none');
+        }
+      }
+    }
+</script>
+<!-- Modal -->
+<div id="commentsModal" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+        <div class="modal-header fixed-modal-header">
+
+            <p id="comment_box{{ skigit_id }}" class="title_commentscontain f_type comment_blk">
+              <span>Comment on this Work of Art</span>
+              <span id="btn_fb_comment_expand{{ skigit_id }}" title="Hide" class="fb_cmm_expand"> ... </span>
+            </p>
+        </div>
+      <div class="modal-body comment-modal-body">
+          <div class="loader"></div>
+          <div id='div_{{ skigit_id }}' class="row mar_zero margin_top_10 fb-comment-blk">
+
+
+            <div id="fbcomment{{ skigit_id }}" class="fb-comment-load-blk">
+              <center><img src="{% static 'images/inf_loading.gif' %} " id="fb_loader" style="display: none"></center>
+              <div class="fb-comments"
+                   data-href="https://{{ request.get_host }}/skigit_data/{{ skigit_id }}/#configurator{{ skigit_id }}"
+                   data-width="850" data-numposts="2"></div>
+            </div>
+
+          </div>
+      </div>
+      <div class="modal-footer fixed-modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% include 'includes/plugin_map.html' %}
+
+    <!-- follow modal box -->
+<div class="overlay"></div>
+<div id="followBox">
+  <div class="follow-blk">
+    <p>
+      <img src="{% static 'images/Skigit_Logo_AI_master_white.png' %}" alt="Skigit logo" class="follow-blk-logo">
+    </p>
+
+    <p id="confirm_logout_text" class="follow-myself-error">Cmon, follow yourself, really?!!!</p>
+
+    <div class="del-bott close-follow">
+      <button type="button" onclick="close_followBox()" id="ok_logout_logo" style="width: 115px!important;">Not Happening</button>
+    </div>
+  </div>
+</div>
+{% endwith %}
+{% endblock content %}
+
+{% block js %}
+  {% include 'includes/skigit_data_js.html' %}
+{% endblock js %}
+

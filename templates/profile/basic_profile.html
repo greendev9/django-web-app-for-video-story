@@ -1,0 +1,2075 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load category_list %}
+
+{% block content %}
+  <style>
+     .coupon-img-load-progress .progress{width: 206px;margin-left: 90px;}
+  </style>
+  <script type="text/javascript" src="{% static 'js/lightbox-plus-jquery.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/dropzone.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/packages/jquery.validate-1.11.1.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/jquery.maskedinput.min.js' %}"></script>
+  <script src="{% static 'js/jquery.progresstimer.js' %}"></script>
+  <script>
+    $j = jQuery.noConflict()
+
+    profileFormValidation = function () {
+        $j.validator.addMethod("customdigits",
+          function (value, element) {
+            return value != '000-000-0000';
+          }, 'Please enter a valid phone number.'
+        );
+        $j.validator.addMethod("validPhone",
+          function (value, element) {
+            var res = false
+            $.ajax({
+                  url: '/api/v1/check_phone_validity/',
+                  type: 'POST',
+                  async: false,
+                  data: {
+                    "phone_number": value,
+                    "country_code": $j("#country_field :selected").val()
+                  },
+                  success: function (data) {
+                    res = data.isValid
+                  }
+            });
+            
+            return res;
+          }, 'Please enter a valid phone number.'
+        );
+        $j.validator.addMethod("customemail",
+          function (value, element) {
+            return /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/.test(value);
+          }, 'Please enter a valid email address.'
+        );
+        $j.validator.addMethod('website', 
+
+          function(value, element) {
+            var urlregex = /^(https?|http|ftp):\/\/([a-zA-Z0-9.-]+(:[a-zA-Z0-9.&%$-]+)*@)*((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3}|([a-zA-Z0-9-]+\.)*[a-zA-Z0-9-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(:[0-9]+)*(\/($|[a-zA-Z0-9.,?'\\+&%$#=~_-]+))*$/;
+            return urlregex.test(value);
+          }, "Please enter the valid website url address."
+        );
+        $j.validator.addMethod("urls", 
+
+          function (value, element) {
+            var urlregex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
+            return urlregex.test(value);
+          }, 'Please enter the valid url'
+        );
+        $j.validator.addMethod("ein", 
+
+          function (value, element) {
+            var einregex = /^([0-9]{2})-([0-9]{7})$/;
+            return einregex.test(value);
+        }, 'Please enter the valid Enterprise number'
+        );
+        $j.validator.addMethod("addincentive",
+          function (value, element) {
+            return /^\d+/.test(value);
+          }, 'Enter valid Incentive amount'
+        );
+        $j.validator.addMethod("lettersonly", function (value, element) {
+          return this.optional(element) || /^[a-z\s]+$/i.test(value);
+        }, "Only alphabetical characters");
+        
+        var profileForm = $j("#basic_information_form")
+        errorLabelContainer: '#errors',
+          profileForm.validate({
+            rules: {
+              'username': {
+                required: true,
+              },
+              'email': {
+                required: {
+                  depends: function () {
+                    $j(this).val($j.trim($j(this).val()));
+                    return true;
+                  }
+                },
+                customemail: true,
+              },
+              'first_name': {
+                required: true,
+              },
+              'last_name': {
+                required: true,
+              },
+              'gender': {
+                required: true,
+              },
+              'payment_method': {
+                required: true,
+              },
+              'language': {
+                required: true,
+              },
+              'about_me': {
+                required: true,
+              },
+              'company_title': {
+                required: true,
+              },
+              'disc1': {
+                required: true,
+              },
+              'url1': {
+                required: true,
+                urls: true,
+              },
+              'incentive': {
+                required: true,
+              },
+              'contact_name': {
+                lettersonly: true,
+                required: true,
+              },
+              'contact_email': {
+                required: {
+                  depends: function () {
+                    $j(this).val($j.trim($j(this).val()));
+                    return true;
+                  }
+                },
+                customemail: true,
+              },
+              'contact_phone': {
+                required: true,
+                maxlength: 15,
+                validPhone: true
+              },
+              'payment_user_name': {
+                required: true,
+              },
+              'payment_email': {
+                required: {
+                  depends: function () {
+                    $j(this).val($j.trim($j(this).val()));
+                    return true;
+                  }
+                },
+                customemail: true,
+              },
+              'ein': {
+                required: true,
+                ein: true,
+              },
+              'business_website': {
+                required: true,
+                website: true,
+              },
+              'biller_name': {
+                required: true,
+              },
+              'biller_address1': {
+                required: true,
+              },
+              'country': {
+                required: true,
+              },
+              'state': {
+                required: false,
+              },
+              'city': {
+                required: true,
+              },
+              'zip_code': {
+                required: true,
+                digits: true,
+                maxlength: 12,
+                minlength: 5,
+              },
+              'skigit_incentive': {
+                required: true
+              },
+              'redemoption_instrucations': {
+                required: true
+              },
+              'coupan_code': {
+                required: true
+              },
+              'incetive_val': {
+                required: true,
+                digits: true
+              },
+              'search_profile_security': {
+                required: true,
+              },
+              'business_type': {
+                required: true,
+              },
+              'custom_business_type': {
+                required: false,
+              },
+              'phone_num': {
+                required: true,
+                maxlength: 12,
+                validPhone: true
+              },
+
+            },
+            messages: {
+              'username': {
+                required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>User Name field is required",
+              },
+              'email': {
+                required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'> Email field is required",
+                customemail: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Please enter a valid email address.",
+
+              }, 'first_name': {
+                required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>First Name field is required",
+
+              }, 'last_name': {
+                required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Last Name field is required",
+
+              }, 'gender': {
+                required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Gender field is required",
+              },'birthdate': {
+                required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Please Enter a valid date",
+              }, 'payment_method': {
+                required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Gender field is required",
+
+              }, 'language': {
+                required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Language field is required",
+
+              }, 'about_me': {
+                required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>About me field is required",
+              },
+              'company_title': {
+                required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Company Title field is required",
+              },
+              'disc1': {
+                required: "<div class='error'><span><img width='25' src='https://static.skigit.com/images/error_icon.png'>This field is required",
+              },
+              'url1': {
+                required: "<div class='error'><span><img width='25' src='https://static.skigit.com/images/error_icon.png'>Enter http://.www... or https://www...",
+              },
+              'incentive': {
+                required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Incentive field is required",
+              },
+              'contact_email': {
+                required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Contact Email field is required",
+                customemail: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Please enter a valid email address.",
+              },
+              'contact_phone': {
+                required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Contact Phone field is required",
+                customdigits: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Enter valid number",
+                maxlength: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Contact Phone value should be less than or equal to 15 digits",
+                validPhone: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Phone number is not valid according to your selected country"
+              },
+              'payment_user_name': {
+                required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Payment Name field is required",
+              },
+              'payment_email': {
+                required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Contact Email field is required",
+                customemail: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Please enter a valid email address.",
+              },
+              'contact_name': {
+                lettersonly: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Contact Name must be text characters only.",
+                required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Contact Name field is required",
+              },
+              'ein': {
+                required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Please enter a valid EIN (12-1234567)",
+              },
+              'business_website' : {
+                required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Invalid website URL"
+              },
+              'biller_name': {
+                required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Biller Name field is required",
+              },
+              'biller_address1': {
+                required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Address1 field is required",
+              },
+              'country': {
+                required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Country field is required",
+              },
+              'state': {
+                required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>State field is required",
+              },
+              'city': {
+                required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>City field is required",
+              },
+              'skigit_incentive': {
+                required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Skitbit Description field is required"
+              },
+              'redemoption_instrucations': {
+                required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Skitbit Redemption Instructions field is required"
+              },
+              'coupan_code': {
+                required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Skitbit Coupon Code field is required"
+              },
+              'incetive_val': {
+                required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Skitbit Value field is required",
+                digits: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Please enter numbers only",
+              },
+              'zip_code': {
+                required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Zip Code field is required",
+                digits: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>You can only enter whole numbers",
+                maxlength: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>You cannot enter more than (12) whole numbers",
+                minlength: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>You must enter a minimum of (5) whole numbers",
+              },
+              'business_type': {
+                required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Business Type field is required",
+              },
+              'phone_num': {
+                required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Contact Phone field is required",
+                customdigits: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Enter valid number",
+                maxlength: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Contact Phone value must be less than or equal to 12 digits",
+                validPhone: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Phone number is not valid according to your selected country"
+              },
+            }
+          });
+        return profileForm.valid()
+      };
+
+    
+    // Dropzone.options.demoform = false; 
+    function removeErrorMsg() {
+      $j('#id_business_doc_error_msg').hide();
+      $j('#id_blogo_error_msg').hide();
+      $j('#id_profile_error_msg').hide();
+    }
+    $j(document).ready(function() {
+      // phone number mask
+      // $j('#id_phone_num').mask('999-999-9999');
+      // $j('#id_contact_phone').mask('999-999-9999');
+      // if is business profile
+      if($j('#business_doc').length != 0){
+        var myDropzone = new Dropzone("#business_doc", {
+          thumbnailHeight: 64,
+          thumbnailWidth: 64,
+          maxFilesize: 20,
+          filesizeBase:1000,
+          url: "/business_doc_upload_target/",  
+          autoProcessQueue: true,
+          uploadMultiple: true,
+          parallelUploads: 4,
+          maxFiles: 4,
+          dictMaxFilesExceeded: "You cannot upload more than 4 files.",
+          params: {
+                _token: '{{csrf_token}}'
+          },
+          
+          init: function() {
+
+              this.on('sending', function(file){
+                //fetch the user id from hidden input field and send that userid with our image
+                $j('.meter').show();
+              });
+              this.on("queuecomplete", function (progress) {
+                $j('.meter').delay(999).slideUp(999);
+              });
+          }
+          // load already saved files
+        });
+
+        myDropzone.options.addRemoveLinks = true;
+        myDropzone.options.dictRemoveFile = "Delete";
+
+        myDropzone.on("addedfile", function (file) {
+            var local_storage_length = localStorage.getItem('business_doc_length')
+            if(local_storage_length < 4)
+            {
+              $j('#business_doc').find('.dz-message').show()
+              localStorage.setItem('business_doc_length', parseInt(local_storage_length) + 1)
+            }else{
+              $j('#business_doc').find('.dz-message').hide()
+              this.removeFile(file)
+              $j('#id_business_doc_error_msg').show();
+              $j('#id_business_doc_error_msg').html('<img width="25" src="/static/images/error_icon.png">You cannot upload more than (4) items.')
+              localStorage.setItem('business_doc_length', parseInt(localStorage.getItem('business_doc_length')) + 1)
+            }
+        });
+
+        myDropzone.on("success", function (file, responseText) {
+          f_img_tag = file.previewElement.querySelector("img")
+          f_img_tag.async = true;
+          f_img_tag.src = responseText.img;
+          f_img_tag.alt = responseText.alt;
+          var local_storage_length = localStorage.getItem('business_doc_length');
+          if(local_storage_length >1)
+            $j('#id_business_doc_error_msg').hide();
+        });
+
+        myDropzone.on("removedfile", function (file) {
+          rm_file = file.previewElement.querySelector("img").alt
+          rm_file_split = rm_file.split("/")
+          f_name = rm_file_split[rm_file_split.length - 1]
+          localStorage.setItem('business_doc_length', parseInt(localStorage.getItem('business_doc_length')) - 1)
+          $j.post("/delete_business_doc/",
+            {
+              file_name: "skigit/doc/" + f_name,
+            });
+        });
+
+        $j.getJSON('/business_doc_get_target/', function (data) {
+
+          business_doc_length = data.length;
+              localStorage.setItem('business_doc_length', business_doc_length)
+
+            $j.each(data, function(index, val){
+              var mockFile;
+
+              mockFile = {name: val.doc, type: 'image/jpg'};
+
+              myDropzone.options.addedfile.call(myDropzone, mockFile);
+              myDropzone.options.thumbnail.call(myDropzone, mockFile, val.url);
+              mockFile.previewElement.classList.add('dz-success');
+              mockFile.previewElement.classList.add('dz-complete');
+              myDropzone.emit("complete", mockFile);
+              $j(mockFile.previewTemplate).find('.dz-remove').attr('id', "id_business_doc");
+            });
+            
+        });
+      }
+
+        $("form[name='basic_information_form']").submit(function(event) {
+            //Make sure that the form isn't actully being sent.
+            event.preventDefault();
+
+            // If there are any invalid items
+            let invalidExist = false;
+            // Check is User payment process is completed successfully or not
+            let paymentSetupExist = false;
+            $.ajax({
+                  url: '/invoice/getUser-Payment-Setup-Status/',
+                  async: false,
+                  dataType: 'json',
+                  success: function (data) {
+                    paymentSetupExist = data.paymentSetupExist
+                  }
+            });
+
+            if(1 > localStorage.getItem('b_logo_length') && $j('#my-dropzone-logo').length)
+            {		 
+              $j('#alertBox').addClass("open");
+	            $j('#id_blogo_error_msg').html('<img width="25" src="https://static.skigit.com/images/error_icon.png">You must add at least 1 logo')
+              invalidExist = true;
+            }
+
+            if(2 > localStorage.getItem('business_doc_length') && $j('#business_doc').length)
+            {		 
+              $j('#alertBox').addClass("open");
+	          $j('#id_business_doc_error_msg').html('<img width="25" src="/static/images/error_icon.png">You must add at least 2 docs')
+              invalidExist = true;
+            }
+
+            if (!profileFormValidation() || !paymentSetupExist) {
+              $j('#alertBox').addClass("open");
+              $j('.payment_not_exist_error').show();
+              $j('.payment_not_exist_error1').show();
+              invalidExist = true;
+            }
+
+            if(invalidExist) return false;
+            
+            URL = $("#basic_information_form").attr('action');
+            formData = $('#basic_information_form').serialize();
+            $.ajax({
+              type: 'POST',
+              url: URL,
+              data: formData,
+              success: function(result){
+                  //myDropzone.processQueue();
+                  removeErrorMsg();
+                  $j('#saveConfirmBox').addClass("open");
+              }
+            });     
+          });
+
+
+      $('#user_coupan_image').mouseover(function () {
+        $j('.coupan_enlarge').fadeIn();
+      });
+
+      $('#user_coupan_image').mouseleave(function () {
+        $j('.coupan_enlarge').fadeOut();
+      });
+
+      $('.delete_profile').click(function () {
+        image_type = $j(this).closest('[data-type]').attr('data-type')
+        if (image_type == 'profile') {
+          $j('#ok_delete').show()
+          $j('#ok_delete_logo').hide()
+          $j('#confirm_text').html('Are you sure you want to remove your profile image?')
+          $j('#confirmBox').addClass('open')
+          $j('.overlay').addClass('open')
+        }
+        else if (image_type == 'coupan') {
+          $j('#ok_delete').show()
+          $j('#ok_delete_logo').hide()
+          $j('#confirm_text').html('Are you sure you want to remove your company coupon?')
+          $j('#confirmBox').addClass('open')
+          $j('.overlay').addClass('open')
+        }
+      });
+
+      $('#no_delete').click(function () {
+        $j('#confirmBox').removeClass('open')
+        $j('.overlay').removeClass('open')
+
+      });
+
+      $('#ok_no_delete').click(function () {
+        $j('#okayBox').removeClass('open')
+        $j('.overlay').removeClass('open')
+
+      });
+
+      $('#ok_response').click(function () {
+        $j('#uploadResponse').removeClass('open')
+        $j('.overlay').removeClass('open')
+
+      });
+
+      $('#ok_save').click(function() {
+        $j('#saveConfirmBox').removeClass('open');
+        $j('.overlay').removeClass('open');
+      });
+
+      $('#ok_alert').click(function() {
+        $j('#alertBox').removeClass('open');
+        $j('.overlay').removeClass('open');
+      });
+
+      $('#ok_delete').click(function () {
+        $j.ajax({
+          url: "/skigit/remove-profile-pic/",
+          type: "POST",
+          data: {'image_type': image_type, 'csrfmiddlewaretoken': '{{csrf_token}}'},
+          success: function (responce) {
+            if (responce.is_success) {
+              if (responce.image_type == 'profile') {
+                $j('#user_profile_image').attr('src', '{% static "images/noimage_user.png" %}')
+                $j('#premove_image').hide()
+                $j('#confirmBox').removeClass('open')
+                $j('.overlay').removeClass('open');
+                $j('.exist-profile-img').text('{% static "images/noimage_user.png" %}');
+                window.location.reload(true);
+              }
+              else if (responce.image_type == 'coupan') {
+                $j('#user_coupan_image').attr('src', '{% static "images/coupan_no_image.png" %}')
+                $j('[data-lightbox="coupan-set"]').css('pointer-events', 'none')
+                $j('#cremove_image').hide()
+                $j('#confirmBox').removeClass('open')
+                $j('.overlay').removeClass('open')
+              }
+            }
+          }
+        })
+      });
+
+      $('#id_username, #id_contact_email, #id_coupan_code,' +
+        ' #id_first_name, #id_last_name, #id_email, ' +
+        '#id_url1, #id_url2, #id_url3,' +
+        '#id_url4, #id_url5, #id_contact_phone,' +
+        '#ein, #id_payment_email, #id_zip_code, #id_phone_num').on("focusout", function (e) {
+
+        str = $j(this).val();
+        str = str.replace(/\s/g, '');
+        $j(this).val(str);
+      });
+
+      $('textarea').on("keyup", function (e) {
+
+        str = $j(this).val().trim();
+        if (str == ' ' || str == '') {
+          str = str.replace(/\s/g, '');
+          $j(this).val(str);
+        }
+      });
+
+      $('#id_disc1, #id_disc2, #id_disc3, #id_disc4, ' +
+        '#id_disc5, #id_email, #id_company_title,' +
+        '#id_contact_name, #id_payment_user_name,' +
+        '#id_biller_name, #id_biller_address1, ' +
+        '#id_biller_address2, #id_state, #id_city').on("keyup", function (e) {
+
+        str = $j(this).val().trim();
+        if (str == ' ' || str == '') {
+          str = str.replace(/\s/g, '');
+          $j(this).val(str);
+        }
+      });
+
+    
+      if($j("#id_incentive_0")[0] && $j("#id_incentive_0")[0].checked){
+        $j("#skitbits_part").hide()
+      }
+      $j("#id_incentive_0").on('click',function (){
+
+        $j("#skitbits_part").hide()
+      })
+      $j("#id_incentive_1").on('click',function (){
+        $j("#skitbits_part").show()
+      })
+      $j("#profileBox").addClass('open');
+      $j('.overlay').addClass('open')
+      setTimeout(function () {
+        $j('.notify_msg_div').slideUp()
+      }, 3500)
+
+    });
+
+    $j(document).ready(function () {
+
+        $j('#bug_report').on("click", function () {
+        $j('#bugModal').modal('show');
+      })
+
+      Dropzone.autoDiscover = false
+      b_logo_length = 0
+
+      $j(function () {
+        if ($j('#my-dropzone-logo').length != 0) {
+          var self;
+          self = new Dropzone("#my-dropzone-logo", {
+            maxFiles: 5,
+            parallelUploads: 5,
+            thumbnailWidth: 75,
+            thumbnailHeight: 65,
+            acceptedFiles: ".jpeg,.jpg,.png,.gif",
+            dictMaxFilesExceeded: "You cannot upload more than (5) logos.",
+          });
+
+          // config
+          self.options.addRemoveLinks = true;
+          self.options.dictRemoveFile = "Delete";
+
+          // load already saved files
+          $j.getJSON('/business_logo_get_target/', function (data) {
+            b_logo_length = data.length
+            localStorage.setItem('b_logo_length', b_logo_length)
+            $j.each(data, function (index, val) {
+              var mockFile1;
+              mockFile1 = {name: val.logo, type: 'image/jpeg'};
+              self.options.addedfile.call(self, mockFile1);
+              self.options.thumbnail.call(self, mockFile1, val.url);
+              mockFile1.previewElement.classList.add('dz-success');
+              mockFile1.previewElement.classList.add('dz-complete');
+              self.emit("complete", mockFile1);
+              $j(mockFile1.previewTemplate).find('.dz-remove').attr('id', "id_business_logo");
+            });
+          });
+
+          //New file added
+          self.on("addedfile", function (file) {
+            acceptedFilesTypes = ["image/jpeg","image/jpg","image/png","image/gif"]
+            if (!acceptedFilesTypes.includes(file.type)) {
+                self.removeFile(file)
+                $j('#uploadResponse').addClass("open");
+            }
+
+            var local_storage_length = localStorage.getItem('b_logo_length')
+            if (local_storage_length < 5) {
+              $j('#my-dropzone-logo').find('.dz-message').show()
+              localStorage.setItem('b_logo_length', parseInt(localStorage.getItem('b_logo_length')) + 1)
+            }
+            else {
+              self.removeFile(file)
+              $j('#id_blogo_error_msg').html('<img width="25"  src="/static/images/error_icon.png">You cannot upload more than (5) logos.')
+              $j('#my-dropzone-logo').find('.dz-message').hide()
+              localStorage.setItem('b_logo_length', parseInt(localStorage.getItem('b_logo_length')) + 1)
+            }
+          });
+
+          // Send file starts
+          self.on("sending", function (file) {
+            $j('.meter').show();
+          });
+
+          // File upload Progress
+          self.on("totaluploadprogress", function (progress) {
+            $j('.roller').width(progress + '%');
+          });
+
+          self.on("queuecomplete", function (progress) {
+            $j('.meter').delay(999).slideUp(999);
+          });
+
+          self.on("success", function (file, responseText) {
+            f_img_tag = file.previewElement.querySelector("img")
+            f_img_tag.async = true;
+            f_img_tag.src = responseText.message;
+            var local_storage_length = localStorage.getItem('b_logo_length');
+            if(local_storage_length >0)
+              $j('#id_blogo_error_msg').hide();
+
+          });
+
+          // On removing file
+          self.on("removedfile", function (file) {
+            rm_file = file.previewElement.querySelector("img").src
+            rm_file_split = rm_file.split("/")
+            f_name = rm_file_split[rm_file_split.length - 1]
+            localStorage.setItem('b_logo_length', parseInt(localStorage.getItem('b_logo_length')) - 1)
+            $j.post("/delete_business_logo/",
+              {
+                file_name: "skigit/logo/" + f_name,
+              });
+          });
+        }
+      });
+    });
+    $j(document).ready(function () {
+      $j(function () {
+        var self = new Dropzone("#my-dropzone", {
+          maxFiles: 5,
+          parallelUploads: 5,
+          acceptedFiles: ".jpeg,.jpg,.png,.gif",
+          dictMaxFilesExceeded: "You cannot upload more than (5) images.",
+        });
+        // config
+        self.options.addRemoveLinks = true;
+        self.options.dictRemoveFile = "Delete";
+
+        // load already saved files
+
+        $j.getJSON('/profile_get_target/', function (data) {
+          localStorage.setItem('extra_logo', 9999)
+          pp_logo_length = data.length
+          if (pp_logo_length <= 5) {
+            localStorage.setItem('pp_logo_length', pp_logo_length)
+          }
+          $j.each(data, function (index, val) {
+            var mockFile = {name: val.profile_img, type: 'image/jpeg'};
+            self.options.addedfile.call(self, mockFile);
+            self.options.thumbnail.call(self, mockFile, val.url);
+            mockFile.previewElement.classList.add('dz-success');
+            mockFile.previewElement.classList.add('dz-complete');
+            self.emit("complete", mockFile);
+            $j(mockFile.previewTemplate).find('.dz-remove').attr('id', "id_extra_logo");
+          });
+
+        });
+
+        //New file added
+        self.on("addedfile", function (file) {
+          acceptedFilesTypes = ["image/jpeg","image/jpg","image/png","image/gif"]
+            if (!acceptedFilesTypes.includes(file.type)) {
+                self.removeFile(file)
+                $j('#uploadResponse').addClass("open");
+            }
+
+          var local_storage_length = localStorage.getItem('pp_logo_length')
+          if (local_storage_length < 5) {
+            $j('#my-dropzone').find('.dz-message').show()
+            localStorage.setItem('pp_logo_length', parseInt(local_storage_length) + 1)
+          }
+          else {
+            $j('#my-dropzone').find('.dz-message').hide()
+            self.removeFile(file)
+            $j('#id_profile_error_msg').html('<img width="25" src="/static/images/error_icon.png">You cannot upload more than (5) images.')
+            localStorage.setItem('pp_logo_length', parseInt(localStorage.getItem('pp_logo_length')) + 1)
+          }
+        });
+
+        // Send file starts
+        self.on("sending", function (file) {
+          $j('.meter').show();
+        });
+
+        // File upload Progress
+        self.on("totaluploadprogress", function (progress) {
+          $j('.roller').width(progress + '%');
+        });
+
+        self.on("queuecomplete", function (progress) {
+          $j('.meter').delay(999).slideUp(999);
+        });
+
+
+        self.on("success", function (file, responseText) {
+          f_img_tag = file.previewElement.querySelector("img")
+          f_img_tag.async = true;
+          f_img_tag.src = responseText.message;
+        });
+
+        // On removing file
+        self.on("removedfile", function (file) {
+          rm_file = file.previewElement.querySelector("img").src
+          rm_file_split = rm_file.split("/")
+          f_name = rm_file_split[rm_file_split.length - 1]
+          localStorage.setItem('pp_logo_length', parseInt(localStorage.getItem('pp_logo_length')) - 1)
+          $j.post("/delete_extra_profile_image/",
+            {
+              file_name: "skigit/profile/" + f_name,
+            });
+        });
+      });
+
+      function uploadPicture () {
+        var progress = $j(".profile-photo-load-progress").progressTimer({
+            timeLimit: 30,
+            onFinish: function () {}
+        });
+        //var filename = $j('#brose_p_pic').val();
+        var form = new FormData();
+        form.append("p_pic", $j("#browse_p_pic")[0].files[0]);
+        $('#id-change-picture, #upload-p-pic').prop('disabled', true);
+        jQuery.ajax({
+          url: "/profile_pic/",
+          type: "POST",
+          data: form,//Now you attached form datas with filename also,
+          processData: false,
+          contentType: false,
+          success: function (data) {
+            $('#id-change-picture, #upload-p-pic').prop('disabled', false);
+            if (data.valid_format == false || data.is_success === false) {
+              $j('#ok_confirm_text').html(data.message)
+              //$j('#okayBox').addClass('open')
+              $j('.overlay').addClass('open')
+              progress.progressTimer('error', {
+                  errorText:'ERROR!',
+                  onFinish:function(){
+                       $j('.img-upload-fail').removeClass('hide').addClass('show')
+                       $j('#pic-preview').attr('src', '#');
+                       $j('#upload_p_pic, #pic-preview').hide();
+                  }
+              });
+              return
+            }
+            else {
+              $j("#user_profile_image").attr("src", data.message);
+              $j('#premove_image').show();
+              $j('.exist-profile-img').text(data.message);
+              progress.progressTimer('complete');
+              setTimeout(function () {
+                $j('#profile-pic-modal').modal('hide');
+                $j(".profile-photo-load-progress").empty();
+              }, 1000);
+            }
+          }
+        });
+      }
+
+      $j('#browse_coupan_img').on('click',function(e) {
+        $j(".coupon-img-load-progress").empty();
+      })
+      $j("#browse_coupan_img").change(function () {
+        var progress = $j(".coupon-img-load-progress").progressTimer({
+            timeLimit: 30,
+            onFinish: function () {}
+        });
+        progress.show();
+        var filename = $j('#browse_coupan_img').val();
+        var form = new FormData();
+        form.append("coupan_img", $j("#browse_coupan_img")[0].files[0]);
+        jQuery.ajax({
+          url: "/coupan_image_upload/",
+          type: "POST",
+          data: form,//Now you attached form datas with filename also,
+          processData: false,
+          contentType: false,
+          success: function (data) {
+            if (data.valid_format == false || data.is_success === false) {
+              progress.progressTimer('error', {
+                  errorText:'ERROR!',
+                  onFinish:function(){
+                    $j('#ok_confirm_text').html(data.message)
+                    $j('#okayBox').addClass('open')
+                    $j('.overlay').addClass('open')
+                    $j('.browse_coupan_img').prop('disabled', true);
+                  }
+              });
+              return
+            }
+            else {
+              $j("#user_coupan_image").attr("src", data.message)
+              $j("#coupan_enlarge_img").attr("src", data.message)
+              $j('[data-lightbox="coupan-set"]').attr('href', data.message)
+              $j('[data-lightbox="coupan-set"]').css('pointer-events', 'auto')
+              $j('.browse_coupan_img').prop('disabled', false);
+              progress.progressTimer('complete');
+              setTimeout(function () {
+                $j('#cremove_image').show();
+                progress.hide();
+              }, 1000);
+
+            }
+          }
+        });
+      });
+
+      $j("#id-change-picture").click(function() {
+        $("#browse_p_pic").trigger("click");
+      });
+
+      function readURL(input) {
+         $('.error-img-upload-txt, .img-upload-fail').removeClass('show').addClass('hide');
+         $('.profile-photo-load-progress').empty();
+        if (input.files && input.files[0]) {
+          if (/^image/.test( input.files[0].type)) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+              $('#pic-preview').attr('src', e.target.result);
+              $('#upload_p_pic, #pic-preview').show();
+              uploadPicture();
+            }
+
+            reader.readAsDataURL(input.files[0]);
+          } else {
+            $('.error-img-upload-txt').removeClass('hide').addClass('show');
+            $('#pic-preview').attr('src', '#');
+            $('#upload_p_pic, #pic-preview').hide();
+          }
+        }
+      }
+
+      $("#browse_p_pic").change(function() {
+        $('#pic-preview').attr('src', '#');
+        $('#upload_p_pic, #pic-preview').hide();
+        $('.error-img-upload-txt').removeClass('show').addClass('hide');
+        readURL(this);
+      });
+
+      // modal
+      $j('#profile-pic-modal').on('show.bs.modal', function (event) {
+        $('#pic-preview').attr('src', $.trim($('.exist-profile-img').text()));
+      });
+
+    });
+	
+  </script>
+
+  <style>
+    #id_about_me, #id_company_title, #id_search_profile_security, #id_payment_user_name,
+    #id_username, #id_email, #id_first_name, #id_zip_code,
+    #id_last_name, #id_gender, #id_incentive, #id_state, #id_city,
+    #id_contact_name, #id_contact_email, #id_payment_email,
+    #id_biller_name, #id_biller_address1, #id_business_type,
+    #id_contact_phone, id_phone_num, #id_language, #id_country,
+    #id_url2, #id_url3, #id_url4, #id_url5, #id_disc1, #id_url1 {
+      color: #555 ;
+      background-color: transparent;
+	  
+    }
+
+    #id_about_me-error, #id_company_title-error, #id_search_profile_security-error,
+    #id_username-error, #id_email-error, #id_first_name-error, #id_zip_code-error,
+    #id_last_name-error, #id_gender-error, #id_payment_method-error, #id_incentive-error, #id_state-error,
+    #id_city-error, #id_contact_name-error, #id_contact_email-error, #gender-error,
+    #id_payment_email-error, #id_biller_name-error, #id_biller_address1-error,
+    #id_business_type-error, #id_contact_phone-error, id_phone_num-error, #id_language-error,
+    #incentive-error, #id_country-error, #id_url2-error, #id_url3-error, #id_payment_user_name-error,
+    #id_url4-error, #id_url5-error, #id_disc1-error, #id_url1-error {
+
+      background-color: transparent;
+    }
+
+    .dropdown {
+      position: relative;
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    .dropdown .dropdown-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      margin: 0;
+      border: 1px solid #ccc !important;
+      width: 220px !important;
+    }
+
+    .dropdown .dropdown-menu .pop {
+      padding: 8px 8px 1px 8px;
+    }
+
+    .dropdown .dropdown-menu h2 {
+      font-weight: bold;
+      font-size: 12px;
+      color: #000 !important;
+      margin: 0 0 4px 0 !important;
+      padding: 0 !important;
+    }
+
+    .dropdown .dropdown-menu p {
+      display: block;
+      line-height: 17px;
+      font-size: 11px;
+      font-style: italic;
+      font-family: "Noto Sans Lao UI", sans-serif !important;
+      font-weight: normal !important;
+    }
+
+    .dropdown .dropdown-menu p a {
+      color: #037bb8;
+      text-decoration: underline !important;
+    }
+
+    .dropdown .dropdown-menu p a:hover {
+      color: #037bb8;
+      text-decoration: none;
+    }
+
+    .dropdown .dropdown-menu p span {
+      color: #E40003;
+    }
+
+
+    .dropzone .dz-preview .dz-remove {
+      bottom: -9px !important;
+    }
+
+    .social_ul {
+      text-align: center;
+    }
+
+    .remove_image {
+      float: left;
+      cursor: pointer;
+    }
+
+    label#gender-error, label#incentive-error {
+      float: right;
+      position: absolute;
+      right: 0;
+      top: 0 !important;
+    }
+
+label#id_disc1-error {
+    float: left;
+}
+
+    .coupan_enlarge {
+      position: absolute;
+      display: none;
+      left: 37%;
+      background: #fff;
+      top: -114px;
+      z-index: 999;
+      padding: 10px;
+    }
+
+    .coupan_enlarge img {
+      max-width: 300px;
+    }
+
+    #coupan_enlarge_img {
+      min-width: 200px;
+    }
+
+    .box_form_credirt {
+      margin-bottom: 15px;
+      border-radius: 6px;
+	  padding:5px;
+	  background-color: transparent!important;
+    }
+
+    .payment_remove {
+      float: right;
+      z-index: 999;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      margin-top: 37px;
+      margin-right: -25px;
+      position: relative;
+    }
+  </style>
+
+  <script>
+
+    function onSelectBusinessType(value) {
+          if(value == "OS")$j("#business_type_other").show();
+          else $j("#business_type_other").hide();
+    }
+
+    function onSelectCountry(value) {
+      $("#id_state").empty();
+      $j.ajax({
+          url: "/get-states/",
+          type: "GET",
+          data: {'country': value, 'csrfmiddlewaretoken': '{{csrf_token}}'},
+          success: function (responce) {
+              var select = document.getElementById('id_state');
+              for (let i of responce['state_list']) {
+                var option = document.createElement("option")
+                option.value = i;
+                option.innerHTML = i;
+                select.appendChild(option)
+              }
+          }
+        })
+    }
+  </script>
+
+  <div class="overlay"></div>
+  <div id="uploadResponse" class="confirmBox">
+    <div style="text-align: center !important;">
+      <p><img src="{% static 'images/Skigit_Logo_AI_master_white.png' %}" width="100px; height:100px;"/></p>
+      <p style="margin: 10px 0 40px!important; color: #ffa3a3;"><img width="25" src="/static/images/error_icon.png">You attempted to upload a file of incorrect type. Please try again.</p>
+    </div>
+    <div class="del-bott">
+      <button type="button" id="ok_response">Ok</button>
+    </div>
+  </div>
+  <div id="alertBox" class="confirmBox">
+    <div style="text-align: center !important;">
+      <p><img src="{% static 'images/Skigit_Logo_AI_master_white.png' %}" width="100px; height:100px;"/></p>
+      <p style="margin: 10px 0 10px!important; color: #ffb5b5; font-size:19px"><img width="25" src="/static/images/error_icon.png">Oops! <p style="color: #ffb5b5;">We found an error in one or more of your entries. Please correct and try again.</p>
+    </div>
+    <div class="del-bott">
+      <button type="button" id="ok_alert">Ok</button>
+    </div>
+  </div>
+  <div id="saveConfirmBox" class="confirmBox">
+    <div style="text-align: center !important;">
+      <p><img src="{% static 'images/Skigit_Logo_AI_master_white.png' %}" width="100px; height:100px;"/></p>
+      <p style="margin: 10px 0 10px!important; color: #fff;">Your profile was successfully saved!</p>
+    </div>
+    <div class="del-bott">
+      <button type="button" id="ok_save">Ok</button>
+    </div>
+  </div>
+  <div id="confirmBox">
+    <div style="text-align: center !important;">
+      <p><img src="{% static 'images/Skigit_Logo_AI_master_white.png' %}" width="100px; height:100px;"/></p>
+      <p id="confirm_text" style="margin: 10px 0 40px!important">Are you sure you want to remove your profile image?</p>
+    </div>
+    <div class="del-bott">
+      <button type="button" id="ok_delete">Yes</button>
+      <button type="button" onclick="ok_delete_click()" id="ok_delete_logo" hidden>Delete</button>
+      <button type="button" id="no_delete">Cancel</button>
+    </div>
+  </div>
+  <div id="okayBox" style="border: none !important;">
+    <div style="text-align: center !important;">
+      <p><img src="{% static 'images/Skigit_Logo_AI_master_white.png' %}" width="100px; height:100px;"/></p>
+      <p id="ok_confirm_text"></p>
+    </div>
+    <div class="del-bott">
+      <button type="button" id="ok_no_delete">Ok</button>
+    </div>
+  </div>
+  <div class="row profile white-back">
+  <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12" id="left_adjust_main">
+    {% include 'profile/profile_menu.html' %}
+  </div>
+
+  <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" style="background-color: #344254;border-radius: 4px;margin-top: 40px;">
+    <div class="profile-content">
+      <div class="row mar_zero profile-form">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 padd_zero margin_bottom_10">
+
+          <h3 class="mar margin_bottom_10"  >Member Profile
+          </h3>
+        </div>
+        {% if verified_business %}
+        <div style=" position: absolute; left:5%; top: -30px;">
+        <img src="{% static 'images/Verified.png' %}" title="Business Verified!" style="float:right; margin: 20px 0 0 10%; transform:scale(0.85);">
+        </div>
+        {% endif %}
+		
+		
+        <div class="">
+          <div class="form-group for-button" style="display: inline-block; width:100%;">
+            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12" >
+              <span style="color: #fff;">Choose your avatar JPG, JPEG or PNG file, then<strong> Click to Upload. </strong></span>
+            </div>
+            <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12 padd_zero">
+              {% if user_profile.profile_img %}
+                <div class="col-md-2 col-sm-3 col-xs-12 img-squire">
+                  <img alt="{{ user.get_full_name|default:user.username }}" src="{{ profile_image }}"
+                       id="user_profile_image" width="100px"/>
+                  <img width="20" height="20"
+                       src="{% static 'images/close(32x32).png' %}"
+                       data-type="profile" id="premove_image" class="remove_image delete_profile">
+                </div>
+              {% else %}
+                <div class="col-md-2 col-sm-3 col-xs-12 img-squire">
+                  <img alt="{{ user.get_full_name|default:user.username }}"
+                       src="{% static 'images/noimage_user.png' %}" id="user_profile_image"
+                       width="100px"/>
+                  <img width="20" height="20"
+                       src="{% static 'images/close(32x32).png' %}"
+                       data-type="profile" id="premove_image" class="remove_image delete_profile" hidden>
+                </div>
+              {% endif %}
+              <div class="col-md-6 col-sm-9 col-xs-12" style="padding-top:18px; margin-left: 30px;width: 75%;">
+
+
+                <div class="upload-btn-wrapper">
+                  <button style="width: auto !important;" class="fileUpload btn" data-toggle="modal" data-target="#profile-pic-modal">Change Photo</button>
+				  <span>
+                              <a target="_blank" href="{% url 'user_profile_display' username=request.user.username %}" id="view_profile">Click here to see how others view you.</a>
+                            </span>
+
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+			  
+			  
+        {% if is_business %}
+          <div class="">
+            <div class="form-group for-button" style="display: inline-block; width:100%;">
+              <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                <span style="color: #fff;">Upload your logo or select from a list (JPG, JPEG, GIF or PNG only). We recommend a square image. Maximum (5) logos allowed.</span>
+                <span class="red">*</span></div>
+              <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" style="z-index: 1; margin-top: 10px;">
+                <form id="my-dropzone-logo" action="/business_logo_upload_target/" class="dropzone">
+                  {% csrf_token %}
+                </form>
+                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12" style="margin-top: 8px;">
+                  <center><label style="text-align:center; color: #ffa3a3!important;" id="id_blogo_error_msg"></label>
+                  </center>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      <div>
+        <div class="form-group for-button" style="display: inline-block; width:100%;">
+          <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+            <span style="color: #fff;">Uploaded personal images will be displayed on your profile page (JPG, JPEG, GIF or PNG only)</span>
+          </div>
+          <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12 " style="z-index:1;margin-top: 10px;">
+            <form id="my-dropzone" action="/profile_upload-target/"  class="dropzone">
+              {% csrf_token %}
+            </form>
+            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+              <center><label style="text-align:center; color: #ffa3a3!important;display: inherit;" id="id_profile_error_msg" ></label>
+              </center>
+            </div>
+          </div>
+        </div>
+      </div>
+        <div class=" padd_zero">
+          <form role="form" class="for-button" id="basic_information_form" name="basic_information_form"
+                enctype="multipart/form-data" action="{% url 'user_profile' %}" method="post"
+                novalidate="novalidate">
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+                <div class="form-group">
+                  {% for err in form.non_field_errors %}
+                    <div class="form_error_message">{{ err }}</div>
+                  {% endfor %}
+                </div>
+              </div>
+            {% endif %}
+            {% if form1.non_field_errors %}
+              <div class="form-group">
+                <div class="form_errors">
+                  {% for err in form1.non_field_errors %}
+                    <div class="form_error_message">{{ err }}</div>
+                  {% endfor %}
+                </div>
+              </div>
+            {% endif %}
+
+            <label class="hidden" for="{{ form.profile_img.id_for_label }}">Add a personal
+              photo<span>*</span></label>
+            <div class="hidden">
+              {{ form.profile_img|addcss:"form-control" }}
+            </div>
+            {% if form.profile_img.errors %}
+              <div class="row mar_zero">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                  <div class="form-group">
+                    {{ form.profile_img.errors }}
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+            <div class="form-group">
+              <label class="col-lg-3 col-md-3 col-sm-12 col-xs-12" for="{{ form1.username.id_for_label }}" >User
+                Name<span class="red">*</span></label>
+              <div
+                  class="col-lg-6 col-md-6 col-sm-12 col-xs-12" > {{ form1.username|addcss:"form-control" }}</div>
+              {% if form1.username.errors %}
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 error_msg padd_zero">
+                  {{ form1.username.errors }}
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="form-group">
+              <label class="col-lg-3 col-md-3 col-sm-12 col-xs-12" for="{{ form1.email.id_for_label }}">Email<span class="red">*</span>
+              </label>
+              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"> {{ form1.email|addcss:"form-control" }}</div>
+              {% if form1.email.errors %}
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 error_msg padd_zero">
+                  {{ form1.email.errors }}
+                </div>
+              {% endif %}
+            </div>
+            
+            {% if not is_business %}
+            <div class="form-group">
+              <label class="col-lg-3 col-md-3 col-sm-12 col-xs-12"
+                     for="{{ form.phone_num.id_for_label }}">Contact Phone<span class="red">*</span>
+              </label>
+              <div
+                  class="col-lg-6 col-md-6 col-sm-12 col-xs-12">  {{ form.phone_num|addcss:"form-control" }}</div>
+              {% if form.phone_num.errors %}
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 error_msg padd_zero">
+                  {{ form.phone_num.errors }}
+                </div>
+              {% endif %}
+            </div>
+            {% endif %}
+            
+            <div class="form-group">
+              <label class="col-lg-3 col-md-3 col-sm-12 col-xs-12" for="{{ form1.first_name.id_for_label }}">First
+                Name<span class="red">*</span>
+              </label>
+              <div
+                  class="col-lg-6 col-md-6 col-sm-12 col-xs-12"> {{ form1.first_name|addcss:"form-control" }}</div>
+              {% if form1.first_name.errors %}
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 error_msg padd_zero">
+                  {{ form1.first_name.errors }}
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="form-group">
+              <label class="col-lg-3 col-md-3 col-sm-12 col-xs-12" for="{{ form1.last_name.id_for_label }}">Last
+                Name<span class="red">*</span></label>
+              <div
+                  class="col-lg-6 col-md-6 col-sm-12 col-xs-12"> {{ form1.last_name|addcss:"form-control" }}</div>
+              {% if form1.last_name.errors %}
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 error_msg padd_zero">
+                  {{ form1.last_name.errors }}
+                </div>
+              {% endif %}
+            </div>
+
+				 
+
+            <div class="form-group gender">
+              <label class="col-lg-3 col-md-3 col-sm-12 col-xs-12" for="{{ form.gender.id_for_label }}" id="Gender" >Gender<span class="red">*</span>
+              </label>
+              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">{{ form.gender|addcss:"form-control" }} <label
+                  for="gender" class="error"></label></div>
+              {% if form.gender.errors %}
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 error_msg padd_zero">
+                  {{ form.gender.errors }}
+                </div>
+
+              {% endif %}
+            </div>
+
+            <div class="form-group no-sel">
+              <label class="col-lg-3 col-md-3 col-sm-12 col-xs-12" for="{{ form.birthdate.id_for_label }}">Birthdate<span class="red">*</span>
+
+              </label>
+              <div
+                  class="col-lg-6 col-md-6 col-sm-12 col-xs-12"> {{ form.birthdate|addcss:"form-control" }}
+                {% if form.birthdate.errors %}
+                  <label for="birthdate" class="error">
+ 
+                    {{ form.birthdate.errors.as_text }}
+                  </label>
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="col-lg-3 col-md-3 col-sm-12 col-xs-12" for="{{ form.language.id_for_label }}">Primary
+                Language<span class="red">*</span>
+              </label>
+              <div
+                  class="col-lg-6 col-md-6 col-sm-12 col-xs-12">  {{ form.language|addcss:"form-control" }}</div>
+              {% if form.language.errors %}
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 error_msg padd_zero">
+                  {{ form.language.errors }}
+                </div>
+              {% endif %}
+            </div>
+            {% if form.company_title %}
+              <div class="form-group">
+                  <label class="col-lg-3 col-md-3 col-sm-12 col-xs-12"
+                         for="{{ form.company_title.id_for_label }}">Company Name
+                    <span class="red">*</span>
+                  </label>
+                  <div
+                      class="col-lg-6 col-md-6 col-sm-12 col-xs-12"> {{ form.company_title|addcss:"form-control" }}</div>
+                  {% if form.company_title.errors %}
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 error_msg padd_zero">
+                      {{ form.company_title.errors }}
+                    </div>
+                  {% endif %}
+              </div>
+            {% endif %}
+
+            <div class="form-group">
+              <label class="col-lg-3 col-md-3 col-sm-12 col-xs-12" for="{{ form.about_me.id_for_label }}">About
+                Us<span class="red" style="margin-left: 2px;">*</span>
+              </label>
+              <div
+                  class="col-lg-6 col-md-6 col-sm-12 col-xs-12">  {{ form.about_me|addcss:"form-control" }}</div>
+              {% if form.about_me.errors %}
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 error_msg padd_zero">
+                  {{ form.about_me.errors }}
+                </div>
+              {% endif %}
+            </div>
+
+            {% if is_business %}
+
+        <div class="form-group inp-padd ">
+                <label class="col-lg-3 col-md-3 col-sm-12 col-xs-12" for="{{ form.url1.id_for_label }}">Profile
+                  Urls <span class="red">*</span></label>
+				
+				  <div class="url-table-rows">
+					<div class="field col-lg-6 col-md-6 col-sm-6 col-xs-12-header" style="color: #baf3c9;font-style: italic;">URL Descriptions</div>
+					<div class="field col-lg-6 col-md-6 col-sm-6 col-xs-12-header" style="color: #baf3c9;font-style: italic;">URL (https://...)</div>
+				  </div>
+				  
+			<div class="center">
+			<table>
+                <div class="field col-lg-6 col-md-6 col-sm-12 col-xs-12 padd_zero">
+				  <div class="url-table-rows-2">
+					<div class="field col-lg-6 col-md-6 col-sm-6 col-xs-12">
+						<input type="text" class="form-control" id="id_disc1" name="disc1"
+                           value="{{ disc1|default_if_none:'' }}">
+					</div>
+
+					<div class="field col-lg-6 col-md-6 col-sm-6 col-xs-12">
+						<input type="url" class="form-control" id="id_url1" name="url1" title="Enter http://.www... or https://www..."
+                           value="{{ url1|default_if_none:'' }}">
+					</div>
+				  </div>
+				  
+				  <div class="url-table-rows-2">
+					<div class="field col-lg-6 col-md-6 col-sm-6 col-xs-12">
+						<input type="text" class="form-control" id="id_disc2" name="disc2"  
+                           value="{{ disc2|default_if_none:'' }}">
+					</div>
+
+					<div class="field col-lg-6 col-md-6 col-sm-6 col-xs-12">
+						<input type="url" class="form-control" id="id_url2" name="url2" title="Enter http://.www... or https://www..."
+                           value="{{ url2|default_if_none:'' }}">
+					</div>
+				  </div>
+				  
+				  <div class="url-table-rows-2">
+					<div class="field col-lg-6 col-md-6 col-sm-6 col-xs-12">
+						<input type="text" class="form-control" id="id_disc3" name="disc3" 
+                           value="{{ disc3|default_if_none:'' }}">
+					</div>
+
+					<div class="field col-lg-6 col-md-6 col-sm-6 col-xs-12">
+						<input type="url" class="form-control" id="id_url3" name="url3" title="Enter http://.www... or https://www..."
+                           value="{{ url3|default_if_none:'' }}">
+					</div>
+				  </div>
+				  
+				  <div class="url-table-rows-2">
+					<div class="field col-lg-6 col-md-6 col-sm-6 col-xs-12">
+						<input type="text" class="form-control" id="id_disc4" name="disc4"
+                           value="{{ disc4|default_if_none:'' }}">
+					</div>
+
+					<div class="field col-lg-6 col-md-6 col-sm-6 col-xs-12">
+						<input type="url" class="form-control" id="id_url4" name="url4" title="Enter http://.www... or https://www..."
+                           value="{{ url4|default_if_none:'' }}">
+					</div>
+				  </div>
+				  
+				  <div class="url-table-rows-2">
+					<div class="field col-lg-6 col-md-6 col-sm-6 col-xs-12">
+						<input type="text" class="form-control" id="id_disc5" name="disc5"
+                           value="{{ disc5|default_if_none:'' }}">
+					</div>
+
+					<div class="field col-lg-6 col-md-6 col-sm-6 col-xs-12">
+						<input type="url" class="form-control" id="id_url5" name="url5" title="Enter http://.www... or https://www..."
+                           value="{{ url5|default_if_none:'' }}">
+					</div>
+				  </div>	
+			   </div>
+			   </table>
+			</div>
+        </div>
+
+				<div style="color: #baf3c9;/* font-style: italic; */margin-top: 10px;margin: 25px 0 20px -20px;border-bottom: 1px solid #baf3c9;padding-top: 10px;width: 80%; font-size: 19px;">
+				SkitBits</div>
+				
+              <div class="form-group gender">
+                <label class="col-lg-3 col-md-3 col-sm-12 col-xs-12" for="{{ form.incentive.id_for_label }}" id="Skitbits" style="line-height: 1.2;">
+                  <span style="color: #baf3c9;">Offer Skitbits</span><span class="red">*</span><br><span style="font-size: 13px;font-style:italic">
+                  Offer Skigit creators an incentive to create Skigits about your business.</span></label>
+				
+				  
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">{{ form.incentive|addcss:"form-control" }}
+                  <label for="incentive" class="error" style="top: 0px;"></label></div>
+                {% if form.incentive.errors %}
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 error_msg padd_zero">
+                    {{ form.incentive.errors }}
+                  </div>
+                {% endif %}
+              </div>
+              
+              <div id = "skitbits_part">
+              <div class="form-group">
+                <label class="col-lg-3 col-md-3 col-sm-12 col-xs-12" style="line-height: 1.2;"
+                       for="{{ form.skigit_incentive.id_for_label }}"><span style="color: #baf3c9;">SkitBit Description</span><span class="red">*</span><br><span style="font-size: 13px;font-style:italic">(Describe to Skigit creators in detail, what you are offering to motivate them to create a Skigit for your business.) </span></label>
+                <div
+                    class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  {{ form.skigit_incentive|addcss:"form-control" }}</div>
+                {% if form.skigit_incentive.errors %}
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 error_msg padd_zero">
+                    {{ form.skigit_incentive.errors }}
+                  </div>
+                {% endif %}
+              </div>
+
+              <div class="form-group">
+                <label class="col-lg-3 col-md-3 col-sm-12 col-xs-12" style="line-height: 1.2;"
+                       for="{{ form.skigit_incentive.id_for_label }}"><span style="color: #baf3c9;">Skitbit Redemption Instruction</span><span class="red">*</span><br><span style="font-size: 13px;font-style:italic">(Describe to Skigit creators in detail, how they can redeem and collect their Skitbit.) </span></label>
+                <div
+                    class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  {{ form.redemoption_instrucations|addcss:"form-control" }}</div>
+                {% if form.redemoption_instrucations.errors %}
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 error_msg padd_zero">
+                    {{ form.redemoption_instrucations.errors }}
+                  </div>
+                {% endif %}
+              </div>
+
+              <div class="form-group">
+                <label class="col-lg-3 col-md-3 col-sm-12 col-xs-12" style="line-height: 1.2;"
+                       for="{{ form.coupan_code.id_for_label }}"><span style="color: #baf3c9;">Skitbit Coupon Code</span><span class="red">*</span><br><span style="font-size: 13px;font-style:italic">( If offering a coupon discount, enter your a coupon code to make it easier for creators to redeem their Skitbit.) </span></label>
+                <div
+                    class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  {{ form.coupan_code|addcss:"form-control" }}</div>
+                {% if form.coupan_code.errors %}
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 error_msg padd_zero">
+                    {{ form.coupan_code.errors }}
+                  </div>
+                {% endif %}
+              </div>
+
+              <div class="form-group">
+                <label class="col-lg-3 col-md-3 col-sm-12 col-xs-12" style="line-height: 1.2;"
+                       for="{{ form.incetive_val.id_for_label }}"><span style="color: #baf3c9;">Skitbit Value $(USD)</span><span class="red">*</span><br><span style="font-size: 13px;font-style:italic">(Enter a dollar value of your Skitibit so that Skigit can make the correct donation amount to the charitable organization of the creators choice, if the creator chooses to donate your Skitbit.) </span></label>
+                <div
+                    class="col-lg-6 col-md-6 col-sm-12 col-xs-12" >
+                  {{ form.incetive_val|addcss:"form-control" }}&nbsp;<span
+                    id="errmsg"></span></div>
+                {% if form.incentive_val.errors %}
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 error_msg padd_zero">
+                    {{ form.incentive_val.errors }}
+                  </div>
+                {% endif %}
+              </div>
+
+              <div class="form-group for-button" style="display: inline-block;">
+                <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12" style="line-height: 1.2; "><span style="color: #baf3c9;">Coupon Image</span><span class="red">*</span><br><span style="font-size: 13px;font-style:italic; color: #fff">(Upload your SkitBit coupon image for creators to redeem. It will be sent to creators after their Skigit is posted. Possession of the coupon must allow them to collect their SkitBit by following the redemption instructions you provide.) </span></div>
+                <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12 padd_zero">
+                  {% if user_profile.coupan_image %}
+                    <div class="col-md-2 col-sm-3 col-xs-12 img-squire">
+                      <a href="{{ user_profile.coupan_image.url }}" id="cupon_href"
+                         data-lightbox="coupan-set">
+                        <img alt="{{ user.username }}" title="click to enlarge coupan "
+                             src="{{ user_profile.coupan_image.url }}" id="user_coupan_image" width="100px"/>
+                      </a>
+                      <img width="20" height="20"  src="{% static 'images/close(32x32).png' %}"
+                           data-type="coupan" id="cremove_image" class="remove_image delete_profile">
+                    </div>
+                  {% else %}
+                    <div class="col-md-2 col-sm-3 col-xs-12 img-squire">
+                      <img alt="{{ user.username }}" src="{% static 'images/coupan_no_image.png' %}"
+                           id="user_coupan_image" width="100px"/>
+                      <img width="20" height="20"  src="{% static 'images/close(32x32).png' %}"
+                           data-type="coupan" id="cremove_image" class="remove_image delete_profile" hidden>
+                    </div>
+                  {% endif %}
+
+                  <div class="col-md-6 col-sm-9 col-xs-12" id="coupon_buttons_wrap">
+                    <div class="upload-btn-wrapper"  id="coupon_buttons">
+                      <button class="fileUpload btn" id="uplad_coupan_img" onclick="$('#browse_coupan_img').click()" type="button"
+                              style="margin: 25px 10px 0px 32px;">Choose File</button>
+                      <input id="browse_coupan_img" type="file" class="upload hide"
+                             >
+                    </div>
+                    <button class="btn uplad_coupan_img hide" id="uplad_coupan_img" type="button"> Upload
+                    </button>
+                    <div class="coupon-img-load-progress"></div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+              <div class="form-group">
+                <div style="color: #e9f0ce; margin-top: 10px;margin: 25px 0 10px -20px;border-bottom: 1px solid #e9f0ce;padding-top: 10px;width: 80%;font-size: 19px;">
+				Contact Information</div>
+				
+              </div>
+
+                  <div id="contact_info_note" style="color: #e9f0ce;font-style: italic; margin: 10px 0 20px;">Note -This will be displayed to members in your company profile</div>
+				  
+              <div class="form-group">
+                <label class="col-lg-3 col-md-3 col-sm-12 col-xs-12"
+                       for="{{ form.contact_name.id_for_label }}">
+                  Contact Name<span class="red">*</span>
+                </label>
+                <div
+                    class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  {{ form.contact_name|addcss:"form-control" }}</div>
+                {% if form.contact_name.errors %}
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 error_msg padd_zero">
+                    {{ form.contact_name.errors }}
+                  </div>
+                {% endif %}
+              </div>
+
+              <div class="form-group">
+                <label class="col-lg-3 col-md-3 col-sm-12 col-xs-12"
+                       for="{{ form.contact_email.id_for_label }}">
+                   Email<span class="red">*</span>
+                </label>
+                <div
+                    class="col-lg-6 col-md-6 col-sm-12 col-xs-12">  {{ form.contact_email|addcss:"form-control" }}</div>
+                {% if form.contact_email.errors %}
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 error_msg padd_zero">
+                    {{ form.contact_email.errors }}
+                  </div>
+                {% endif %}
+              </div>
+
+              <div class="form-group">
+                <label class="col-lg-3 col-md-3 col-sm-12 col-xs-12"
+                       for="{{ form.contact_phone.id_for_label }}">Contact Phone<span class="red">*</span>
+                </label>
+                <div
+                    class="col-lg-6 col-md-6 col-sm-12 col-xs-12">  {{ form.contact_phone|addcss:"form-control" }}</div>
+                {% if form.contact_phone.errors %}
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 error_msg padd_zero">
+                    {{ form.contact_phone.errors }}
+                  </div>
+                {% endif %}
+              </div>
+
+              <div class="form-group">
+                <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" style="margin:16px 0px;" id="payment_info">
+                  <strong style="color: #e9f0ce;font-weight: normal;">Payment Setup Information</strong>
+                  <span>
+                              <a target="_blank" id="check_fees"
+                                 href="/about-us/business-value-services-fees/" >Click here to check Skigit Fees</a>
+                            </span>
+                </div>
+              </div>
+              
+			                <div id="payment_selection">
+                <div class="form-group gender" id="payment_method_section" style="margin-bottom: 15px;">
+                  <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12" for="{{ form.gender.id_for_label }}" id="Payment" style="color: #fff;">Payment
+                    Method
+                    <span class="red">*</span>
+                    <div class="dropdown f_type">
+                      <!-- <i><img src="/static/images/help.png" width="15"/> </i>-->
+                      <!-- dropdown menu -->
+                      <ul class="dropdown-menu f_type">
+                        <div class="pop f_type">
+                          <h2 class="f_type">Payment Information</h2>
+                          <p class="f_type">Select Appropriate Payment Method to Proceed.</p>
+                        </div>
+                      </ul>
+                    </div>
+                  </div>
+                  <div
+                      class="col-lg-6 col-md-6 col-sm-12 col-xs-12">{{ form.payment_method|addcss:"form-control" }} </div>
+                  {% if form.payment_method.errors %}
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 error_msg padd_zero">
+                      {{ form.payment_method.errors }}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+			  
+              <div id="paypal_info_section">
+                <div class="form-group">
+                  <label class="col-lg-3 col-md-3 col-sm-12 col-xs-12"
+                        for="{{ form.payment_user_name.id_for_label }}">
+                    Name of PayPal Setup<span class="red">*</span></label>
+                  <div
+                      class="col-lg-6 col-md-6 col-sm-12 col-xs-12"> {{ form.payment_user_name|addcss:"form-control" }} </div>
+                  {% if form.payment_user_name.errors %}
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 error_msg padd_zero">
+                      {{ form.payment_user_name.errors }}
+                    </div>
+                  {% endif %}
+                </div>
+
+                <div class="form-group">
+                  <label class="col-lg-3 col-md-3 col-sm-12 col-xs-12"
+                        for="{{ form.payment_email.id_for_label }}">
+                  PayPal  Email<span class="red">*</span></label>
+                  <div
+                      class="col-lg-6 col-md-6 col-sm-12 col-xs-12">  {{ form.payment_email|addcss:"form-control" }}</div>
+                  {% if form.payment_email.errors %}
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 error_msg padd_zero">
+                      {{ form.payment_email.errors }}
+                    </div>
+                  {% endif %}
+                </div>
+            </div>
+
+
+			  
+			  
+              <script>
+                $j = jQuery.noConflict();
+                $j(document).ready(function () {
+                  var radioVal = $j("input[name='payment_method']:checked").val();
+                  if (radioVal == 0) {
+                    $j('#card_section').hide()
+                    $j('#paypal_section').show()
+                    $j('#paypal_info_section').show()
+                  }
+                  else if (radioVal == 1) {
+                    $j('#paypal_section').hide()
+                    $j('#paypal_info_section').hide()
+                    $j('#card_section').show()
+                  }
+
+                  $j("input[name='payment_method']").click(function () {
+                    var radioValue = $j("input[name='payment_method']:checked").val();
+
+                    if (radioValue == 0) {
+                      $j('#card_section').hide()
+                      $j('#paypal_section').show()
+                      $j('#paypal_info_section').show()
+                    }
+                    else if (radioValue == 1) {
+                      $j('#paypal_section').hide()
+                      $j('#paypal_info_section').hide()
+                      $j('#card_section').show()
+                    }
+                  });
+
+                  removePaymentMethod = function (type) {
+
+                    $j.ajax({
+                      url: "/invoice/payment-method-remove/",
+                      type: "POST",
+                      data: {'type': type},
+                      success: function (data) {
+                        if (data.is_success) {
+                          if (type == 'PayPalAccount') {
+                            $j('.box_form_paypal').empty()
+                            $j('.paypal_form').css('visibility', 'visible')
+                            $j('.paypal_form').show()
+                          }
+                          else if (type == 'CreditCard') {
+                            $j('.card_form').css('visibility', 'visible')
+                            $j('.card_form').show()
+                            $j('.card_section').show()
+
+                            $j('.box_form_credirt').empty()
+                          }
+                          window.location.reload(true); // reloaded the page so that user can't navigate to other pages
+                        }
+                      }
+                    });
+                  }
+
+                });
+              </script>
+              <div for="id_payment_method_0" id="paypal_section" style="height: 54px;">
+                <div class="form-group">
+                  <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12"></div>
+                  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                    <div class='paypal_form'
+                         style="visibility:{% if not pay_pal_account_found %}visible;{% else %}hidden; display: none;{% endif %}">{% include 'payment/paypal_form.html' %}</div>
+                    <div class="box_form_paypal" style="color: #fff;margin-bottom: 10px;">
+                      {% if pay_pal_account_found %}
+                        Saved PayPal Account Detail
+                        {% for invo in paypal_invoice_data %}
+                          <div class="list-group" style="margin-top: 10px;">
+                            <div class="list-group-item" style="color: #090909;background-color: #e8f3e8;">
+                              <img src="{{ invo.c_image_url }}"/> {{ invo.email }}
+                              <img width="20" height="20"  src="{% static 'images/close(32x32).png' %}"
+                                   onclick="removePaymentMethod('PayPalAccount')" data-type="paypal-delete"
+                                   id="paypal_remove" class="payment_remove"/>
+                            </div>
+                          </div>
+                        {% endfor %}
+                      {% endif %}
+                    </div>
+                    {% if not pay_pal_account_found %}
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 error_msg padd_zero payment_not_exist_error"><img width="25" src="/static/images/error_icon.png">Please Complete Your Payment Setup</div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+
+              <div for="id_payment_method_1" id="card_section" hidden >
+                <div class="form-group">
+                  <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12"></div>
+                  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="card_form"
+                         style="visibility: {% if not card_found %}visible;display: block;{% else %}hidden; display: none;{% endif %}">{% include 'payment/invoice_card.html' %}</div>
+                    <div class="box_form_credirt">
+                      {% if card_found %}
+                        <span style="margin-left: 10px;color: #fff;">Saved Credit Card</span>
+                        {% for invo in invoice_data %}
+                          <div class="list-group" style="margin-top: 10px;background-color: #d4d6e2;border-radius: 6px;">
+                            <div class="list-group-item">
+                              <img src="{{ invo.c_image_url }}"/>&nbsp;{{ card }}
+                              <img width="20" height="20" src="{% static 'images/close(32x32).png' %}"
+                                   onclick="removePaymentMethod('CreditCard')" data-type="credit-card-delete"
+                                   id="card_remove" class="payment_remove"/>
+                            </div>
+                          </div>
+                        {% endfor %}
+                      {% endif %}
+                    </div>
+                    {% if not card_found %}
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 error_msg padd_zero payment_not_exist_error1">Please Complete Your Payment Setup</div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 15px;">
+                <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" style="margin:8px 0px;">
+                  <strong style="color: #e9f0ce;font-weight: normal;"   >Contact Billing Address Information</strong>
+                </div>
+              </div>
+
+
+
+              <div class="form-group">
+                <div>
+                  <label class="col-lg-3 col-md-3 col-sm-12 col-xs-12"  style="margin-top: -15px;">EIN<span class="red">*</span><br>(NN-NNNNNNN)</label>
+                  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">{{ form.ein|addcss:"form-control" }}</div>
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 error_msg padd_zero">
+                      <div id="ein_error" style="margin-left:25%;"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div>
+                  <label class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+				  Business Documents
+				  <span class="red">*</span><br>(minimum of two documents required)</label>
+				 
+                  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="margin-bottom:6px;z-index: 1;">
+                    <div id="business_doc" class=" dropzoneDragArea dropzone-previews dropzone" style="width: 100%;">
+                    </div>
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 error_msg padd_zero">
+                      <div style="margin-top:8px;" id="id_business_doc_error_msg"></div>
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div>
+                  <label class="col-lg-3 col-md-3 col-sm-12 col-xs-12" style="margin-top: -15px;">Business Website<span class="red">*</span> <br>(https://www...)</label>
+                  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">{{ form.business_website|addcss:"form-control" }}</div>
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 error_msg padd_zero">
+                      <div id="business_website_error" style="margin-left:25%;"></div>
+                    </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-lg-3 col-md-3 col-sm-12 col-xs-12" for="{{ form.biller_name.id_for_label }}">Biller
+                  Name<span class="red">*</span></label>
+                <div
+                    class="col-lg-6 col-md-6 col-sm-12 col-xs-12">  {{ form.biller_name|addcss:"form-control" }}</div>
+                {% if form.biller_name.errors %}
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 error_msg padd_zero">
+                    {{ form.biller_name.errors }}
+                  </div>
+                {% endif %}
+              </div>
+
+              <div class="form-group">
+                <label class="col-lg-3 col-md-3 col-sm-12 col-xs-12"
+                       for="{{ form.biller_address1.id_for_label }}">Address1<span class="red">*</span>
+                </label>
+                <div
+                    class="col-lg-6 col-md-6 col-sm-12 col-xs-12">  {{ form.biller_address1|addcss:"form-control" }}</div>
+                {% if form.biller_address1.errors %}
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 error_msg padd_zero">
+                    {{ form.biller_address1.errors }}
+                  </div>
+                {% endif %}
+              </div>
+
+              <div class="form-group">
+                <label class="col-lg-3 col-md-3 col-sm-12 col-xs-12"
+                       for="{{ form.biller_address2.id_for_label }}">Address2
+                </label>
+                <div
+                    class="col-lg-6 col-md-6 col-sm-12 col-xs-12">  {{ form.biller_address2|addcss:"form-control" }}</div>
+                {% if form.biller_address2.errors %}
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 error_msg padd_zero">
+                    {{ form.biller_address2.errors }}
+                  </div>
+                {% endif %}
+              </div>
+
+            {% endif %}
+
+            <div class="form-group">
+              <label class="col-lg-3 col-md-3 col-sm-12 col-xs-12" for="{{ form.country.id_for_label }}">Country&nbsp;&nbsp;&nbsp;
+                <span class="red">*</span>
+              </label>
+              <div
+                  class="col-lg-6 col-md-6 col-sm-12 col-xs-12" id="country_field">  {{ form.country|addcss:"form-control" }}</div>
+              {% if form.country.errors %}
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 error_msg padd_zero">
+                  {{ form.country.errors }}
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="form-group">
+              <label class="col-lg-3 col-md-3 col-sm-12 col-xs-12" for="{{ form.state.id_for_label }}">State<span class="red">*</span>
+              </label>
+              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <select class="form-control" name="state", id="id_state">
+                    {% for i in state_list %}
+                    <option value="{{ i }}" 
+                    {% if i == form.state.value %}
+                    selected
+                    {% endif %}
+                    >{{ i }}</option>
+                    {% endfor %}
+                  </select>
+              </div>
+              {% if form.state.errors %}
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 error_msg padd_zero">
+                  pay {{ form.state.errors }}
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="form-group">
+              <label class="col-lg-3 col-md-3 col-sm-12 col-xs-12" for="{{ form.city.id_for_label }}">City<span class="red">*</span>
+              </label>
+              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"> {{ form.city|addcss:"form-control" }}</div>
+              {% if form.city.errors %}
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 error_msg padd_zero">
+                  {{ form.city.errors }}
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="form-group">
+              <label class="col-lg-3 col-md-3 col-sm-12 col-xs-12" for="{{ form.zip_code.id_for_label }}">Zip
+                Code<span class="red">*</span>
+              </label>
+              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">{{ form.zip_code|addcss:"form-control" }}</div>
+            </div>
+
+            <div class="form-group">
+              <label class="col-lg-3 col-md-3 col-sm-12 col-xs-12"
+                     for="{{ form.search_profile_security.id_for_label }}">Search and Profile Security<span class="red">*</span>
+              </label>
+              <div
+                  class="col-lg-6 col-md-6 col-sm-12 col-xs-12">{{ form.search_profile_security|addcss:"form-control" }}</div>
+              {% if form.search_profile_security.errors %}
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 error_msg padd_zero">
+                  {{ form.search_profile_security.errors }}
+                </div>
+              {% endif %}
+            </div>
+            {% if is_business %}
+              <div class="form-group">
+                <label class="col-lg-3 col-md-3 col-sm-12 col-xs-12" for="{{ form.business_type.id_for_label }}">Business
+                  Type<span class="red">*</span>
+                </label>
+                <div
+                    class="col-lg-6 col-md-6 col-sm-12 col-xs-12">  {{ form.business_type|addcss:"form-control" }}</div>
+                {% if form.business_type.errors %}
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 error_msg padd_zero">
+                    {{ form.business_type.errors }}
+                  </div>
+                {% endif %}
+              </div>
+              <div class="form-group" id="business_type_other"
+              {% if form.business_type.value != 'OS' %}
+               style="display: none;"
+               {% endif %}>
+                <label class="col-lg-3 col-md-3 col-sm-12 col-xs-12">Please Specify <span class="red"></span>
+                </label>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">{{ form.custom_business_type|addcss:"form-control" }}
+                </div>
+              </div>
+            {% endif %}
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+              <label class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                &nbsp; </label>
+              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="color: #baf3c9;"> Keep search engines (ex:Google) from showing your
+                Skigit profile in search results and keep others from viewing your profile.
+              </div>
+            </div>
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center margin_tb_10" style="margin: 50px 0 50px -40px!important;">
+			
+              <input type="submit" value="Save" class="btn" name="basic_profile_submit"/>
+              <a onclick="location.href = '/'" class="btn" id="profile_cancel_button">Cancel</a>
+              <div id='errors' style="list-style-type:none; margin:15px; "></div>
+            </div>
+
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+    </div>
+    <div  class="modal" id="profile-pic-modal" tabindex="-1" aria-labelledby="profile-pic-modal" role="dialog" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+          <!-- Modal content-->
+          <div class="modal-content modal-blk">
+            <div class="modal-body">
+              <h4 class="modal-title text-center" >Click to Upload and change your Profile picture</h4>
+              <div class="" style="padding-top:18px;">
+                <div class="row">
+                  <div class="col-md-offset-3 img-squire">
+                    <img alt="{{ user.get_full_name|default:user.username }}" class="img-responsive" id="pic-preview" style="margin:0 0 20px 10px" src="#"/>
+                  </div>
+                </div>
+
+                <div class="error-img-upload-txt hide text-danger" style="padding-bottom: 15px;">
+                  Please select valid file format like *.jpg, *.jpeg,*.gif ,*.png
+                </div>
+                <div class="img-upload-fail hide text-danger text-center" style="padding-bottom: 15px;">
+                  Image upload fail. Please try again
+                </div>
+                <div class="row text-center btn-wrapper">
+                  <div class="form-group col-md-6" style="margin: 0 -30px 0 20px;">
+                    <input id="id-change-picture" type="button" value="Click to upload" />
+                  </div>
+                  <div class="form-group col-md-4 hide" id="upload-p-pic">
+                    <input class="hide" type="file" id="browse_p_pic">
+                    <input type="button" class="upload_p_pic" value="Upload" style="width:120px!important; "/>
+                  </div>
+                  <div class="form-group col-md-6">
+				  <a onclick="location.href = ''" class="btn" id="profile_cancel_button">Cancel</a>
+                    <!--<input id="id-change-picture-cancel" type="button" data-dismiss="modal" value="Cancel" style="width:120px!important;color: #ffffff;"/>-->
+                  </div>
+                  <div class="col-md-12">
+                      <div class="profile-photo-load-progress"></div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+
+   <span class="exist-profile-img hide">{% if user_profile.profile_img %}{{ profile_image }}{% else %}{% static 'images/noimage_user.png' %}{% endif %}</span>
+{% endblock %}

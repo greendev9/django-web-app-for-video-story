@@ -1,0 +1,41 @@
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 padd_zero libnk_skigitshair" ng-hide="succ">
+  <div class="mar_zero">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 modal-header" style="border-bottom: none;">
+      <h4 class="modal-title">Share this Skigit with...</h4>
+    </div>
+
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 modal-body tabbable custom_popup" id="shareContent">
+
+      <div class="tabbox">
+        <ul class="nav nav-tabs">
+          <li class="tab active"><a href=".share1" data-toggle="tab">Skigit Friends</a></li>
+          <li class="tab"><a href=".share2" data-toggle="tab">Email Friends</a></li>
+        </ul>
+        <div class="tab-content" style="padding-top: 8px">
+          <div class="tab-pane active share1{{ vid.id }}">
+            {% if friend_list %}
+              <div class="row" style="">
+                <div class="col-lg-12 col-md-12 col-sm-12 f_type">
+                  <div class="col-lg-8 col-md-8 col-sm-8 " style="padding-bottom: 10px;">
+                    <input type="text" class="search-query form-control f_type" style="border-radius: 2px;"
+                           id="friend_share_text{{ vid.id }}" autocomplete="off" autocorrect="off"
+                           spellcheck="false"
+                           placeholder="Search friends"/>
+                  </div>
+                  <div class="col-lg-4 col-md-4 col-sm-4 check_box_sapn">
+                    <label class="selectall_label" id="selectall_label{{ vid.id }}">All &nbsp;
+                      <input type="checkbox"
+                             value=""
+                             class="select_all{{ vid.id }}"
+                             name="select_all{{ vid.id }}"
+                             id="select_all{{ vid.id }}"/>
+                    </label>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

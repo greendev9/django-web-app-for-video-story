@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block title %}{{ block.super }}
+  {% if category_current.cat_name %}
+    {{ category_current.cat_name }}
+  {% elif category_current.sub_cat_name %}
+    {{ category_current.sub_cat_name }}
+  {% elif skigit_plug %}
+    Plugged Skigits into {{ skigit_plug }}
+  {% elif skigit_like %}
+    Liked Skigits by {{ skigit_like }}
+  {% else %}
+    Skigits by {{ category_current }}
+  {% endif %}
+{% endblock %}
+{% block content %}
+
+  <div class="mar_zero" id="main">
+    <div class="row">
+      {% block category_video_block %}
+        {% include 'category/category_video.html' %}
+      {% endblock category_video_block %}
+    </div>
+    <div class="row">
+      <div class="col-md-2 col-lg-2 hidden-xs hidden-sm"></div>
+      <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+
+		           {% if video_detail %}
+              <div class="categories-sort-box">
+                <ul>
+                  <li>
+                    <a href="{% url 'date_sort_view' category_current.cat_slug order %}">Sort Date</a>
+                    {% if page_type == 'sort_date' %}
+                      <span class="sort_arrow">
+                        {% if order == 1 %}&#9206;{% else %}&#9207;{% endif %}
+                      </span>
+                    {% endif %}
+                  </li>
+                  |
+                  <li>
+                    <a href="{% url 'title_sort_view' category_current.cat_slug order_title %}">Titles
+                    </a>
+                    {% if page_type == 'sort_title' %}
+                      <span class="sort_arrow">
+                        {% if order_title == 1 %}&#9206;{% else %}&#9207;{% endif %}
+                      </span>
+                    {% endif %}
+                  </li>
+                  |
+                  <li>
+                    <a href="{% url 'views_sort_view' category_current.cat_slug order_views %}">Views
+                    </a>
+                    {% if page_type == 'sort_views' %}
+                      <span class="sort_arrow">
+                        {% if order_views == 1 %}&#9206;{% else %}&#9207;{% endif %}
+                      </span>
+                    {% endif %}
+                  </li>
+                  |
+                  <li>
+                    <a href="{% url 'like_sort_view' category_current.cat_slug order_likes %}">Likes
+                    </a>
+                    {% if page_type == 'sort_likes' %}
+                      <span class="sort_arrow">
+                        {% if order_likes == 1 %}&#9206;{% else %}&#9207;{% endif %}
+                      </span>
+                    {% endif %}
+                  </li>
+                  |
+                  <li>
+                    <a href="{% url 'random_sort_view' category_current.cat_slug %}">Random
+                    </a>
+                    {% if page_type == 'sort_random' %}
+                      <span class="sort_arrow">&#9207;</span>
+                    {% endif %}
+                  </li>
+                </ul>
+              </div>
+            {% endif %}
+			
+		
+      </div>
+      <div class="col-md-2 col-lg-2 hidden-xs hidden-sm"></div>
+    </div>
+    {% if video_detail %}
+      <div id="skigit_content_list"  >  
+        <div class="row endless_page_template">
+          {% include 'includes/skigit_list.html' %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}
+{% block js %}
+  <script>
+  jQuery.endlessPaginate({paginateOnScroll: true});
+
+</script>
+{% endblock %}
+{#{% block js %}#}
+{#  {{ block.super }}#}
+{#  <script>jQuery.endlessPaginate({paginateOnScroll: true, paginateOnScrollChunkSize: 5});</script>#}
+{#{% endblock %}#}

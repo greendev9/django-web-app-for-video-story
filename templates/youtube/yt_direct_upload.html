@@ -1,0 +1,685 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{{ block.super }}Upload{% endblock %}
+
+{% block bx-slider-js %}{% endblock bx-slider-js %}
+{% block pagination-js %}{% endblock pagination-js %}
+
+{% block css %}
+    <style type="text/css">
+  
+   
+  
+        label.error {
+            margin: 10px 0px 0px -20px !important;
+            border: 0;
+            display: block;
+            width: 100%;
+        }
+.error {
+  color: #b52525;
+}
+    input[type="text"], input[type="email"], textArea, select, select option, label {
+      color: #000;
+    }
+
+.dropzone .dz-preview .dz-image {
+    height: 80px!important;
+}
+
+    </style>
+  <link href="{% static 'css/jquery-ui-1.12.1.css' %}" rel="stylesheet"/>
+  <link href="{% static 'css/dropzone.css' %}" rel="stylesheet"/>
+  <link href="{% static 'css/select2.min.css' %}" rel="stylesheet"/>
+
+{% endblock css %}
+
+{% block js %}
+  <script>
+speark_logo = function () {
+
+if ($j('#id_made_by').val() != '') {
+  $j("#id_made_by_option").val(null);
+  $j("#id_made_by_option").attr('disabled', 'disabled');
+}
+else {
+  $j("#id_made_by_option").removeAttr('disabled');
+}
+
+var user_id = $j('#id_made_by option:selected').val();
+
+if(user_id) {
+    jQuery.ajax({
+      url: "/get-sperk/",
+      type: "POST",
+      data: {
+        'user_id': user_id,
+        csrfmiddlewaretoken: '{{ csrf_token }}'
+      },
+      success: function (data) {
+        $j("#sperk_div").show();
+        $j('#id_made_by-error, #id_earn-block-error').empty();
+        $j('.sperk-content p').remove();
+        $j('.sperk-content h2').remove();
+
+        if (data.incentive_detail) {
+            $j('.sperk-content').empty()
+  
+
+            $j('.sperk-content').append("<center><img width='60' height='auto' style='z-index: 1;position: relative;border-radius: 50%;'  src='/static/images/crud_happy_icon.png'></center>");
+
+            $j('.sperk-content').append("<center><p>" + data.incentive_detail + "</p></center>");
+
+            if ($j("input[type='radio'][name=add_logo]:checked").val() === '1' ||
+              $j("input[type='radio'][name=add_logo]:checked").val() === 1) {
+              $j("#logos").show();
+              $j("#rec-donate-radials").show();
+            } else {
+              $j("#rec-donate-radials").hide();
+              $j("#logos").hide();
+            }
+          }
+          else {
+            $j('.sperk-content').empty()
+            $j('.sperk-content').append("<center><img width='60' height='auto'  style='z-index: 1;position: relative;border-radius: 50%;' src='/static/images/crud_icon.png'></center>");
+            $j('.sperk-content').append("<center><p> This maker is not offering any Skitbits at this time. Check back later! </p></center>");
+            if ($j("input[type='radio'][name=add_logo]:checked").val() === '1' ||
+              $j("input[type='radio'][name=add_logo]:checked").val() === 1) {
+
+              $j("#logos").show();
+              $j("#rec-donate-radials").hide();
+            } else {
+              $j("#rec-donate-radials").hide();
+              $j("#logos").hide();
+            }
+          }
+          $j('.logo-url .dz-image').remove()
+          $j('.logo-url label').remove()
+          $j('.logo-url .dz-image').remove()
+          $j('#logos').empty()
+          $j('#id_sperk_label').show()
+
+        var imagesCollection = data.all_business_logo;
+        if (imagesCollection) {
+          for (var i = 0; i < imagesCollection.length; i++) {
+            var idd = imagesCollection[i][0];
+            if ((idd.length == 0)) {
+              continue;
+            }
+            var image_div = ' <input type="radio"  id=' + idd + ' value=' + idd + ' name="select_logo" style="margin: -15px 0;"/>' + '<label for=' + idd + ' class="label"><div class="dz-image"> <img data-dz-thumbnail="" alt="skigit/logo/ebf7e1f9-5356-40cc-bb56-0bd0bbecfecc" src=' + imagesCollection[i][1] + '></div></label>'
+            $j('.logo-url').append(image_div);
+          }
+        }
+        else {
+          $j('#logos').hide()
+        }
+
+      }
+    });
+}
+}
+
+    $j = jQuery.noConflict();
+    $j(document).ready(function () {
+      $j('[data-toggle="popover"]').popover();  // popover for post skigit btn
+      speark_logo() // will be used when a user try to upload skigit from direct sperk (sperk detail page)
+      $j("b.sperk-logo-n").click(function () {
+        $j("ul.sperk-logo").addClass('open');
+        $j(".p_body").css("display", "block");
+
+      });
+
+      $j("#sperk_div").hide(); // by default it will hide
+      $j('#id_made_by').on('select2:select', function (e) {
+        if (e.params.data.id != '') {
+          $j("#sperk_div").show();
+          $j('#id_made_by-error, #id_earn-block-error').empty();
+        } else {
+          $j("#sperk_div").hide();
+        }
+      });
+      var busninessUser;
+      $j("#id_made_by").select2({
+          templateResult: formatOptions,
+          templateSelection : formatOptions,
+            ajax: {
+                    url: "/business-users/",
+                    type:"POST",
+                    data: function (params) {
+                      var query = {
+                        term: params.term,
+                        page: params.page || 1
+                      }
+                      return query;
+                    },
+                    dataType: 'json',
+                    processResults: function (data) {
+                      busninessUser = data.results;
+                      return {
+                        results: data.results,
+                        pagination: {
+                            more: data.next_page
+                        }
+                      };
+                    }
+             },
+
+          });
+      function formatOptions (state) {
+        // check for on selection
+        busninessUser && busninessUser.map(busninessUser=>{
+          if (busninessUser.id === parseInt(state.id)){state.text = busninessUser.text}
+        });
+
+        if (!state.id) { return state.text }
+        option_data = state.text.split(':;:');
+        company_title = option_data[0];
+        state.title = company_title;
+        let logo_src = null;
+        if (option_data[1] !== '') {
+          logo_src = `<img class="logo-max-width-height here" src="${option_data[1]}"  />`;
+        }
+        else {
+          logo_src = `<span class="glyphicon glyphicon-briefcase"></span>`;
+        }
+
+          var $jstate = $j(
+          `<span id="company-title-text"> <span class="inner-logo-design">${logo_src}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` + state.title + '</span>'
+        );
+        return $jstate;
+      }
+
+      $j("span#close-button").click(function () {
+        $j("ul.sperk-logo").removeClass('open');
+        $j(".p_body").css("display", "none");
+
+      });
+
+      $j(".p_body").click(function () {
+        $j("ul.sperk-logo").removeClass('open');
+        $j(".p_body").css("display", "none");
+      });
+
+      $j(".p_body").click(function () {
+        $j(".target-div").removeClass('open');
+        $j(".p_body").css("display", "none");
+      });
+
+      $j("#close").click(function () {
+        $j(".target-div").removeClass('open');
+        $j(".p_body").css("display", "none");
+      });
+     
+
+      $j("#id_add_logo_1").click(function () {
+        $j("#show-me").hide();
+        $j("#logos").hide();
+      });
+
+
+      $j("#id_receive_donate_sperk_1").click(function () {
+
+        $j("#target").show();
+      });
+
+      $j("#id_receive_donate_sperk_0").click(function () {
+
+        $j("#target").hide();
+        $j('#id_donate_skigit').val('');
+      });
+
+      $j('#id_video_link').init(function () {
+        if ($j('#id_video_link').val() == '') {
+          $j('.fileUpload').show();
+        }
+
+        if ($j('#id_video_link').val() != '') {
+          $j('.fileUpload').hide();
+        }
+      });
+
+      if ($j('.dropzone').change(function () {
+            $j("#id_video_link").attr("disabled", "disabled");
+          }));
+      if ($j('#id_video_link').change(function () {
+            $j('#fileUpload').hide();
+          }))
+
+
+        $j('#video_form').bind('change', function () {
+
+          file_size = this.files[0].size / 1048576
+          if (file_size < 20) {
+
+            if (this.files[0].type.split('/')[0] == 'video') {
+              return true;
+            }
+            else {
+              alert('Your Skigit file type must be .mkv | .avi | .mp4 | .3gp | .wmv ')
+              $j('#video_form').get(0)
+              return false;
+            }
+          }
+          else if (file_size > 30) {
+            alert('Your skigit must be less then 20MB')
+            $j('#video_form').get(0).clear
+            return false;
+          }
+        });
+
+      var upperlinkvalue = $j('#video_form').get(0);
+      var lowerlinkvalue = '{{form2.video_link}}';
+
+      function check() {
+        if (document.getElementById('id_video_link').value == ""
+            && document.getElementById('video_form').value == "") {
+          alert("Please Select one.");
+          return false;
+        }
+      }
+
+      $j('#id_made_by').on('change', function () {
+        speark_logo()
+      });
+
+      $j("#id_add_logo").click(function () {
+        speark_logo()
+      });
+
+      $j('.earn-block').on('change', 'input, select', function() {
+        $j('#id_earn-block-error').empty();
+      })
+    });
+
+    {% if sperk %}
+        var bizSelect = $j('#id_made_by');
+        // create the option and append to Select2
+        var option = new Option("{{business_dropdown_text}}", "{{sperk}}", true, true);
+        bizSelect.append(option).trigger('change');
+
+        // manually trigger the `select2:select` event
+        bizSelect.trigger({
+            type: 'select2:select'
+        });
+    {% endif %}
+
+    var UPLOAD_VIDEO_DIRECT_URL = '/upload/';
+    var UPLOAD_VIDEO_LINK_URL = '/youtube/link-upload';
+    var YOUTUBE_VIDEO_CHECK_API = '/youtube/video-check';
+    var PLUG_CATEGORY = '';
+    var SUB_CATEGORY = '';
+
+  </script>
+  <script type="text/javascript"
+          src="{% static 'js/dropzone-yt-direct.js' %}"></script>
+
+  {% include 'includes/upload_video_js.html' %}
+
+  <script type="text/javascript"
+          src="{% static 'js/additional-methods.min.js' %}"></script>
+  <script type="text/javascript"
+      src="{% static 'js/jquery-ui-1.12.1.min.js' %}"></script>
+  <script type="text/javascript"
+  src="{% static 'js/select2.min.js' %}"></script>
+
+{% endblock %}
+{% block content %}
+
+  <div class="box_fulllodar f_type" hidden>
+    <div id="processbar_div">
+      <div class="progress_uploading">
+        <span class="progress_text">Skigit upload progress</span>
+        <img class="ski_img_logo" src="{% static 'images/Upload_4x4.png' %}"/>
+      </div>
+      <div class="progress">
+        <div class="progress-bar progress-bar-striped active" role="progressbar" id="progessbar_strip"
+        aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- upload modal box -->
+  <div class="overlay"></div>
+  <div id="uploadBox">
+    <div style="text-align: center !important;">
+      <p>
+        <img src="{% static 'images/Skigit_Logo_AI_master_white.png' %}" alt="Skigit logo" style="width:100px;filter: brightness(1.1);">
+      </p>
+
+      <p id="confirm_upload_text" style="padding: 0px 0; margin: 0 0 25px!important"></p>
+
+      <div class="del-bott" style="padding-bottom: 20px">
+        <button type="button" onclick="close_uploadBox()" id="ok_logout_logo">Ok</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="p_body js__p_body f_type"></div>
+  <div class="row mar_zero" id="main" >
+  <div style="height:50px;background-color: #2b4756;width: 102.4%;margin-left: -20px;"> </div>
+    <div class="wrap cf f_type" style="margin-right: 15px!important;border-radius: 4px;">
+      <div id="content" class=" no-padd-form f_type" role="main">
+        <div class="post-2110 page type-page status-publish hentry f_type"
+             id="post-2110">
+          <div class="page-content rich-content f_type">
+            <div class="title_2">
+       
+	  <span id="primary_text">Upload your <span style="font-family: segoe print;font-weight: bold;color: #edce36;">Skigit!</span></span></div>
+
+      <!--<div id="Primary_Header"><span id="my_skigit_list_primary_upload">Primary</span></div>-->
+      <div id="Primary_Header"><img src="{% static 'images/Primary_upload.png' %}" width="83.333" alt="Primary Page" ></div>
+
+            <input type="hidden" id="temp_logo_val"/>
+            <form class="form-horizontal f_type" id='skigit_form1' style='margin-left: 50px;'
+                  enctype="multipart/form-data">
+              <div class="form-group f_type">
+                <div class="control-label col-sm-3 col-sm-offset-1 f_type"
+                     for="id_title" style="margin-top: 10px;">My <span style="font-family: segoe print;font-weight: bold;color: #1c6890;">Skigit</span> Title  <span class="red">*</span>
+                  <div class="dropdown">
+
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  {{ form1.title }}
+                  {% if form1.title.errors %}
+                    <div
+                        class="col-lg-12 col-md-12 col-sm-12 col-xs-12 error_msg padd_zero">
+                      {{ form1.title.errors }}
+                    </div>
+                  {% endif %}
+                </div>
+                <div class="col-sm-4 small"  style="margin-top: 20px;" >Limit 40
+                  Characters
+                </div>
+              </div>
+              <div class="form-group f_type">
+                <div class="control-label col-sm-3 col-sm-offset-1 f_type"
+                     for="id_category">My <span style="font-family: segoe print;font-weight: bold;color: #1c6890;">Skigit</span> Category <span
+                    class="red">*</span>
+                  <div class="dropdown">
+
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  {{ form1.category }}
+                </div>
+              </div>
+              <div class="form-group f_type">
+                <div class="control-label col-sm-3 col-sm-offset-1 f_type"
+                     for="id_subject_category">My Subject Category <span
+                    class="red">*</span>
+                  <div class="dropdown">
+
+                  </div>
+                </div>
+                <div class="col-sm-4 f_type">
+                  {{ form1.subject_category }}
+                </div>
+              </div>
+              <div class="form-group f_type">
+                <div class="control-label col-sm-3 col-sm-offset-1 sel-padd f_type no-padding-left"
+                     for="id_mad_by">My awesome thing was made by <span
+                     class="red">*</span>
+                  <div class="dropdown">
+                  </div>
+   
+                </div>
+                <div class="col-sm-4 f_type" style="font-family: 'LAOUI',sans-serif;">
+                    <select id="id_made_by" name="{{form1.made_by.name}}" >
+                      <option value="" selected="selected" >Select One
+                      </option>
+                    </select>
+                </div>
+              </div>
+        
+        <div class="col-sm-4 col-xs-12 small"
+                   style="margin-top: -55px;margin-right: -5px;"> 
+                   If you cannot find the logo, choose <b>Select one</b> then type the maker name in the field below.
+              </div>
+
+              <div class="form-group f_type mt-1">
+                <p class="control-label col-sm-3 col-sm-offset-1 f_type" id="if_not_found_text"
+                   for="id_made_by_option" style="margin-top: -20px;">If not found in
+                  the list above, add maker or proprietor name
+				  					<br>
+					 <span style="font-size:14px">(optional but highly receommended)</span>
+				  </p>
+				  
+                <div class="col-sm-4 f_type">
+                {{ form1.made_by_option }}
+              </div>
+              <div class="col-sm-4 col-xs-12 small"
+                   style="margin-top: -5px;">
+                   For people, places, ideas or other, simply add a cool or fun name that best fits the originator of your awesome thing. e.g. Awesome Idea; “E=mc2”, maker: “Albert Einstein”
+              </div>
+            
+          
+             
+            
+            </div>
+              <div class="form-group f_type" id="bought_at" style="margin-top: 10px; margin-bottom: 1em;">
+                <div class="control-label col-sm-3 col-sm-offset-1 f_type"
+                     for="id_bought_at">I bought my awesome thing at <span
+                    class="red">*</span>
+                  <div class="dropdown">
+
+                  </div>
+                </div>
+                <div class="col-sm-4 f_type">
+                  {{ form1.bought_at }}
+                </div>
+         <div class="col-sm-4 small" style="margin-top: 5px;">
+                 Enter name of the Internet URL (www...) of the retailer or
+                            website where you purchased your awesome thing. If not
+                            a purchased item, enter the item home page or
+                            information page where viewers can learn more about
+                            your awesome thing.
+                  </div>
+              </div>
+
+
+
+        <!-- Start New Sperks div  --->
+
+          <div class="form-group f_type earn-block" id="sperk_div">
+                <div class="col-sm-6 main-box radio">
+                  <center><label class="radio-inline">
+                    <div class="radio-box f_type">
+                      <label id="id_sperk_label" class="radio-inline small f_type">
+                       <!--<span class="red">*</span>-->
+                        <b class="sperk-logo-n f_type">
+                        <!--<img width="120" height="auto" src="https://static.skigit.com/images/animation/50/PNG/Skitbit_4x4.png">-->
+            <img width="110" height="auto" src="{% static 'images/Skitbit_4x4.png' %}"  style="z-index: 1;position: relative; margin-bottom: 50px;border-radius: 50%;">
+            
+                      </b>
+              <div id="click_sperk">Click the <span style="font-family: segoe print;font-weight: bold;color: #edce36;">SkitBit</span> icon to see what you can earn!</div>
+                      </label>
+
+                        <ul class="sperk-logo f_type">
+                          <li>
+                            <div class="sperk-content">
+
+                              <span class="glyphicon glyphicon-triangle-top"></span>
+               <!-- <center><img width='80' height='auto' src='https://static.skigit.com/images/icons/crud_icon.png'></center>-->
+                
+                <center><img width='60' height='auto' style='z-index: 1;position: relative;border-radius: 50%;' src="{% static 'images/crud_icon.png' %}" ></center>
+                
+                
+                             <!--<center><h2 class="sorry f_type" style="color:#000000 !important;">Crud!</h2></center>-->
+                             <center><p>This maker is not offering any <span style="font-family: segoe print;font-weight: bold;color: #23683b;">SkitBits</span> at this time. Check back later!</p></center>
+                              <span id="close-button"></span>
+                            </div>
+                          </li>
+                        </ul>
+                    </div>
+                  </label></center>
+
+
+
+          <!-- Start New Spice up Logo div --->
+
+        <div class="form-group f_type">
+                <div class="control-label col-sm-3 col-sm-offset-1 f_type" for="id_add_logo" id="spice_up" >Spice up your <span style="font-family: segoe print;font-weight: bold;color: #1c6890;">Skigit</span> thumbnail by adding
+                  your item logo <span>&nbsp;</span>
+                  <div class="dropdown">
+                  </div>
+                </div>
+                <div class="col-sm-6 main-box radio_2">
+                  <label class="radio-inline" style="padding-left:0px; padding-right:20px">
+                    <div class="radio-box f_type"><ul id="id_add_logo">
+    <li><label for="id_add_logo_0"><input type="radio" name="add_logo" value="1" required="" id="id_add_logo_0" checked="">
+ Yes</label>
+
+</li>
+    <li><label for="id_add_logo_1"><input type="radio" name="add_logo" value="0" required="" id="id_add_logo_1">
+ No</label>
+
+</li>
+</ul>
+<div class="col-md-3 col-sm-3 col-xs-12 f_type_logo_spice" >
+By selecting YES while the logo is NOT available, you will prompt <span style="font-family: segoe print;font-weight: bold;color: #1c6890;">Skigit</span> to inform the maker of your support, in hopes they will join <span style="font-family: segoe print;font-weight: bold;color: #1c6890;">Skigit</span> to support you.
+ </div>
+
+                      <label></label>
+
+
+
+
+                    </div>
+                  </label>
+                    <div class="form-group gender" id="rec-donate-radials" >
+
+                        <input type="radio" name="receive_donate_sperk" value="1" placeholder="Sperk" class="form-control" id="id_receive_donate_sperk_0">
+                          <label for="id_receive_donate_sperk_0">Receive <span style="font-family: segoe print;font-weight: bold;color: #23683b;">SkitBit</span></label>
+
+                                                  <input type="radio" name="receive_donate_sperk" value="2" placeholder="Sperk" class="form-control" id="id_receive_donate_sperk_1">
+                          <label for="id_receive_donate_sperk_1" style="margin-left: 0px;">Donate <span style="font-family: segoe print;font-weight: bold;color: #23683b;">SkitBit</span></label>
+
+
+                      <div id="target" style="display:none;">
+                          <br/>
+                        <img 
+                        src="{% static 'images/Live-Share_Icon_Landing-Banner.png' %}" 
+                        style="width: 60px;">
+                        
+                            {{ form1.donate_skigit }}
+                          <br/>
+
+                      </div>
+                    </div>
+                  <div class="logo-url f_type" id="logos" style="margin-bottom: 20px; display: inline-block;">
+                  </div>
+                    <label id="id_earn-block-error" class="error text-center" style="top:0;"></label>
+                </div>
+              </div>
+
+
+                </div>
+              </div>
+        <!----End of new sperks div---------->
+
+
+
+
+              <div class="form-group f_type">
+                <div class="control-label col-sm-3 col-sm-offset-1 f_type"
+                     for="id_why_rocks">Why my awesome thing rocks!<span
+                    class="red">*</span>
+                </div>
+                <div class="col-sm-4 f_type">
+                  {{ form1.why_rocks }}
+                </div>
+                <div class="col-md-3 col-sm-3 col-xs-12 f_type" id="guide_text_awesome_thing">Limit 200
+                  characters
+                </div>
+              </div>
+        </form>
+
+        <div class="form-horizontal">
+            <div class="form-group" id="video-upload-div">
+              <div class="control-label col-sm-3 col-sm-offset-1 f_type"
+                     id='file_uplod_div' for="fileUploadform">
+                  Upload or link to your video<br> (max = 100MB) <span class="red">*</span>
+                <div class="dropdown">
+				<div style="font-size:12px">For files larger than this, we recommend to upload your video into YouTube then post to <span style="font-family: segoe print;font-weight: bold;color: #1c6890;">Skigit</span> as a YouTube share link.</div>
+
+                </div>
+              </div>
+              <div class="col-sm-4 fileUpload" style="margin:10px 0px;">
+                <form method="post" id="fileUploadform"
+                      enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <div id="myId" style="width: inherit;text-align: center;" class="dropzone"></div>
+                  <div class="dz-progress">
+                    <span class="dz-upload"
+                          data-dz-uploadprogress>
+                    </span>
+                  </div>
+                </form>
+                <div class="col-sm-12">
+                  <label id="id_direct_upload-error" class="error" style="top:0;"></label>
+                </div>
+              </div>
+              <div class="col-md-3 col-sm-3 col-xs-12 f_type" id="file_upload_guidance">If a file is
+                uploaded, it will be posted in your <span style="font-family: segoe print;font-weight: bold;color: #1c6890;">Skigit</span>. Otherwise, you must
+                  enter a valid URL for your video in order to link to it.
+              </div>
+            </div>
+          <div class="form-group">
+            <p class="control-label col-sm-3 col-sm-offset-1 f_type"
+               id="id_link_label" for="id_video_link">YouTube video link<span class="red">*</span></p>
+            <div class="col-sm-4" style="margin-left: 25px;">
+              {{ form2.video_link }}
+              <label id="id_video_link-error" for="id_video_link" class="error" style="top:0;margin-left: -20px;"></label>
+            </div>
+            <div class="col-md-3 col-sm-3 col-xs-12 f_type" id="id_upload_link_guidance">Enter the complete
+              URL of the YouTube <strong>SHARE link </strong>only. For example: format https://youtu.be/T0gl9LXq3LA.
+            </div>
+          </div>
+      
+      
+          <div class="col-sm-8 col-sm-offset-4 upload_btn_main upload-btn"
+               style="margin-top: 20px;margin-left: -2%;width: 100%;text-align: center;">
+                {% if canPost %}
+        
+            <input name="submit" type="button" class="btn" id="vidsubmit"
+                   value="Post Skigit"/>
+           <a onclick="location.href = '/'" class="btn" id="profile_cancel_button" style="padding-top: 5px!important;">Cancel</a>
+                {% else %}
+            <input type="button" class="btn disabled"
+                   value="Post Skigit" data-toggle="popover" data-trigger="hover"
+                   data-content="You can only access your profile page until your account is verified. We will notify you when verified at which time, you will have full access to all Skigit features. Thank you for your patience." />
+                {% endif %}
+          
+           <!--<input name="cancel" type="button" id="clear_form" value="Cancel"
+                   class="btn"/>-->
+           
+            <div id='errors'
+                 style="margin-top:25px; list-style-type:none; "></div>
+            <div>
+              <ul>
+                <li style="list-style-type:none;color:red;" id="msg_donate"
+                    hidden>
+                    <label id="msg_donate" style="margin-top:5px;" class="error" hidden></label>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <ul>
+                <li style="list-style-type: none; color:red;" id="msg1" class="error">
+                  <label id="msg" style="margin-top:5px;" class="error"></label></li>
+              </ul>
+            </div>
+          </div>
+          <div id="status"></div>
+          <div class="clearfix"></div>
+        </div>
+   </div>
+      </div>
+    </div>
+  </div>
+  </div>
+{% endblock %}

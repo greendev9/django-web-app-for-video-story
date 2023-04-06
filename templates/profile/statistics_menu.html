@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load category_list %}
+
+{% block window_page_meta_block %}
+
+    <title>{{ user.first_name }} {{ user.last_name }} | Delete Account</title>
+    <meta name="description" content="Skigit" />
+    <link rel="image_src" href="{% static 'img/ico/arabic-media-icon-100x110.jpg' %}" />
+    <meta property="og:title" content="Skigit" />
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="{{ request.build_absolute_uri }}"/>
+    <meta property="og:image" content="http://arabic-media.com/img/ico/arabic-media-icon-100x110.jpg' %}"/>
+    <meta name="description" content="Skigit"/>
+    <link rel="image_src" href="{% static 'img/ico/arabic-media-icon-100x110.jpg' %}" />
+    <meta property="og:site_name" content="Skigit"/>
+    <meta property="og:description" content="{{ user.first_name }} {{ user.last_name }}{{ user.username}} Delete Account"/>
+    <meta itemprop="name" content="Skigit" />
+    <meta itemprop="description" content="{{ user.first_name }} {{ user.last_name }}{{ user.username}}" />
+    <meta itemprop="image" content="img/ico/arabic-media-icon-100x110.jpg' %}" />
+    <meta name="description" content=  "Skigit"/>
+    <meta name="keywords" content="{{ user.first_name }} {{ user.last_name }}{{ user.username}} Delete Account" />
+    <meta name="rating" content="Skigit"/>
+    <meta name="revisit-after" content="1 days"/>
+    <meta name="robots" content="index,follow"/>
+    <meta name="Author" content="(c) Skigit"/>
+
+    <style>
+        .profile-form{font-size:13px;}
+        .profile-form h3{ color:#000 !important; font-size:22px !important; text-align:center; }
+        .profile-form h4{ color:#000 !important; font-size:14px; line-height:20px;  }
+        .profile-form h5.note{color:#FF0000 !important; text-align:center; font-size:14px; font-weight:bold; font-family:"LaoUI"; }
+        .profile-form .btn{ border-radius:30px !important; -moz-border-radius:30px !important; -webkit-border-radius:30px !important; -o-border-radius:30px !important;color:#fff !important;  padding: 5px 25px !important;  }
+        .profile-form .btn:hover{  color:#ff0 !important;  }
+        .profile-form .btn.yel{ color:#ff0 !important;   }
+        .profile-form .btn.yel:hover{  color:#fff !important;  }
+        .profile-form .panel{margin-bottom:0px; border-radius:0; -moz-border-radius:0; -webkit-border-radius:0; -o-border-radius:0; box-shadow: none !important;}
+        .profile-form .panel.panel-primary{border:none !important;}
+        #enotification_div .profile-form .panel-primary > .panel-heading {   background:#eaeaea !important;     color: #000; border-radius:0; -moz-border-radius:0; -webkit-border-radius:0; -o-border-radius:0; font-size:15px; font-weight:bold; border-bottom:0 !important; padding:4px 15px;}
+        #enotification_div .profile-form .panel-primary > .panel-body{padding:4px 15px;}
+        .padd-left{padding-left:15px;}
+        .white-back{background:#fff !important;}
+        .profile-form .blue-text{color:#037bb8; font-size:18px; line-height:70px;}
+        .profile-form .blue-text a{color:#037bb8;}
+        .profile-form .text-center{text-align:center;}
+    </style>
+{% endblock window_page_meta_block %}
+
+{% block head_inline_css_block %}
+{% endblock %}
+
+{% block main_video_block %}
+{% endblock %}
+
+{% block main_div_block %}
+    <div class="row profile mar_zero white-back">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+            <div class="profile-content col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="row mar_zero profile-form">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 padd_zero margin_bottom_10">
+                        <h3 class="mar margin_bottom_10 profile-form "  >My Skigistats</h3>
+                    </div>
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 padd_zero margin_bottom_10" style="margin-bottom:15px;">
+                        <div class="statistic-main" >
+			<img style="margin: 53px 0px 0px 83px;height: 380px;width: 380px;" src="{% static 'images/skigitshapebig.png' %}">
+                            <div class="skigit-follow" title="Skigit Follow"><b>{{ follow_count }}</b></div>
+                            <div class="skigit-follow-me" title=" Skigit Follow Me"><b>{{ follow_me_count }}</b></div>
+                            <div class="skigit-like" title=" Skigit Like"><b>{{ like_count }}</b></div>
+                            <div class="skigit-friends" title=" Skigit Friends"><b>{{ friend_count }}</b></div>
+                            <div class="skigit-shares" title=" Skigit Shares"><b>{{ share_count }}</b></div>
+                            <div class="plug-in-skigits" title=" Plug In Skigits"><b>{{ plug_to_my_skigit }}</b></div>
+                            <div class="plug-in" title="Plug In"><b>{{ plug_in_count }}</b></div>
+                            <div class="favorites" title="Favorites"><b>{{ favorite_count }}</b></div>
+                            <div class="p-skigit" title="Primary Skigit"><b>{{ primary_count }}</b></div>
+                            <div class="skigit-logo" title="Skigit"><b>{{ skigit_count }}</b></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

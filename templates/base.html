@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+{% load static %}
+{% load i18n %}
+{% load category_list %}
+{% load meta %}
+{% load compress %}
+
+<html lang="en" {% meta_namespaces_gplus %} ng-app="skigitApp">
+<head {% meta_namespaces %}>
+  <meta name="p:domain_verify" content="c2aa3a5b7c896fe888ee369a69bbb118"/>
+  <meta name="loadforge-site-verification" content="4ed4d5a975c06a4ae9211500c87e5c5f8c1de7c0e77f86b5703862c091b33b7d255e66cba331b637ebafefcb3b94da1d37740e6df00bb2c12e9522290ccf683b" />
+  <meta name="google-site-verification" content="bsoRwrlCERJ_zkzQV0Kvi-i3GspYgNAn5cSDngtFDfU" />
+  
+  <title>{% block title %}Skigit | {% endblock %}</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes, maximum-scale=1.0, user-scalable=0">
+  {% block extra_meta %}
+      {% include 'meta/meta.html' %}
+  {% endblock extra_meta %}
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@skigit">
+  <meta name="twitter:domain" content="skigit.com">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:width" content="600">
+  <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
+  <link rel="apple-touch-icon" href="{% static 'apple-touch-icon.png' %}">
+    {% compress css %}
+      {% if request.resolver_match.url_name != 'index' %}
+        <link href="{% static 'css/packages/vjs-video-7.6.0.min.css' %}" rel="stylesheet">
+      {% endif %}
+      <link rel="preload" href="{% static 'css/bootstrap.min.css' %}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+      <noscript><link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"></noscript>
+        <link rel="preload" href="{% static 'css/style.css' %}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="{% static 'css/style.css' %}"></noscript>
+      {% if request.resolver_match.url_name == 'index' %}
+        <link rel="preload" href="{% static 'css/landing.css' %}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="{% static 'css/landing.css' %}"></noscript>
+        {% block index-css %}{% endblock %}
+      {% else %}
+          {% block css %}{% endblock %}
+      {% endif %}
+    {% endcompress css %}
+
+    {% compress js %}
+    <script type="text/javascript" src="{% static 'js/jquery-2.2.4.min.js' %}"></script>
+    {% if request.resolver_match.url_name != 'index' %}
+      <script type="text/javascript" src="{% static 'js/packages/vjs-video-ie8-1.1.2.min.js' %}"></script>
+      <script src="{% static 'js/packages/vjs-video-7.6.0.min.js' %}"></script>
+      <script src="{% static 'js/packages/youtube-2.6.0.min.js' %}"></script>
+    {% endif %}
+    <link rel="preload" href="{% static 'fonts/LaoUI.ttf' %}" as="stylesheet" crossorigin="anonymous">
+    {% endcompress js %}
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-210406262-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-210406262-1');
+    </script>
+</head>
+
+<body id="page-top" data-spy="scroll">
+<div class="overlayErrorBox"></div>
+<div id="errorBox">
+  <img width="20" height="20" src="{% static 'images/close(32x32).png' %}" onclick="close_error_box()"
+       class="close-error-box">
+  <img src="{% static 'images/Skigit_Logo_AI_master_white.png' %}" style="margin:30px; width:150px">
+  <div class="del-top error f_type" style="top: -32px;font-size: 18px;color: #fff;"><strong><p style="font-weight: normal;">This Skigit is no longer available.</p></strong></div>
+</div>
+
+<div class="container">
+  <div class="notify_join_msg" style="display: none;">
+    <div style='top: 0px; z-index:99999;'  class='info message'>
+      <h3>
+        You  must be a Skigit member to access this feature. <br class="hidden-lg hidden-md" />
+        <a href="/register" style='color:#f9ff8f  !important; text-decoration:underline !important'>Join Today!</a>
+      </h3>
+    </div>
+  </div>
+    <!-- profile modal box -->
+    <div class="overlay"></div>
+    {% if messages %}
+    {% for ms in messages %}
+    <div id="profileBox" style="display: none;">
+        <div style="text-align: center !important;">
+          <p>
+            <img src="{% static 'images/Skigit_Logo_AI_master_white.png' %}" alt="Skigit logo" style="width: 120px; "/>
+          </p>
+      
+          <p id="confirm_profile_text" style="padding: 0px 0; margin: 25px 0 25px!important; color: white">{{ ms }}</p>
+      
+          <div class="del-bott" style="padding-bottom: 20px">
+            <button type="button" onclick="close_profileBox()" id="ok_logout_logo">Ok</button>
+          </div>
+        </div>
+		
+    </div>
+      {% endfor %}
+      {% endif %}
+  {% block main-header-block %}
+  <div class="row">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12" style="background-color: #52768c" > <!--/*#5e849c;"-->
+
+      <header id="header">
+        <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button class="navbar-toggle collapsed"
+                    type="button"
+                    data-toggle="collapse"
+                    data-target="#navbar"
+                    aria-controls="navbar"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation" style="box-shadow: none; ">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar top-bar"></span>
+              <span class="icon-bar middle-bar"></span>
+              <span class="icon-bar bottom-bar"></span>
+            </button>
+          </div>
+            </div>
+          </nav>
+		  
+<div id="get_app_group_base" style="color: #fff;width: 20%;margin: 0 0 20px 10%;  display: inline-block;">
+            <b id="get-app_base" <span style="font-size: 14px; font-weight:700;font-family: segoe print;color: #fffff; margin-left: -25px;line-height: 2.2;">Get the FREE Skigit App!</b>
+			  <br>
+			  <div id="app-store-group" style="display: inline;">
+              <!--Apple store image and link -->	
+			 <a class="mobile-app-link-apple" href="#" onclick="window.open(encodeURI('https://apps.apple.com/app/instagram/id389801252?vt=lo'), '_blank', 'location=yes,enableViewPortScale=yes');">
+				<span class="mobile-app-span">
+				<img class="image-app-d_base" title="Apple Store" alt="-" src="/static/images/landing/AppleStore_nav.png" style="margin-left: -30px; margin-top: 5px; width: 110px;">
+			</span>
+				</a>
+			</div>
+			
+			  <!--Google play store image and link -->			
+				<a class="mobile-app-link-google" href="#" onclick="window.open(encodeURI('https://play.google.com/store/apps/details?id=com.instagram.android&amp;referrer=utm_source%3Dinstagramweb%26utm_campaign%3DloginPage%26ig_mid%3D996C2F48-94F0-4CE2-BD02-A31A40B588E0%26utm_content%3Dlo%26utm_medium%3Dbadge'), '_blank', 'location=yes,enableViewPortScale=yes');">
+				<span class="mobile-app-span">
+				<img class="image-app-d_base" title="Google Play Store" alt="-" src="/static/images/landing/GoogleStore_nav.png"  style = "margin-left: 3px; margin-top: 5px; width: 110px;">
+			</span>
+			</a>
+		 </div>
+		  
+		  
+        <div class="logo center-align pull-left">
+          <a href="/" style="height: 200px;display: inline-block;z-index: 2;position: relative;">
+            <img src="{% static 'images/Skigit_Logo_AI_master.png' %}" alt="Skigit logo" id="header_logo">
+          </a>
+		  <div id="skigit_tag_line">  Thirty Seconds could change your Life!</div>
+		 <!-- <img src="https://static.skigit.com/images/dog_on_reel.png" id="dog_on_reel">-->
+        </div>
+
+        {% user_navigation %}
+      </header>
+    </div>
+  </div>
+  
+  <div><img loading="lazy" id="giving_border_image" src= "{% static 'images/Skigit_Logo_AI_master.png' %}"
+  ></div>
+  
+  
+  <div class="row">
+    <div class="main_video_1_content_div"></div>
+
+  </div>
+  {% endblock main-header-block %}
+
+  {% block content %}
+  {% endblock %}
+  {% block main_div_block %}
+  {% endblock %}
+  <div class="container-fluid"  >
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <hr>
+        <footer>
+
+        </footer>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="skigit-modal" role="dialog" style="display:none">
+  <div class="modal-dialog modal-lg">
+   <!-- Modal content base.html-->
+    <div class="modal-content" style="-webkit-box-shadow: none;box-shadow: none; border:none">
+    </div>
+  </div>
+</div>
+{% if request.user.is_authenticated %}
+<div class="modal fade" id="share-modal" role="dialog" style="display:none">
+  <div class="modal-dialog modal-md">
+    <!-- Modal content base.html-->
+    <div class="modal-content share-modal-content" style="-webkit-box-shadow: none;box-shadow: none;border:none">
+    </div>
+  </div>
+</div>
+{% else %}
+
+<div class="modal fade" data-backdrop="static" id="two-fa-modal" role="dialog">
+  <div class="modal-dialog" style="width: 600px;">
+   <!-- Modal content base.html-->
+    <div class="modal-content" id="2FA_popup" >
+      <div>
+	  <img loading="lazy" alt="Skigit logo" src="{% static 'images/Skigit_Logo_AI_master_white.png' %}"
+	  style="width: 120px;margin: 30px 50% 0 35%;">
+        <label class="col-sm-12 control-label" style="color: #fff;margin: 0 0 0 -3%;padding: 0 20px 0 20px;font-size: 14px;">
+          Two-Factor Authentication (TFA/2FA) is an extra layer of security that requires not only a password and username but also an extra piece of information in order to log in. On our platform, you have two options to log in to your account - either by a text sent to your mobile phone, or by using a code from an authentication app. The goal of TFA is to make it harder for potential intruders to gain access and steal your personal data or identity. We will send you a text-message security code to confirm you are the account owner. (Messaging rates may apply.)
+		  <br>
+		  <br/>
+		 <div style="text-align:center">Your code has been sent to your profile email address or your mobile phone. </div>
+		 <div style="text-align:center;color:#f9f4b0">REMEMBER: When entering your code, case matters! </div>
+          <br/>
+		  <div style="text-align:center">For help, contact us at <a href="mailto:accounts@skigit.com"><span style="color: #b9e7ff;">accounts@skigit.com</span><span style="color: #fff">.</span></a> </div>
+        </label>
+        <div class="col-sm-12" style="width: 40%;margin: 2% 27% 2% 27%;">
+            <br/>
+            <input type="hidden" name="email" />
+            <input type="text" class="form-control two-fa-code" placeholder="Enter code here"  style="text-align: center;"/>
+
+          <br/>
+          <div class="resend-code-wrap" style="line-height:2.5;text-align:center;">Didn't receive  a code? <span onclick="resendCode()">Resend</span></div>
+
+        </div>
+        <div class="col-sm-12" style="display:flex;justify-content: center;margin-left: -20px;">
+          <button style="margin-bottom:0;margin-top:0" type="submit" class="btn btn-primary" onClick="validateTwoFaCode()">Continue</button>
+          <button style="margin-bottom:0;margin-top:0" type="button" class="btn btn-danger" data-dismiss="modal" style="margin-top: -3px;">Cancel</button>
+        </div><br/>
+        <div style="margin: 15px 0" class="col-sm-12 two-fa-msg"></div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+  {% compress js %}
+    <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/emailProvider.js' %}"></script>
+    {% if not mobile_api_request %}
+      <script type="text/javascript" src="{% static 'bower_components/angular/angular.min.js' %}"></script>
+      <script type="text/javascript" src="{% static 'js/skigit.js' %}"></script>
+      <script type="text/javascript" src="{% static 'js/pageUp.js' %}"></script>
+      <script type="text/javascript" src="{% static 'js/jstz.min.js' %}"></script>
+      {% block bx-slider-js %}
+        <script type="text/javascript" src="{% static 'js/jquery.bxslider.min.js' %}"></script>
+      {% endblock bx-slider-js %}
+      {% block pagination-js %}
+        <script type="text/javascript" src="{% static 'el-pagination/js/el-pagination.js' %}"></script>
+      {% endblock pagination-js %}
+
+      <script type="text/javascript" src="{% static 'js/jquery.validate.min.js' %}"></script>
+      <script type="text/javascript" src="{% static 'bower_components/angular-animate/angular-animate.js' %}"></script>
+      <script type="text/javascript" src="{% static 'bower_components/angular-resource/angular-resource.js' %}"></script>
+      <script type="text/javascript" src="{% static 'bower_components/angular-route/angular-route.js' %}"></script>
+      <script type="text/javascript" src="{% static 'bower_components/angular-cookies/angular-cookies.js' %}"></script>
+      <script type="text/javascript" src="{% static 'bower_components/angular-touch/angular-touch.js' %}"></script>
+      <script type="text/javascript" src="{% static 'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js' %}"></script>
+      <script type="text/javascript" src="{% static 'bower_components/angular-sanitize/angular-sanitize.min.js' %}"></script>
+      <script type="text/javascript" src="{% static 'js/app.module.js' %}"></script>
+      <script type="text/javascript" src="{% static 'js/app.config.js' %}"></script>
+      <script type="text/javascript" src="{% static 'js/core/core.module.js' %}"></script>
+      <script type="text/javascript" src="{% static 'js/core/modal/modal.form.js' %}"></script>
+      <script type="text/javascript" src="{% static 'js/user/user.module.js' %}"></script>
+      <script type="text/javascript" src="{% static 'js/user/user.login.js' %}"></script>
+      <script type="text/javascript" src="{% static 'js/user/user.bug.js' %}"></script>
+      <script type="text/javascript" src="{% static 'js/user/user.share.js' %}"></script>
+      <script type="text/javascript" src="{% static 'js/popover/popover.module.js' %}"></script>
+      <script type="text/javascript" src="{% static 'js/popover/notification/notification.user.js' %}"></script>
+    {% endif %}
+
+    <script type="text/javascript">
+      // To view general profile in friends page for Business users!
+      {% if view_general_profile %}
+        var VIEW_GENERAL_PROFILE = "yes";
+      {% else %}
+        var VIEW_GENERAL_PROFILE = "no";
+      {% endif %}
+
+  {% if request.user.is_authenticated %}
+      $j(document).on('show.bs.modal', '#share-modal', function(e) {
+        $j.ajax({
+            url: "{% url 'skigit_friend_invite' %}",
+            type: 'POST',
+            data: {video_id: $j(e.relatedTarget).attr('data-id')},
+            success: function(data) {
+              $j(".share-modal-content").html(data);
+            }
+          });
+      })
+  {% else %}
+    const validateTwoFaCode = () => {
+      $j.ajax({
+            url: "{% url 'validate-two-fa' %}",
+            type: 'POST',
+            data: {
+              code: $j('.two-fa-code').val(),
+              email: $j('#two-fa-modal').find('input[name="email"]').val()
+            },
+            success: function(data) {
+               $j('.two-fa-msg').html(data.message);
+               if(data.success) {
+                  $j('.two-fa-msg').addClass('txt-success').removeClass('txt-danger');
+                  setTimeout(function() {
+                    window.location.reload();
+                  }, 1000);
+               }
+               else
+                  $j('.two-fa-msg').removeClass('txt-success').addClass('txt-danger');
+            }
+          });
+    }
+
+    const resendCode = () => {
+        $j.ajax({
+            url: "{% url 'resend-two-fa' %}",
+            type: 'POST',
+            data: {
+              email: $j('#two-fa-modal').find('input[name="email"]').val()
+            },
+            success: function(data) {
+               $j('.two-fa-msg').html(data.message);
+               if(data.success)
+                  $j('.two-fa-msg').addClass('txt-success').removeClass('txt-danger');
+               else
+                  $j('.two-fa-msg').removeClass('txt-success').addClass('txt-danger');
+            }
+          });
+    }
+  {% endif %}
+  function close_profileBox() {
+    $j("#profileBox").removeClass('open');
+    $j('.overlay').removeClass('open')
+    // window.location.reload(true);
+  }
+    </script>
+  {% block js %}
+  {% endblock %}
+  {% endcompress js %}
+  {% block js-from-url %}{% endblock js-from-url %}
+</body>
+
+</html>

@@ -1,0 +1,109 @@
+{% load static %}
+
+
+<div id="paypal-button"></div>
+
+<!-- Load PayPal's checkout.js Library. -->
+<script src="https://www.paypalobjects.com/api/checkout.js" data-version-4 log-level="warn"></script>
+<!-- Load the client component. -->
+<script src="https://js.braintreegateway.com/web/3.15.0/js/client.min.js"></script>
+<!-- Load the PayPal Checkout component. -->
+<script src="https://js.braintreegateway.com/web/3.15.0/js/paypal-checkout.min.js"></script>
+
+
+<script>
+  $j = jQuery.noConflict();
+    var payment_environment = '{{ payment_environment }}';
+    braintree.client.create({
+        authorization: '{{ pay_pal_client_token }}'
+    }, function (clientErr, clientInstance) {
+
+        // Stop if there was a problem creating the client.
+        // This could happen if there is a network error or if the authorization
+        // is invalid.
+        if (clientErr) {
+            console.error('Error creating client:', clientErr);
+            return;
+        }
+
+        // Create a PayPal Checkout component.
+        braintree.paypalCheckout.create({
+            client: clientInstance,
+        }, function (paypalCheckoutErr, paypalCheckoutInstance) {
+
+            // Stop if there was a problem creating PayPal Checkout.
+            // This could happen if there was a network error or if it's incorrectly
+            // configured.
+            if (paypalCheckoutErr) {
+                console.error('Error creating PayPal Checkout:', paypalCheckoutErr);
+                return;
+            }
+
+            // Set up PayPal with the checkout.js library
+            paypal.Button.render({
+                //env: 'production', // or 'sandbox'
+                env: payment_environment,
+                payment: function () {
+                    return paypalCheckoutInstance.createPayment({
+                        flow: 'vault',
+                        billingAgreementDescription: 'Agree all terms and condition related to skigit',
+                        enableShippingAddress: true,
+                        shippingAddressEditable: false,
+                        shippingAddressOverride: {
+                            recipientName: 'Skigit.com',
+                            line1: '1234 Main St.',
+                            line2: 'Unit 1',
+                            city: 'Chicago',
+                            countryCode: 'US',
+                            postalCode: '60652',
+                            state: 'IL',
+                            phone: '123.456.7890'
+                        }
+                    });
+                },
+
+                onAuthorize: function (data, actions) {
+                    return paypalCheckoutInstance.tokenizePayment(data)
+                            .then(function (payload) {
+                                // Submit `payload.nonce` to your server.
+                                var nonce, name, type;
+                                nonce = payload.nonce;
+                                type = payload.type;
+                                jQuery.ajax({
+                                    url: "/invoice/pay-pal-nonce/",
+                                    type: "POST",
+                                    data: {'nonce': nonce, 'type': type},
+                                    success: function(data){
+                                        if(data.is_success){
+                                            $j('.paypal_form').hide()
+                                                $j('.box_form_paypal').empty()
+                                                $j('.payment_not_exist_error').hide();
+                                        var payPal_info = ''
+                                        payPal_info += 'Saved PayPal Account Detail'
+                                        payPal_info += '<div class="list-group">'
+                                        payPal_info += '<div class="list-group-item" >'
+                                        payPal_info += '<img src="'+data.invoice.card_image+'" />&nbsp;'+data.invoice.email+''
+                                        payPal_info += '<img width="20" height="20" src="/static/images/close(20x20).png" onclick="removePaymentMethod(\''+type+'\')" data-type="credit-card-delete" id="card_remove" class="payment_remove" />'
+                                        payPal_info +=' </div> </div>'
+                                        $j('.box_form_paypal').append(payPal_info)
+                                        }
+                                    }
+                                });
+                            });
+                },
+
+                onCancel: function (data) {
+                    {#   console.log('checkout.js payment cancelled', JSON.stringify(data, 0, 2));#}
+                },
+
+                onError: function (err) {
+                    console.error('checkout.js error', err);
+                }
+            }, '#paypal-button').then(function () {
+                // The PayPal button will be rendered in an html element with the id
+                // `paypal-button`. This function will be called when the PayPal button
+                // is set up and ready to be used.
+            });
+        });
+    });
+</script>

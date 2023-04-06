@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block title %}{{ block.super }}Awesome Things{% endblock %}
+
+<style>
+.page-content.rich-content {
+	padding: 45px;
+    background-color: #418379;
+    box-shadow: 2px 2px 4px #333;
+    border-radius: 4px;
+}
+</style>
+
+<!--#main2 {
+  background: #FFFFFF;
+  box-shadow: 0 0 6px #AFAFAF;
+  /*margin-top: -17px !important;*/
+  /*display: table;*/
+  /*width: 100%;*/
+  position: relative;
+  border-radius: 2px;
+  /*box-shadow: 8px 7px 14px 0px #AFAFAF;*/
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  padding: 20px 20px 20px 20px;
+}-->
+
+
+
+{% block content %}
+  <div class="row mar_zero" id="main"><!-- id="main"-->
+    <div class="page-content rich-content" id="athings">
+      {% if awesome_cat %}
+        <br>
+        <br>
+        <div class="awesome_title">
+          <h1>
+		   
+            <center id="awesome_title_1">Looking for Skigits about your favorite things?<br>You came to the right place.<br>Skigit Creators love these...!</center>
+			<!--<center id="awesome_title_2">Check it out.</center>-->
+          </h1>
+          <!--<h1>View Skigits by any AWESOME thing just by selecting the category link below.</h1>-->
+        </div>
+        <br>
+        <br>
+        {% for cat in awesome_cat %}
+          <div class="col-md-2 col-sm-4 col-lg-2 col-xs-6 text-center">
+            <div class="athings">
+              <a href="{{ cat.get_absolute_url }}">{{ cat.sub_cat_name }}</a>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="awesome_title">
+          <h1><span>No awesome thing founds...!!!
+                  <img width="100" height="45" src="{% static 'images/awesome_title.png' %}">
+              </span>
+          </h1>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}
+

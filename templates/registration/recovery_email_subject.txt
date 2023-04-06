@@ -1,0 +1,1 @@
+{% load i18n %}{% blocktrans %}Password recovery on {{ site_name }}{% endblocktrans %}

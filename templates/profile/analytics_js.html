@@ -1,0 +1,111 @@
+{% load static %} {% load i18n %}
+
+
+<script type="text/javascript">
+    function PieChart(id, subtitle, seriesData, height,title) {
+        $j = jQuery.noConflict();
+        $j(id).highcharts({
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie',
+                height: height,
+                borderColor: '#e0dddd',
+                borderRadius: 20,
+                borderWidth: 1,
+            },
+            credits: false,
+            title: {
+                text: title
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                        style: {
+                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                        }
+                    }
+                }
+            },
+            series: [{
+                name: subtitle,
+                colorByPoint: true,
+                data: seriesData
+            }]
+        });
+    };
+
+    function barChart(id,subtilte,title,seriesData) {
+        $j(id).highcharts({
+            chart: {
+                type: 'column',
+                height: 350,
+                borderColor: '#e0dddd',
+                borderRadius: 20,
+                borderWidth: 1,
+                padding: 3
+            },
+            credits: false,
+            title: {
+                text: title
+            },
+            accessibility: {
+                announceNewData: {
+                    enabled: true
+                }
+            },
+            xAxis: {
+                type: 'category'
+            },
+            yAxis: {
+                title: {
+                    text: 'Total No of Users'
+                }
+
+            },
+            legend: {
+                enabled: false
+            },
+            plotOptions: {
+              allowPointSelect: true,
+                series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.y}'
+                    }
+                }
+            },
+
+            tooltip: {
+                headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+            },
+
+            series: [{
+                name: subtilte,
+                colorByPoint: true,
+                data: seriesData
+            }]
+        })
+    }
+</script>
+
+
+<script>
+    PieChart('#gender_chart','Gender',{{gender|safe}},250,'Skigits Created with Your Logo By Gender');
+    PieChart('#language_chart','Language',{{language|safe}},250, 'Skigits Created with Your Logo By Language');
+    PieChart('#country_chart','Country',{{country|safe}},250, 'Skigits Created with Your Logo By Country');
+    PieChart('#share_chart','Share',{{share|safe}},350,'Skigits Shared with Your Logo');
+    PieChart('#share_gender_chart','Gender',{{gender_share|safe}},350,'Skigits Shared with Your Logo By Gender');
+    barChart('#age_chart','Age','Skigits Created with Your Logo By Age',{{age_created|safe}});
+    barChart('#age_share_chart','Age','Skigits Shared with Your Logo By Age',{{age_shared|safe}});
+</script>

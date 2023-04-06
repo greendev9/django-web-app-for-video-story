@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{{ block.super }}Skigitology{% endblock %}
+
+{% block main-header-block %}
+    {% if not mobile_api_request %}
+        {{ block.super }}
+    {% endif %}
+{% endblock main-header-block %}
+
+{% block content %}
+  <div class="row mar_zero" id="main">
+    <div class="wrap cf">
+      <div id="content" role="main">
+        <div class="post-5969 page type-page status-publish hentry" id="post-5969">
+          <div class="page-content rich-content innerPageContent img-up" style="margin: 5px;">
+            <h1>
+              <center>The Art of <span style="font-family: segoe print;font-weight: bold;color: #1c6890;">Skigit</span></center>
+            </h1>
+            <p>Ski&#8217;·jit·ol·o·gy, Ski&#8217;·jitˈäləjē/noun, plural, informal, humorous: Skigitologies; a subject
+              of study or a branch of knowledge in Skigit. Whether you’re new to Skigit or want a refresher, we're here to
+               help you understand Skigit terminology.</p>
+            <br>
+			<!--<span style="color: #3366ff;">Rules for Your Company Skigit</span>-->
+	
+            <p  style="text-align: center;">
+			
+			<a id="primary_skigit_link" href="#primaryskigit"  >Primary Skigit</a> | 
+			
+			<a id="plugin_skigit_link" href="#plugin_skigit" >Plugin Skigit</a> | 
+			  
+			  <a id="superskigit_skigit_link"href="#superskigit" >Superskigit</a> | 
+			  
+			  <a id="skitbit_skigit_link" href="#skitbit" >SkitBits</a> | 
+			  
+			  <a id="following_skigit_link" href="#following" >Following Skigit Creators</a> | 
+			  
+			  <a id="sharing_skigit_link" href="#sharing">Sharing Skigits</a></p>
+            
+			<p style="text-align: center;">
+			
+			<a id="creator_skigit_link"  href="#Creator" >View a Creator&#8217;s Skigits</a> | 
+			
+			<a id="favorite_skigit_link" href="#Favorites">Add to Favorites</a> | 
+			  
+			  <a id="post_skigit_link" href="#Posting" >Posting Skigits</a> | 
+			  
+			  <a id="finding_skigit_link" href="#finding_skigits" >Finding Skigits</a> | 
+				
+				<a id="awesome_things_skigit_link" href="#awesomethings" >Awesome Stuff</a></p>
+            <br>
+            <hr/>
+            
+			<p><a name="primaryskigit"></a></p>
+            <span class="imgLeft"><img src="{% static 'images/skigitology_primary_icon.png' %}"
+                                       alt="Primary Skigit" width="116.66" style="border-radius: 50%;"></span>
+            <h3 style="margin: 50px 0 0 0 !important;"><br>Primary Skigit</h3>
+            <div class="clearfix"></div>
+            <p><br>A Primary Skigit is an influential, ground-breaker &#8230;the trend-setter, if you will. It's the
+              kind of Skigit others can&#8217;t wait to plug into and it&#8217;s the source of every Superskigit. The
+              Primary typically creates a lasting impression with the ability to grab viewers and not let go, no matter how
+              hard they try to shake loose.</p>
+            <br>
+            <hr/>
+            <span class="imgLeft" &nbsp;><img src="{% static 'images/skigitology_plugin_icon.png' %}" style="border-radius: 50%;" alt="Plugin Skigit" width="116.66"></span>
+            <h3 style="margin: 40px 0 0 0 !important;"><a name="plugin_skigit"></a><br>Plugin Skigit</h3>
+            <div class="clearfix"></div>
+            <p><br>The Plugin Skigit is a way for you to connect with others through your Skigit when you share an
+              interest in the same thing. It&#8217;s a way for you to join a group of like-minded creators. Our rule of
+              thumb - if you like it, plug-in and show 'em what you got.</p>
+            <br>
+            <hr/>
+            <span class="imgLeft"><img src="{% static 'images/skigitology_superskigit_icon.png' %}"
+                                       alt="Superskigit" width="116.66" style="border-radius: 50%;"></span>
+            <h3 style="margin: 50px 0 0 0 !important;"><a name="superskigit"></a><br>Superskigit</h3>
+            <div class="clearfix"></div>
+            <p><br>The amazing Superskigit! The Primary Skigit appears out of nowhere, suddenly Plugins start to attach
+              - the Superskigit emerges, a potentially unending train of connected Skigits with a Primary at the helm!
+              &#8230; a bit much? We don&#8217;t think so.</p>
+            <br>
+            <hr/>
+              <span class="imgLeft">
+              <img src="{% static '/images/Skigitology_Skitbit_4x4.png' %}" width="96.66" style="margin:-10px 0 0 10px;border-radius: 50%;"/></span>
+            <h3><a name="skitbit"></a><br>SkitBit Rewards</h3>
+            <div class="clearfix"></div>
+            <p><br>At Skigit, we help you get recognized but what you may not know is Brands want you to succeed too. That's why so many offer SkitBits - an incentive to create Skigits about the things you love and want to share.
+            When you see a company logo displayed on a Skigit thumbnail, click it to find out what that company is offering Skigit creators. You can also click the
+            Skitbits icon in the header menu or on the Skigit upload page after selecting the maker in the "My awesome
+              thing was made by" drop-down. It&#8217;s just another cool way to enjoy Skigit!</p>
+            <br>
+            <hr/>
+            <span class="imgLeft">
+			<img src="{% static 'images/Skigitology_follow.png' %}" width="106.66" style="border-radius: 50%;"/></span>
+            <h3 style="margin: 40px 0 0 0 !important;"><a name="following"></a><br>Follow Skigit Creators</h3>
+            <div class="clearfix"></div>
+            <p><br>Following people will enhance your Skigit experience by helping you stay close to the creators whose
+              style and taste you best identify with. Discover the myriad of people that are creating Skigits and start
+              following those you like. It&#8217;s all about what you like, not just who you know - so if you come
+              across a Skigit you like, follow it&#8217;s creator and receive notifications to stay in touch with all of their latest works.</p>
+            <p>Click the Follow logo in the Skigit viewing page to follow all of their current and
+              future Skigits.</p>
+            <br>
+            <hr/>
+            <span class="imgLeft"><img src="{% static 'images/Skigitology_Friends_4x4.png' %}" width="116.66" style="border-radius: 50%;"/></span>
+            <h3 style="margin: 50px 0 0 0 !important;"><a name="sharing"></a><br>Sharing Skigits</h3>
+            <div class="clearfix"></div>
+            <p><br>Skigit offers an easy way to share your favorite Skigits with anyone you choose. Sharing is an ideal
+              way to tell your friends and family about the things you love. You&#8217;ll be able to locate this icon in
+              every Skigit thumbnail and by clicking on the View icon in the Skigit view pop-up window located
+              underneath the video frame on the right-hand side.</p>
+            <br>
+            <hr/>
+            <span class="imgLeft"><img  src="{% static 'images/Skigitology_eye_black.png' %}" width="96.66" style="border-radius: 50%;"/></span>
+            <br>
+            <h3 style="margin: 15px 0 0 0 !important;"><a name="Creator"></a>View Creator Skigits</h3>
+            <div class="clearfix"></div>
+            <p><br>Connecting with others is not always that easy. At Skigit, we give you the ability to view the work
+              of your favorite creators simply by clicking on the View icon in the Skigit pop-up window. You&#8217;ll
+              find this icon located underneath the video frame. Click on it and see the creator&#8217;s great work!</p>
+            <hr/>
+			<br>
+              <span class="imgLeft">
+              <img src="{% static 'images/Skigitology_favorites_golden.png' %}" width="96.66"  style="border-radius: 50%;"/></span>
+            <br>
+            <h3 style="margin: 20px 0 0 0 !important;"><a name="Favorites"></a>Add to Favorites</h3>
+            <div class="clearfix"></div>
+            <p>See a Skigit you just can&#8217;t get enough of? Add it to your favorites page! You find this icon by
+              clicking on the View icon in the Skigit view popup window located underneath the video screen on the
+              right-hand side. Click on it and you&#8217;ll never have to remember where you saw it. From then on, just go to your My Favorites page through via the header drop down menu, <strong>My
+                Favorites</strong>.</p>
+            <br>
+          
+			
+            <div><span class="imgLeft" style=" padding-left:0px;"><img src="{% static 'images/social_icon_group_black.png' %}" alt="Favorites" width="400" style="margin: -55px 0 -35px -35px;"/></span>
+			<!--<span class="imgLeft" style=" padding-left:0px;"><img src="{% static 'images/SN_Post_Twitter.png' %}" alt="Favorites" width="85" style="margin: 0 -15px 0 -15px;/></span>
+			 <span class="imgLeft" style=" padding-left:0px;"><img src="{% static 'images/SN_Post_Tumblr.png' %}" alt="Favorites" width="85" style="margin: 0 -15px 0 -5px;"/></span>
+			 <span class="imgLeft" style=" padding-left:0px;"><img src="{% static 'images/SN_Post_LinkedIn.png' %}" alt="Favorites" width="85" style="margin: 0 -15px 0 -15px;"/></span>
+			 <span class="imgLeft" style=" padding-left:0px;"><img src="{% static 'images/SN_Post_Pinterest.png' %}" alt="Favorites" width="65" style="margin: 0 -15px 0 -15px;"/></span>-->
+			
+            <h3  style="padding-top: 40px;"><a name="Posting" style="margin-left: -25px;"></a>Posting Skigits </h3>
+			
+			</div>
+            <div class="clearfix"></div>
+            <p><br>Post to the max! We encourage you to post any Skigit on other social sites. We will
+              continuously update your ability to post to other sites as site APIs change so if we aren&#8217;t providing you that ability,
+              we wanna hear from you.</p>
+			  <br>
+            <hr/>
+			
+            <span class="imgLeft"><img src="{% static 'images/Search_4x4_black.png' %}" width="116.66"style="border-radius: 50%;"/></span>
+            <br>
+            <h3><a name="finding_skigits"></a>Finding Skigits</h3>
+            <div class="clearfix"></div>
+            <p><br>To find Skigits, just do a quick search by clicking the search icon in the header menu.
+              You can use the search feature to locate Skigits by title, creator user name or company name. But wait,
+              That's not all! You can also browse category pages or find your awesome thing in the Awesome Things page.
+              One way or another, we'll help you find what you're looking for. </p>
+            <br>
+			<hr/>
+            <span class="imgLeft"><img src="{% static 'images/Skigitology_Chest_4x4.png' %}" width="116.66" style="border-radius: 50%;"/></span>
+   
+            <h3><a name="awesomethings"></a><br>Find Awesome stuff on Skigit</h3>
+            <div class="clearfix"></div>
+            <p><br>Looking for ideas for your next family getaway but don’t have a destination in mind yet? Thinking
+              about starting a new hobby? Maybe you&#8217;re just looking to buy Momar a new chew toy. The <a
+                href="{% if mobile_api_request %}{% url 'share_deeplink_view' %}?category=SKIGIT{% else %}{% url 'awesome_things' %}{% endif %}" style="color: #3366ff">Awesome Stuff </a>page lets
+              you browse all the awesome things featured in Skigits throughout the site by all users. </p>
+            <ul>
+              <li>Animals and Pet Things</li>
+              <li>Apparel, Clothing, Accessories and Fashion</li>
+              <li>DIY, Hobby and Crafts
+              <li>etc.</li>
+            </ul>
+            </p>
+            <br>
+            <!--<hr/>
+            <span class="imgLeft"><img src="https://static.skigit.com/images/member_profile.png" width="300" height="400"/></span>
+            <h3><a name="account"></a><br><br>Creating your Profile</h3>
+            <div class="clearfix"></div>
+            <br>
+            <p>Create your own personal profile on Skigit. Just click the drop down list in the upper right hand corner
+              of the header of any page (below your avatar image). Click Profile and Settings to edit your profile
+              information entered at the time of registration. You can change your user information, add personal photos
+              or any other profile attributes whenever you wish. Access notifications, change your password and view
+              your statistics at the touch of a mouse click. </p>
+            <hr/>-->
+            <p>We hope this helps you get going! </p>
+			<br>
+			<p> Email us for help at: <a
+                href="mailto:info@skigit.com" style="color: #3366ff">info@skigit.com</a></p>
+          </div>
+        </div>
+        <!--end .hentry-->
+
+      </div>
+      <!--end #content-->
+
+    </div>
+  </div>
+{% endblock %}

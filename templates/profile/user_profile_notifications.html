@@ -1,0 +1,419 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load category_list %}
+
+{% block title %}{{ block.super }}{{ user.first_name }} {{ user.last_name }} | Profile{% endblock %}
+
+{% block content %}
+  {#  <style>#}
+  {#        .profile-form{font-size:13px;}#}
+  {#        .profile-form h3{ color:#000 !important; font-size:18px !important; text-align:center; }#}
+  {#        .profile-form h4{ color:#000 !important; font-size:14px; line-height:20px;  }#}
+  {#        .profile-form h5.note{color:#FF0000 !important; text-align:center; font-size:14px; font-weight:bold; font-family:"LaoUI"; }#}
+  {#        .profile-form .btn{ border-radius:30px !important; -moz-border-radius:30px !important; -webkit-border-radius:30px !important; -o-border-radius:30px !important;color:#fff !important;  padding: 5px 25px !important;  }#}
+  {#        .profile-form .btn:hover{  color:#ff0 !important;  }#}
+  {#        .profile-form .btn.yel{ color:#ff0 !important;   }#}
+  {#        .profile-form .btn.yel:hover{  color:#fff !important;  }#}
+  {#        .profile-form .panel{margin-bottom:0px; border-radius:0; -moz-border-radius:0; -webkit-border-radius:0; -o-border-radius:0; box-shadow: none !important;}#}
+  {#        .profile-form .panel.panel-primary{border:none !important;}#}
+  {#        #enotification_div .profile-form .panel-primary > .panel-heading {   background:#eaeaea !important;     color: #000; border-radius:0; -moz-border-radius:0; -webkit-border-radius:0; -o-border-radius:0; font-size:15px; font-weight:bold; border-bottom:0 !important; padding:4px 15px;}#}
+  {#        #enotification_div .profile-form .panel-primary > .panel-body{padding:4px 15px;}#}
+  {#        .padd-left{padding-left:15px;}#}
+  {#        .white-back{background:#fff !important;}#}
+  {#    </style>#}
+  <div class="row profile white-back">
+      <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+
+        <div class="profile-sidebar" id="adjust_3">
+
+          <div class="profile-usermenu padd-left ">
+            <ul class="nav">
+              <li><a href="{% url 'user_profile' %}">Member Profile </a></li>
+              {% if is_business %}	  
+			   <div  class="hidden-xs hidden-sm" >
+					<li><a href="/brochure-preview" style="margin-left: 15px !important;">View/Print Brochure</a></li>
+					<li><a href="/wall-poster-preview" style="margin-left: 15px !important;">View/Print Wall Poster</a></li>
+				</div>
+                <li><a href="{% url 'user_payment_setup' %}">Invoice History</a></li>
+				<li><a href="{% url 'business_analytics' %}">Business Analytics</a></li>
+              {% endif %}
+              <!--<li><a href="{% url 'user_payment_setup' %}">Payment Setup </a></li>-->
+              <li><a href="{% url 'password_change' %}">Password and Security</a></li>
+              <li class="active"><a href="{% url 'user_profile_notifications' %}">Notification Settings</a></li>
+              <li><a href="{% url 'user_profile_delete' %}">Delete My Account </a></li>
+              <li><a href="{% url 'my_statistics' %}">My Skigistats </a></li>
+               
+            </ul>
+          </div>
+
+        </div>
+      </div>
+	  
+	  
+      <style>
+
+        .panel-primary {
+          border: none;
+        }
+
+        .panel-primary .col-lg-4,
+        .panel-primary .col-md-4,
+        .panel-primary .col-sm-4,
+        .panel-primary .col-xs-4 {
+          padding-right: 10px;
+          padding-left: 10px;
+        }
+        .switch {
+          position: relative;
+          display: inline-block;
+          width: 54px;
+          height: 28px;
+        }
+
+        .switch input {
+          display: none;
+        }
+
+        .slider {
+          position: absolute;
+          cursor: pointer;
+          top: 0;
+          left: 0;
+          right: -3px;
+          bottom: 0;
+          background-color: #919191;
+          -webkit-transition: .4s;
+          transition: .4s;
+        }
+
+        .slider:before {
+          position: absolute;
+          content: "";
+          height: 24px;
+          width: 24px;
+          left: 4px;
+          bottom: 2px;
+          background-color: #ffffff;
+          -webkit-transition: .4s;
+          transition: .4s;
+        }
+
+        input:checked + .slider {
+          background-color:  #0691b2;
+        }
+
+        input:focus + .slider {
+          box-shadow: 0 0 1px #117f13;
+        }
+
+        input:checked + .slider:before {
+          -webkit-transform: translateX(26px);
+          -ms-transform: translateX(26px);
+          transform: translateX(26px);
+        }
+
+        /* Rounded sliders */
+        .slider.round {
+          border-radius: 34px;
+        }
+
+        .slider.round:before {
+          border-radius: 50%;
+        }
+
+        .btnslider {
+          /*background: url(../..https://static.skigit.com/images/sliderbutton.png) no-repeat !important;*/
+          height: 26px !important;
+          background-size: 100% 100% !important;
+          width: 59px !important;
+          background-color: #037BB8;
+          /*box-shadow: 2px 3px 4px 0px #888888;*/
+        }
+
+        .btnslider:hover {
+          /*background: url(../..https://static.skigit.com/images/sliderbutton.png) no-repeat !important;)*/
+          height: 26px !important;
+          background-size: 100% 100% !important;
+          width: 59px !important;
+          background-color: #037BB8 !important;
+        }
+
+
+      </style>
+
+      <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" style="background-color: #344254;border-radius: 4px;margin-top: 40px;">
+        <div class="profile-content" id="enotification_div">
+          <div class="row mar_zero profile-form">
+
+            <div class="">
+              <form role="form" action="{% url 'user_profile_notifications' %}" method="post">
+
+                {% csrf_token %}
+
+                {% if form1.non_field_errors %}
+{#                  <div class="row mar_zero">#}
+{#                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">#}
+                      <div class="form-group">
+                        {% for err in form1.non_field_errors %}
+                          <div class="form_error_message">{{ err }}</div>
+                        {% endfor %}
+                      </div>
+{#                    </div>#}
+{#                  </div>#}
+                {% endif %}
+                <!--<div class="notification_settings">
+                                    Notification Settings
+                                    </div>-->
+                <div class="margin_tb_10">
+                  <div class="padd_notification_settings margin_top_5">
+                    <div class="panel panel-primary" id="notification_panel_primary">
+                      <h3 class="profile-form h3" >Notification Settings</h3>
+					  <span>This setting allows users to select which Skigit notifications appear in their Notification dropdown window and email inbox</span>
+                      <div class="panel-body" id="notification_setting_panel">
+                        <div class="row">
+                          {% if form1.like_notify.errors %}
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12  padd_notification_settings">
+                              {{ form1.like_notify.errors }}
+                            </div>
+                          {% endif %}
+                          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 padd_notification_settings">
+                            <p class="color_555">{{ form1.like_notify.label }}</p>
+                          </div>
+                          <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                            <label class="switch">
+                              {{ form1.like_notify }}
+                              <span class="slider round">
+                                <!--<button class="btnslider" type="button"></button>-->
+                              </span>
+                            </label>
+                          </div>
+                          <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2" >
+                            <label  style="color: #fff;" id="notification_button_text">
+                              {% if form1.like_notify.value == True %}
+                                YES
+                              {% else %}
+                                NO
+                              {% endif %}
+                            </label>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          {% if form1.follow_un_follow_notify.errors %}
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 padd_notification_settings">
+                              {{ form1.follow_un_follow_notify.errors }}
+                            </div>
+                          {% endif %}
+                          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 padd_notification_settings">
+                            <p class="color_555">Follow/Unfollow Notification</p>
+							<!--{{ form1.follow_un_follow_notify.label }}</p>-->
+                          </div>
+                          <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                            <label class="switch">
+                              {{ form1.follow_un_follow_notify }}
+                              <span class="slider round">
+                                <!--<button class="btnslider" type="button"></button>-->
+                              </span>
+                            </label>
+                          </div>
+                          <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                            <label style="color: #fff;" id="notification_button_text">
+                              {% if form1.follow_un_follow_notify.value == True %}
+                                YES
+                              {% else %}
+                                NO
+                              {% endif %}
+                            </label>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          {% if form1.friends_request_notify.errors %}
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12  padd_notification_settings">
+                              {{ form1.friends_request_notify.errors }}
+                            </div>
+                          {% endif %}
+                          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 padd_notification_settings">
+                            <p class="color_555">{{ form1.friends_request_notify.label }}</p>
+                          </div>
+                          <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                            <label class="switch">
+                              {{ form1.friends_request_notify }}
+                              <span class="slider round">
+                                <!--<button class="btnslider" type="button"></button>-->
+                              </span>
+                            </label>
+                          </div>
+                          <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                            <label style="color: #fff;" id="notification_button_text">
+                              {% if form1.friends_request_notify.value == True %}
+                                YES
+                              {% else %}
+                                NO
+                              {% endif %}
+                            </label>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          {% if form1.friends_accept_notify.errors %}
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12  padd_notification_settings">
+                              {{ form1.friends_accept_notify.errors }}
+                            </div>
+                          {% endif %}
+                          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 padd_notification_settings">
+                            <p class="color_555">{{ form1.friends_accept_notify.label }}</p>
+                          </div>
+                          <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                            <label class="switch">
+                              {{ form1.friends_accept_notify }}
+                              <span class="slider round">
+                                <!--<button class="btnslider" type="button"></button>-->
+                              </span>
+                            </label>
+                          </div>
+                          <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                            <label style="color: #fff;" id="notification_button_text">
+                              {% if form1.friends_accept_notify.value == True %}
+                                YES
+                              {% else %}
+                                NO
+                              {% endif %}
+                            </label>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          {% if form1.plug_notify.errors %}
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12  padd_notification_settings">
+                              {{ form1.plug_notify.errors }}
+                            </div>
+                          {% endif %}
+                          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 padd_notification_settings">
+                            <p class="color_555">{{ form1.plug_notify.label }}</p>
+                          </div>
+                          <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                            <label class="switch">
+                              {{ form1.plug_notify }}
+                              <span class="slider round">
+                                <!--<button class="btnslider" type="button"></button>-->
+                              </span>
+                            </label>
+                          </div>
+                          <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                            <label style="color: #fff;" id="notification_button_text">
+                              {% if form1.plug_notify.value == True %}
+                                YES
+                              {% else %}
+                                NO
+                              {% endif %}
+                            </label>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          {% if form1.plug_notify.errors %}
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12  padd_notification_settings">
+                              {{ form1.un_plug_notify.errors }}
+                            </div>
+                          {% endif %}
+                          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 padd_notification_settings">
+                            <p class="color_555">{{ form1.un_plug_notify.label }}</p>
+                          </div>
+                          <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                            <label class="switch">
+                              {{ form1.un_plug_notify }}
+                              <span class="slider round">
+                                <!--<button class="btnslider" type="button"></button>-->
+                              </span>
+                            </label>
+                          </div>
+                          <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                            <label style="color: #fff;" id="notification_button_text">
+                              {% if form1.un_plug_notify.value == True %}
+                                YES
+                              {% else %}
+                                NO
+                              {% endif %}
+                            </label>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          {% if form1.skigit_notify.errors %}
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12  padd_notification_settings">
+                              {{ form1.skigit_notify.errors }}
+                            </div>
+                          {% endif %}
+                          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 padd_notification_settings">
+                            <p class="color_555">{{ form1.skigit_notify.label }}</p>
+                          </div>
+                          <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                            <label class="switch">
+                              {{ form1.skigit_notify }}
+                              <span class="slider round">
+                                <!--<button class="btnslider" type="button"></button>-->
+                              </span>
+                            </label>
+                          </div>
+                          <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                            <label style="color: #fff;" id="notification_button_text">
+                              {% if form1.skigit_notify.value == True %}
+                                YES
+                              {% else %}
+                                NO
+                              {% endif %}
+                            </label>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          {% if form1.share_notify.errors %}
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12  padd_notification_settings">
+                              {{ form1.share_notify.errors }}
+                            </div>
+                          {% endif %}
+                          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 padd_notification_settings">
+                            <p class="color_555">{{ form1.share_notify.label }}</p>
+                          </div>
+                          <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                            <label class="switch">
+                              {{ form1.share_notify }}
+                              <span class="slider round">
+                                <!--<button class="btnslider" type="button"></button>-->
+                              </span>
+                            </label>
+                          </div>
+                          <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                            <label style="color: #fff;" id="notification_button_text">
+                              {% if form1.share_notify.value == True %}
+                                YES
+                              {% else %}
+                                NO
+                              {% endif %}
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center margin_tb_10">
+                    <button type="submit" class="btn yel" name="user_profile_notification_submit">
+                      &nbsp;Save&nbsp;</button>
+                    
+					<a href="{% url 'user_profile' %}" class="btn" id="cancel_button_profile_notifications" style= "margin-top: 8px;">Cancel</a>
+					
+                  </div>
+
+                </div>
+              </form>
+            </div>
+          </div>
+
+        </div>
+      </div>
+  </div>
+
+{% endblock %}

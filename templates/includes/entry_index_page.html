@@ -1,0 +1,7 @@
+{% if videos_latest %}
+    {{ home_videos|safe }}
+{% else %}
+    <div class="row" id="skigit_content_list">
+        <param  id="skigit_no_upload" >There is no skigit uploaded yet</h4>
+    </div>
+{% endif %}

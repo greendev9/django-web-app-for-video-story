@@ -1,0 +1,328 @@
+{% load static %}
+{% load i18n %}
+{% load thumbnail %}
+ 
+
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="collapse navbar-collapse padd_zero" id="navbar">
+      <ul class="nav navbar-nav list-inline">
+        {% if category_list %}
+          <li class="nav-item hidden-lg hidden-md hidden-xs">
+            <a class="nav-link text-center dropdown-toggle " title="Categories" href="#" aria-haspopup="true"
+               aria-expanded="false" data-toggle="dropdown" id="navbarDropdownMenuLink">
+                <img src="{% static 'images/Category_2.png' %}" height="85.33" class="img1" style="margin-top: 20px;"/>
+            </a>
+ 
+
+            <ul class="dropdown-menu" id="categories_menu" aria-labelledby="navbarDropdownMenuLink">
+            {% for cat in category_list %}
+            {% if cat.cat_name == 'Just here for the Drama' %}
+              <li class="nav-item" >
+                <a class="nav-link text-center"  href="{{ cat.get_absolute_url }}">
+                  <img loading="lazy" src="{% static 'images/Drama-Wacki_4x4.png' %}" title = "Just Here for the Drama" height="72" class="img1" style="border-radius: 50%;margin-left: -20px;" />
+                </a>
+              </li>
+            {% elif cat.cat_name == 'Where Words Fail, Music Speaks' %}
+               <li class="nav-item" >
+                <a class="nav-link text-center"  href="{{ cat.get_absolute_url }}">
+                  <img src="{% static 'images/Vibraskigit_4x4.png' %}" title = "Where Words Fail, Music Speaks" height="72" class="img1" style="border-radius: 50%;margin-left: -20px;"/>
+              </a>
+			  </li>
+            {% elif cat.cat_name == 'Let Me Show You Where to Put That' %}
+              <li class="nav-item" >
+                <a class="nav-link text-center"  href="{{ cat.get_absolute_url }}">
+                  <img src="{% static 'images/Demo_4x4.png' %}"  title = "Let Me Show You Where to Put That" height="72" class="img1"  style="border-radius: 50%;margin-left: -20px;"/>
+                </a>
+              </li>
+            {% elif cat.cat_name == 'Normal is Overrated' %}
+              <li class="nav-item" style="margin-left: 10px;">
+                <a class="nav-link text-center" href="{{ cat.get_absolute_url }}" >
+                  <img src="{% static 'images/Wacki_4x4.png' %}" height="72"  class="img1"  style="border-radius: 50%;margin-left: -30px;"/>
+                </a>
+              </li>
+            {% elif cat.cat_name == 'I\'ll do Me, You do You' %}
+              <li class="nav-link text-center">
+                <a class="nav-item text-center" href="{{ cat.get_absolute_url }}" >
+				  <img src="{% static 'images/Selfie_4x4.png' %}"  title = "I'll do Me, You do You"  height="72" class="img1"  style="border-radius: 50%;margin-left: -20px;"/>
+                </a>
+              </li>
+            {% endif %}
+            {% endfor %}
+            </ul>
+          </li>
+		  
+          {% for cat in category_list %}
+            {% if cat.cat_name == 'Just here for the Drama' %}
+              <li class="nav-item hidden-sm" style="margin-left: -10px;">
+                <a class="nav-link text-center" href="{{ cat.get_absolute_url }}">
+                  <img src="{% static 'images/Drama-Wacki_4x4.png' %}"  title = "Just here for the Drama"  height="85.33"class="img1" style="margin-top: 20px;"/>
+                </a>
+              </li>
+            {% elif cat.cat_name == 'Where Words Fail, Music Speaks' %}
+             <li class="nav-item hidden-sm"style="margin-left: -10px;">
+                <a class="nav-link text-center" href="{{ cat.get_absolute_url }}">
+				<!--<span class="tooltiptext"  id="tooltiptext_music" style="color: #db6832;font-family: segoe print;top: 74px;">Where Words Fail, Music Speaks</span>-->
+                  <img src="{% static 'images/Vibraskigit_4x4.png' %}"  title = "Where Words Fail, Music Speaks" height="85.33" class="img1" style="margin-top: 20px;"/>
+		</a>
+              </li>
+            {% elif cat.cat_name == 'Let Me Show You Where to Put That' %}
+              <li class="nav-item hidden-sm"  style="margin-left: -10px;">
+                <a class="nav-link text-center" href="{{ cat.get_absolute_url }}">
+				<!--<span class="tooltiptext"  id="tooltiptext_demo" style="color: #db6832;font-family: segoe print; top: 74px;">Let Me Show You Where to Put That</span>-->
+                  <img src="{% static 'images/Demo_4x4.png' %}"  title = "Let Me Show You Where to Put That" height="85.33" class="img1" style="margin-top: 20px;"/>
+                </a>
+              </li>
+            {% elif cat.cat_name == 'Normal is Overrated' %}
+              <li class="nav-item hidden-sm" style="margin-left: -10px;">
+                <a class="nav-link text-center" href="{{ cat.get_absolute_url }}" >
+			<!--	<span class="tooltiptext"  id="tooltiptext_wacky" style="color: #db6832;font-family: segoe print;transform: rotate(-2deg);">Normal is Overrated</span>-->
+                  <img src="{% static 'images/Wacki_4x4.png' %}"
+                        title = "Normal is Overrated" height="85.33" class="img1" style="margin-top: 22px;"/>
+                </a>
+              </li>
+            {% elif cat.cat_name == 'I\'ll do Me, You do You' %}
+              <li class="nav-item text-center hidden-sm">
+                <a class="nav-link text-center"  href="{{ cat.get_absolute_url }}" >
+				<!--<span class="tooltiptext"  id="tooltiptext_selfie" style="color: #db6832;font-family: segoe print;transform: rotate(0.5deg);top: 74px;">I'll do Me, You do You</span>-->
+				  <img src="{% static 'images/Selfie_4x4.png' %}"  title = "I'll do Me, You do You"  height="85.33" class="img1" style="margin-top: 20px;"/>
+                </a>
+              </li>
+            {% else %}
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+        <li class="nav-item">
+          <a class="nav-link text-center" id="your_things" href="{% url 'awesome_things' %}" style="margin: 0 16px 0 0">
+            <img src="{% static 'images/Chest_4x4.png' %}" title = "Things Skigit Creators Like" height="85.33"class="img1" style="margin-top: 20px;margin-left: -7px;">
+          </a>
+        </li>
+
+        <li class="nav-item dropdown"style="margin: 10px 0 0 -20px;">
+          <a class="nav-link text-center dropdown-toggle" href="#" aria-haspopup="true"
+             aria-expanded="false" data-toggle ="dropdown" id="navbarDropdownMenuLink">
+			 <!--<span class="tooltiptext" style="transform: rotate(1deg);" >Helpful Stuff</span>-->
+            <img src="{% static 'images/Guidelines_4x4.png' %}" height="85.33" 
+                 class="img1" style="margin-top: 12px;margin-left: -2px;"/>
+			 <br>
+			<img style="width:18.33px; height: 8.33px;border-radius:0;margin: -16px 0px 0px -10px;" src="/static/images/menu_down_arrow.png">
+          </a>
+          <ul class="dropdown-menu" id="guideline_menu" aria-labelledby="navbarDropdownMenuLink">
+
+ 
+            <li><a href="/guidelines/">What Makes Skigit So Fun?</a></li>
+            <li><a href="{% url 'guidelines_url:skigitology_view' %}">Skigitology</a></li>
+            <li><a href="{% url 'guidelines_url:making_your_skigit_view' %}">Making Your Skigit</a></li>
+            
+            <li><a href="{% url 'guidelines_url:allowed_video_formats_view' %}">Video Formats</a></li>
+
+            <li><a href="{% url 'about_us_url:aboust_us_view' %}">About Us</a></li>
+            <li><a href="{% url 'about_us_url:faq_view' %}">FAQ</a></li>
+            <li><a href="{% url 'about_us_url:privacy_policy_view' %}">Privacy Policy</a></li>
+            <li><a href="{% url 'about_us_url:t_and_c_view' %}">Terms Of Service</a></li>
+            <li><a href="{% url 'about_us_url:business_terms_service' %}">Business Terms of Service</a></li>
+            <li><a href="{% url 'about_us_url:acceptable_use_policy_view' %}">Acceptable Use Policy</a></li>
+            <!--<li><a href="{% url 'about_us_url:copyright_policy' %}">Copyright Policy</a></li>-->
+            <li><a href="{% url 'about_us_url:skigit_for_business_view' %}">Skigit For Your Business</a></li>
+            <li><a href="{% url 'about_us_url:business_verification' %}">Business Verification</a></li>
+            <li><a href="{% url 'about_us_url:skigit_for_investors_view' %}">Investors</a></li>
+          </ul>
+        </li>
+      </ul>
+      {% if request.user.is_authenticated %}
+        <ul id="user_action" class="nav navbar-nav navbar-right">
+
+          <li class="nav-item text-center" >
+            <a class="nav-link text-center" href="{% url 'sperks' %}" >
+
+              <img src="{% static 'images/Skitbit_4x4.png' %}" id="skitbits"
+                    title = "SkitBits"  height="85.33" class="img1" style="margin-top: 22px;"/>
+
+            </a>
+          </li>
+
+          <li class="nav-item text-center" >
+            <a class="nav-link text-center"  href="{% url 'direct_upload' %}" >
+			 
+              <img src="{% static 'images/Upload_4x4.png' %}" title = "Upload your Skigit" class="img1" height="85.33"
+                  style="margin-top: 22px;"/>
+ 
+            </a>
+          </li>
+
+          <li class="general_notify">
+            <a data-toggle="popover" onclick="get_notify()" id="generalNPopover" class="nav-link text-center" >
+			 
+              <img src="{% static 'images/Notifications_4x4.png' %}" title = "Notifications"  height="85.33" class="img1" title="Notifications" 
+			  style="margin-top: 22px;"/>
+               
+              <span id="general_badge"
+                    style="margin-top:37px;
+                        {% if general_notify_count %}
+                          visibility: visible !important; {% else %} display: none
+                          !important;{% endif %}" class="badge badge-warning">
+                {% if general_notify_count %}{{ general_notify_count }}{% else %}
+                  0{% endif %}
+              </span>
+            </a>
+            <div class="tabbable hide custom_popup" id="notifyContaint">
+              <ul class="list-group notification_ul" id="notify_ul">
+                <li class="f_type" style="color:#ffd6d4; font-size: smaller; text-align: center;font-family: segoe print;text-align: center;">
+                  There are no pending Notifications.
+                </li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="frien_notification" >
+            <a data-toggle="popover" onclick="friendsNotificaton()" id="friendPopover" class="nav-link text-center" >
+			 
+			
+              <img src="{% static 'images/Friends_4x4.png' %}" 
+                   title = "Friends and Invites" height="85.33"  class="img1" title="Friend Requests" style="margin-top: 22px ;"/>
+               
+              
+
+                    <span id="friend_badge"
+                          style="visibility:visible !important;margin-top: 4px;margin-right: -10px;{% if friend_request_notification %}{% else %}display: none !important;{% endif %}"
+                          class="badge badge-danger">{% if friend_request_notification %}
+                      {{ friend_request_notification }}{% else %}0{% endif %}</span>
+               <div class="tabbable hide custom_popup" id="friendContent">
+                <ul class="list-group notification_ul" id="frnd_notification" style="margin-left: 40px;">
+ 
+                </ul>
+
+                <center><a class="f_type" href="/friends/friends-&-invite" style="color:#ccf3ff"> Go to my Friends
+                  and Invites page </a></center>
+              </div>
+            </a>
+          </li>
+
+          <li>
+            <a href="/search_skigit/" class="nav-link text-center">
+ 
+              <img src="{% static 'images/Search_4x4.png' %}" title = "Search Skigit" height="85.33" 
+                   class="img1" style="margin: 21px 8px 0 2px;"/>
+ 
+            </a>
+          </li>
+
+		  
+          <li class="dropdown" >
+            <a href="{% url 'user_profile' %}" class="text-center dropdown-toggle" id="profile-menu"
+               data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" >
+			   <span {{ user.username }}></span>
+			   
+              {% if user_profile.profile_img %}
+               <!--<p class="navusername"  style="top:60px; transform: rotate(-4deg);">{{ user.username }}</p>-->
+			   <img class="avatar"  alt="{{ user.username }}" src=
+                    "{{ user_profile.get_top_profile_img }}"  />
+              {% else %}
+                <img  loading="lazy" src="{% static 'images/noimage_user.png' %}" 
+                     class="avatar"  style="border-radius: 50%; margin:5px 0 32px -3px; width:72px; object-fit: contain;padding: 8px;"/>
+              {% endif %}
+			  <br>
+			  <img style="width:18.33px; height: 8.33px;border-radius:0;margin-top:3px;" src="/static/images/menu_down_arrow.png">
+            </a>
+			
+			
+			
+            <ul class="dropdown-menu" aria-labelledby="profile-menu" id="guideline_menu_settings" >
+ 
+              <li>
+                <a href="/profile/">Profile and Settings</a>
+              </li>
+              <li>
+                <a href="/my-skigits/">My Skigits</a>
+              </li>
+              <li>
+                <a href="/plugged-in-skigits/">Skigits I Plugged</a>
+              </li>
+              <li>
+                <a href="/like/">Skigits I Like</a>
+              </li>
+              <li>
+                <a href="/favorite/">My Favorites</a>
+              </li>
+              <li>
+                <a href="/following/">I'm Following</a>
+              </li>
+              <li>
+                <a href="/friends/friends-&-invite">Friends and Invites</a>
+                <!-- </li>
+                <li>
+                 <a href="/skigistats/">My Skigistats</a>-->
+              </li>
+              <li>
+                <a id="bug_report" modal-form data="bug" template-url="/static/templates/bug_report.html"
+                   method="POST" dialog-class="login-modal"
+                   path="/bug-management/" redirect="/" close-on-success="true"  >Report a Bug</a>
+              </li>
+              <li>
+                <a href="#logout" onclick="logoutCnfm()">Logout</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+
+        <div class="overlay"></div>
+        <div id="confirmLogoutBox">
+          <div style="text-align: center !important;">
+            <p>
+              <img  loading="lazy" alt="Skigit logo" src="{% static 'images/Skigit_Logo_AI_master_white.png' %}" style="width:100px">
+            </p>
+
+            <p id="confirm_logout_text" style="padding: 0px 0; margin: 25px 0 35px !important;">Do you really want to leave
+              us?</p>
+
+            <div class="del-bott" style="padding-bottom: 20px">
+              <button type="button" onclick="ok_logout_click()" id="ok_logout_logo">Ok</button>
+			  		<button type="button" onclick="cancel_logout()" id="cancel_logout" style="margin: -3px 0 0 6px;" class="btn btn-danger" ;>Cancel</button>
+               
+            </div>
+          </div>		  
+        </div>
+
+        <script>
+          logoutCnfm = function (e) {
+            jQuery('#confirmLogoutBox').addClass('open');
+            jQuery('.overlay').addClass('open')
+          };
+          cancel_logout = function (e) {
+            jQuery('#confirmLogoutBox').removeClass('open');
+            jQuery('.overlay').removeClass('open')
+          };
+          ok_logout_click = function (e) {
+            window.location = '{% url 'logout_user' %}'
+          }
+        </script>
+
+
+      {% else %}
+        <ul id="user_action" class="nav navbar-nav navbar-right list-inline">
+          <li>
+            <a id="login-modal-blk" class="text-center" modal-form data="user" template-url="/static/templates/login.html" title="Register and Login"
+               method="POST" dialog-class="login-modal"
+               path="/login_ajax/" redirect="/" close-on-success="true">
+			   
+              <img src="{% static 'images//Star_4x4.png' %}" style="margin-top: 20px;width: 80px;height: 80px;margin: 0;" height="85.33" 
+                   class="img1" style="margin-top: 20px;"/>
+
+            </a>
+          </li>
+          <li>
+            <a href="/search_skigit/" class="nav-link text-center" >
+			
+              <img src="{% static 'images/Search_4x4.png' %}" height="85.33" style="margin: 20px 0px 0 0px;"
+                   class="img1"/>
+
+            </a>
+          </li>
+        </ul>
+      {% endif %}
+    </div><!--/.nav-collapse -->
+  </div><!--/.container-fluid -->
+</nav>
+
+

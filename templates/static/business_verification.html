@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{{ block.super }}Business Verification{% endblock %}
+
+{% block main-header-block %}
+    {% if not mobile_api_request %}
+        {{ block.super }}
+    {% endif %}
+{% endblock main-header-block %}
+
+{% block content %}
+  <div class="row mar_zero" id="main">
+    <div class="wrap cf">
+      <div role="main" id="content main-fnt-mch">
+        <div id="post-139" class="post-139 page type-page status-publish hentry">
+		<h1>
+          <h1  style="text-align: center;">Business Verification</h1>
+          <div class="page-content rich-content" style="padding-top:5px">
+{#            <img width="68" height="50" alt="logo" src="{% static 'images/logo.png' %}" style="position: relative;">#}
+            <p> 
+			
+			
+			<p style="margin: 20px 0 0 0;"> We want people to find the content that they're expecting to find on Skigit, which is why we've initiated our Business Verification process. The goal of this process ensure that people have trust in Skigit and the businesses  they're supporting. When a business account has been verified on Skigit, users will see a business verification logo in the Business profile page for that business. This logo signifies that the Skigit team has verified the account creator represents the business they claim to represent so when you create a Skigit for that business, you can have 100% trust that they are who they say. </p>
+		
+			<p style="margin: 20px 0 0 0;"> Only verified business can use Skigit so if you're a business registering for Skigit, make sure to follow the instructions below. They help  to ensure that your business, our users and Skigit are protected from fraudulent registration and misrepresentation that could harm us all.</p>
+	 <br>
+			<p style="color: #19485f;text-shadow: none; font-family: segoe print;">To start the business verification process...</p>
+		<ol type="1">	
+			<li style="font-weight:bold;color: #000;text-shadow: none;margin: 40px 0 20px 0;">User Email</li>
+			<p>Enter your user business email address. The email address must be the domain 
+				for the business to which you are authorized to represent.</p>
+
+<li style="font-weight:bold;color: #000;text-shadow: none;margin: 40px 0 20px 0;">Company Name</li>
+			<p> Enter your business name as it appears on the legal documentation 
+				you are planning to submit to Skigit for verification.</p>
+
+<li style="font-weight:bold;color: #000;text-shadow: none;margin: 40px 0 20px 0;">Contact Email</li>
+			<p>Enter your business email address. The email address must be the 
+				domain for the business and may be the same as the User Email. Note -This email will be displayed to members in your company profile and will appears as the company contact email.</p>
+
+<li style="font-weight:bold;color: #000;text-shadow: none;margin: 40px 0 20px 0;">EIN (Employer Identification Number) </li>
+			<p> Enter your business EIN as it appears on at least 
+				one business document you are submitting for verification.</p>
+			
+			<p>The Employer Identification Number, also known as the Federal Employer Identification Number or the Federal Tax Identification Number, is a unique nine-digit number assigned by the Internal Revenue Service to business entities operating in the United States for the purposes of identification.</p>
+				 
+				 <li style="font-weight:bold;color: #000;text-shadow: none;margin: 40px 0 20px 0;">Business Documents</li>
+			<p>Upload a minimum of 2 documents for verification and not thet 
+				your identiy and business must be confirmed in order to be Skigit-verified. </p>
+			
+			<ol type="A">	
+			<li style="font-weight:bold;color: #000;text-shadow: none;margin: 40px 0 20px 0;">Confirm Your Identity. </li>
+				<p style="margin: 20px 0 0 0;">Select a type of government ID from the list, and upload a 
+					photo of your ID. If you don't have a photo ID you can submit, you can upload two official documents. </p>
+				
+				<li style="font-weight:bold;color: #000;text-shadow: none;margin: 40px 0 20px 0;">Verify the Legal Business Name.</li>
+				<p style="margin: 20px 0 0 0;"> You may be asked to provide 
+					official documentation of your business's legal name. Upload an official document that matches the business's legal name you entered in step 1, such as a business license, articles of incorporation or business tax registration. See table below for examples of the documents you can submit for your country. Currently, only the United States is supported for business verification:</p>
+		</ol>
+		<ol type="i" style="margin: 40px 0 20px 40px;font-size:18px;">
+		
+				  <p style="margin: 20px 0 10px -40px;font-size:18px; font-weight:bold">United States </p>
+					<li>Articles of incorporation</li>
+					<li> Business bank statement</li>
+					<li> Business license</li>
+					<li> Employer identification number (EIN)</li>
+					<li> IRS SS-4 (Ein Assignment Letter)</li>
+					<li> IRS 147c (EIN Confirmation Letter)</li>
+					<li> Taxpayer identification number</li>
+			</ol>	
+					<li style="font-weight:bold;color: #000;text-shadow: none;margin: 40px 0 20px 0;">Business Domain </li>
+			<p>Verify your domain. Complete the domain verification process by 
+				entering your business website home page beginning with "https://". </p>
+			
+			<li style="font-weight:bold;color: #000;text-shadow: none;margin: 40px 0 20px 0;">Get a Verification Code and Certification</li>
+			
+			<p>After you register for Skigit, we will initiate the Biusiness Verification process using your profile information and the document content you provided at the time of registration.  While we are verifying your business credentials, you will only be allowed to login and access your profile page. 
+			
+			After we have verified your business you will receive a verification email and a verification certification logo will  appear in your account profile. This will signal to you and other users, your business has been verified. </p>
+			
+			<img id="business_verification_icon" src="{% static 'images/Verified.png' %}" title="Business Verified!" style="display: block;margin: 20px auto 20px auto;">
+			
+			<p>  You may not receive confirmation right away so we kindly ask for your patience. You can also check the status in your profile page, to look for the Business Verification approval logo.</p>
+			
+		 
+			</ol>
+			
+			</p>
+			 
+ 
+          </div>
+        </div><!--end .hentry-->
+
+      </div><!--end #content-->
+
+
+      <div role="complementary" id="sidebar">
+      </div><!--end #sidebar-->
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block main_video_block %}
+{% endblock %}
+
+{% block title %}{{ block.super }}FAQ {% endblock %}
+
+{% block main-header-block %}
+    {% if not mobile_api_request %}
+        {{ block.super }}
+    {% endif %}
+{% endblock main-header-block %}
+
+{% block content %}
+
+<style>
+
+h3.sageo {
+  font-size: 24px;
+  color: #1c6890;
+  font-weight: bold;
+  font-family: 'laoui Sans',sans-serif;
+}
+
+</style>
+
+  <div class="row mar_zero" id="main">
+    <div class="wrap cf">
+      <div role="main" id="content">
+        <div id="post-4192" class="post-4192 page type-page status-publish hentry">
+
+          <h1 class="sageo" style="text-align:  center">Frequently Asked Questions</h1>
+          <div class="page-content rich-content" style="margin: 15px;">
+
+            <p>
+            <h3 class="sageo" >What the heck is a <span style="font-family: segoe print;font-weight: bold;color: #1c6890;">Skigit</span>? </h3></p>
+
+            <p><span>A Skigit (pronounced ski'jit) is a member created video story of 45 seconds or less about something, someone or someplace &nbsp;awesome that has special and&nbsp;positive&nbsp;meaning to you.</span>
+            </p>
+            <br>
+            <p>
+            <h3 class="sageo" >How long can my <span style="font-family: segoe print;font-weight: bold;color: #1c6890;">Skigit</span> be?</h3></p>
+
+            <p><span>Forty Five (45) seconds maximum with no limit on the short end ;-), except that it must run T&gt;0 in the 3rd dimension. However, YouTube uploads can be any length you choose. We recommend no more that 5 minutes to keep your audience's attention</span>
+            </p>
+            <br>
+            <p>
+            <h3 class="sageo" >Is there any limit to how many <span style="font-family: segoe print;font-weight: bold;color: #1c6890;">Skigit</span>s I can create?</h3></p>
+            <p><span>No. You can can create as many <span style="font-family: segoe print;font-weight: bold;color: #1c6890;">Skigits</span> as you wish.<br></span></p>
+            <br>
+            <p>
+            <h3 class="sageo" >In which video formats can I create my <span style="font-family: segoe print;font-weight: bold;color: #1c6890;">Skigit</span>? </h3></p>
+            <p><span >Reference the Video Formats page located within the</span> <a
+                target="_blank" href="{% if mobile_api_request %}{% url 'guidelines_api_url:guidelines_view_api' %}{% else %}{% url 'guidelines_url:guidelines_view' %}{% endif %}" title="Guidelines"><em><span
+                style="font-size: 20px; font-style: normal;color: #067bb4;">Guidelines </span></em></a><span style="font-size: 20px; color: #333300;font-family:'LAOUI';">page located in the "Other Things" drop down menu at the top of each page</span></span>
+            </p>
+            <br>
+            <p>
+            <h3 class="sageo" >Why should I choose to display the logo of my product? &nbsp;</h3></p>
+            <p><span>By sharing the maker logo for your awesome thing, you are creating a personal and emotional connection between you, the maker of your awesome thing and your viewers. Don't forget, you can help others by choosing to donate your Sperk to a favorite cause.</span>
+            </p>
+            <br>
+            <p>
+            <h3 class="sageo" >Can I share my <span style="font-family: segoe print;font-weight: bold;color: #1c6890;">Skigit</span> with friends on other sites? </h3></p>
+            <p><span>Absolutely! You can post and share any <span style="font-family: segoe print;font-weight: bold;color: #1c6890;">Skigit</span> to other websites. If you prefer, you can even email them to family and friends. Heck, why not do all three! &nbsp;&nbsp;</span>
+            </p>
+            <br>
+            <p>
+            <h3 class="sageo" >What does it mean to plug-in to a <span style="font-family: segoe print;font-weight: bold;color: #1c6890;">Skigit</span> and what does it really do? &nbsp;
+              &nbsp; &nbsp;</h3></p>
+            <p><span >By plugging into a <span style="font-family: segoe print;font-weight: bold;color: #1c6890;">Skigits</span>, you are connecting with other members on a personal and perhaps an emotional level to form a group which ultimately, creates a Superskigit! Viewers can view your <span style="font-family: segoe print;font-weight: bold;color: #1c6890;">Skigit</span> and follow the connected <span style="font-family: segoe print;font-weight: bold;color: #1c6890;">Skigits</span> to get even more insight into your awesome thing. How cool is that!</span>
+            </p>
+
+            <p><span <em>For additional guidance, reference the <a
+                href="{% if mobile_api_request %}{% url 'guidelines_api_url:guidelines_view_api' %}{% else %}{% url 'guidelines_url:guidelines_view' %}{% endif %}" title="Guidelines"><em><span
+                style="font-style: normal!important;color: #067bb4;">Guidelines</span></a></em><span style="font-size: 20px;"> page on the menu tab located at the top of your page.</span></span>
+            </p>
+            <br>
+            <p>
+            <h3 class="sageo" >What happens if I plug into a <span style="font-family: segoe print;font-weight: bold;color: #1c6890;">Skigit</span> and the Primary <span style="font-family: segoe print;font-weight: bold;color: #1c6890;">Skigit</span> gets
+              deleted? </h3></p>
+
+            <p><span>If a Primary <span style="font-family: segoe print;font-weight: bold;color: #1c6890;">Skigit</span> gets deleted, by default, you automatically plug-in
+              to the Plug-in <span style="font-family: segoe print;font-weight: bold;color: #1c6890;">Skigit</span> that was posted prior to yours. It now becomes the new Primary <span style="font-family: segoe print;font-weight: bold;color: #1c6890;">Skigit</span>. You'll
+              receive a notification and will have the option to delete that plug-in connection on your <a
+                  href="{% if mobile_api_request %}{% url 'share_deeplink_view' %}?category=SKIGIT{% else %}{% url 'plugged_in_skigits' %}{% endif %}" title="Skigits I Plugged Into" style="font-style: normal;"><em><span
+                  style="font-style: normal !important;color: #067bb4;">Skigits I Plugged Into</span></a></em><span
+                style="font-size: 20px"> page.</span></span></p>
+            <br>
+
+          </div>
+        </div><!--end .hentry-->
+
+      </div><!--end #content-->
+
+
+      <div role="complementary" id="sidebar">
+      </div><!--end #sidebar-->
+    </div>
+  </div>
+{% endblock %}

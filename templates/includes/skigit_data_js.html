@@ -1,0 +1,790 @@
+{% load static %}
+
+<script type="text/javascript">
+    $c = jQuery.noConflict();
+    $c('#ca-container').contentcarousel;
+  </script>
+
+<script>
+
+  $cmm = jQuery.noConflict();
+  $cmm(document).init(function () {
+
+    /*** Facebook Comment Box Javascript API ***/
+
+    var fb_script = ' ';
+    fb_script += '<div id="fb-root"></div> \r\n';
+    fb_script += '<script>\r\n';
+    fb_script += '(function(d, s, id){ \r\n';
+    fb_script += 'var js, fjs = d.getElementsByTagName(s)[0]; \r\n';
+    fb_script += 'if (d.getElementById(id)) return; \r\n';
+    fb_script += 'js = d.createElement(s); js.id = id; \r\n';
+    fb_script += 'js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v4.0&appId={{facebook_app_id}}"; \r\n'
+    fb_script += 'fjs.parentNode.insertBefore(js, fjs); \r\n';
+    fb_script += '}(document, "script", "facebook-jssdk")) \r\n';
+    fb_script += '<\/script>\r\n\n';
+
+    $cmm('#fbcomment{{ skigit.id }}').append(fb_script);
+
+    if (window.FB) {
+      FB.XFBML.parse(); // re-parse all of the XFBML on a page (Reloads Comment Box)
+    }
+  });
+
+</script>
+
+<script type="text/javascript">
+
+  $j = jQuery.noConflict();
+  var slider_options = {
+    hideControlOnEnd: false,
+    infiniteLoop: false,
+    slideWidth: 130,
+    minSlides: 2,
+    maxSlides: 5,
+    moveSlides: 5,
+    slideMargin: 10,
+    pager: false,
+    touchEnabled: false,
+    onSlideBefore: async function($slideElement,oldIndex, newIndex){
+      if ((slider.getSlideCount() / 5) - 1 == slider.getCurrentSlide()) await get_recommended_skigits()
+      }
+    }
+
+  var page = 1;
+  var slider = $j('.slider1').bxSlider(slider_options);
+
+  async function get_recommended_skigits() {
+    page++
+    $j.ajax({
+        url: "{% url 'recommended_skigits' skigit.id %}",
+        data: { page: page },
+        success: await function(data) {
+          $j('.slider1').append(data)
+          slider_options["startSlide"] = slider.getCurrentSlide()
+          slider.reloadSlider(slider_options);
+          $j('.bx-pager.bx-default-pager .bx-pager-item:last a').trigger('click');
+        }
+      });
+  }
+
+  $j(document).ready(function () {
+
+    window.skigit_statistics =  function get_skigit_statistics(){
+        $j.ajax({
+        type: "POST",
+        url: "/skigit_statistics/",
+        data: {'skigit_id': {{skigit_id}}, 'csrfmiddlewaretoken': '{{csrf_token}}'},
+        success: function (response) {
+
+          if (response.is_success) {
+            $j('li').find('#id_plug_count').html(response.plug_count);
+            $j('li').find('#id_view_count').html(response.view_count);
+            $j('li').find('#id_favorites').html(response.fav_count);
+            $j('li').find('#id_likes').html(response.like_count);
+            $j('li').find('#id_share').html(response.share_count)
+          }
+        },
+        error: function (rs, e) {
+          $j("#popup_msg").text("Error into Skigit Statistic Please try again");
+          $j("#popScreen").show();
+        }
+      });
+    }
+    
+    $j.ajax({
+        url: "{% url 'recommended_skigits' skigit.id %}",
+        data: { page: page },
+        success: function(data) {
+          $j('.slider1').html(data)
+          slider.reloadSlider();
+          $j('.bx-pager.bx-default-pager .bx-pager-item:last a').trigger('click');
+        },
+      });
+
+      window.parent.skigit_statistics() // get skigit stats
+
+    var currentTimezone = jstz.determine();
+    var timezone = currentTimezone.name();
+
+    $j('#id_time_zone').val(timezone);
+
+    fav_un_fav = function () {
+
+      var skigit_id = $j("#fav_" +{{skigit.skigit_id.id}}).attr('data-pid');
+      var fav_id = $j("#fav_" +{{skigit.skigit_id.id}}).attr('id');
+      var fav_class = $j("#fav_" +{{skigit.skigit_id.id}}).attr('class');
+
+      if (fav_class == 'unfavorite') {
+        $j.ajax({
+          type: "POST",
+          url: "/my_favourites/",
+          data: {'skigit_id': {{skigit.id}}, 'csrfmiddlewaretoken': '{{csrf_token}}'},
+          success: function (response) {
+            if (response.is_success) {
+              if (response.is_fav == 1 || response.is_fav == '1') {
+                $j("#" + fav_id).attr("title", "Remove Favorite");
+                $j("#" + fav_id).removeClass("unfavorite");
+                $j("#" + fav_id).addClass("favorite");
+                $j("#" + fav_id + "> img").attr("src", "{% static 'images/favorites.png' %}");
+              }
+            }
+            window.parent.skigit_statistics() // update skigit stats
+          },
+          error: function (rs, e) {
+            $j("#popup_msg").text("Error into Favorite/Un favorite Skigit...! Please try again");
+            $j("#popScreen").show();
+          }
+        });
+      }
+      else if (fav_class == 'favorite') {
+
+        $j.ajax({
+
+          type: "POST",
+          url: "/un_favourites/",
+          data: {'skigit_id': {{skigit.id}}, 'csrfmiddlewaretoken': '{{csrf_token}}'},
+          success: function (response) {
+            if (response.is_success) {
+              if (response.is_fav == 1 || response.is_fav == '1') {
+                $j("#" + fav_id).attr("title", "Add to Favorite");
+                $j("#" + fav_id).removeClass("favorite");
+                $j("#" + fav_id).addClass("unfavorite");
+                $j("#" + fav_id + "> img").attr("src", "{% static 'images/favorites_golden.png'%}");
+              }
+              window.parent.skigit_statistics() // update skigit stats
+            }
+          },
+          error: function (rs, e) {
+            $j("#popup_msg").text("Error into Favorite/Un-favorite Skigit...! Please try again");
+            $j("#popScreen").show();
+          }
+        });
+      }
+    };
+
+    returnPicture = function () {
+      $j.ajaxSetup({async: false});
+      current_picture = '';
+      var video_id = "{{skigit.id}}";
+      $j.post("/vdo_thumbnail/get/", {video_id: video_id},
+        function (data, status) {
+          if (data.is_success) {
+            msg = data.message;
+            current_picture = data.url;
+          }
+          else {
+            return false;
+          }
+        });
+      $j.ajaxSetup({async: true});
+      return current_picture;
+    };
+
+    get_statistics_count = function (skigit_id, e) {
+      $j.ajax({
+        type: "POST",
+        url: "/skigit_statistics/",
+        data: {'skigit_id': skigit_id, 'csrfmiddlewaretoken': '{{csrf_token}}'},
+        success: function (response) {
+
+          if (response.is_success) {
+            $j('li').find('#id_plug_count').html(response.plug_count);
+            $j('li').find('#id_view_count').html(response.view_count);
+            $j('li').find('#id_favorites').html(response.fav_count);
+            $j('li').find('#id_likes').html(response.like_count);
+            $j('li').find('#id_share').html(response.share_count)
+          }
+        },
+        error: function (rs, e) {
+          $j("#popup_msg").text("Error into Skigit Statistic Please try again");
+          $j("#popScreen").show();
+        }
+      });
+    };
+
+    openPopup = function () {
+      $j('.msg_success').hide();
+    };
+
+    read_More = function () {
+      $j('#why_rocks_half').hide();
+      $j('#why_rocks_full').show();
+      $j('#read_more').hide();
+      $j('#hide_text').show()
+    };
+
+    hide_Text = function () {
+      $j('#why_rocks_half').show();
+      $j('#why_rocks_full').hide();
+      $j('#read_more').show();
+      $j('#hide_text').hide()
+    };
+
+    un_follow_follow = function () {
+
+      var follow_uid = $j("#follow_" +{{skigit.skigit_id.user_id}}).attr('data-cuid');
+      var follow_id = $j("#follow_" +{{skigit.skigit_id.user_id}}).attr('id');
+      var follow_clas = $j("#follow_" +{{skigit.skigit_id.user_id}}).attr('class');
+      var auth_id = $j("#follow_" +{{ skigit.skigit_id.user_id }}).attr('data-id');
+
+      if(follow_uid == auth_id) {
+          $j("#followBox").addClass('open');
+          $j('.overlay').addClass('open')
+          return;
+      }
+
+      if (follow_clas == 'unfollow') {
+        $j.ajax({
+          type: "POST",
+          url: "/unfollow/",
+          data: {
+            'follow_id': follow_uid,
+            'skigit_id': "{{skigit.skigit_id.id}}",
+            'csrfmiddlewaretoken': '{{csrf_token}}'
+          },
+          success: function (response) {
+            if (response.is_success) {
+              if (response.is_follow == 1 || response.is_follow == '1') {
+                $j("#" + follow_id).attr("title", "Un Follow");
+                $j("#" + follow_id).removeClass("unfollow");
+                $j("#" + follow_id).addClass("follow");
+                $j("#" + follow_id + "> img").attr("src", "{% static 'images/follow.png' %}");
+              }
+              window.parent.skigit_statistics() // update skigit stats
+            }
+          },
+          error: function (rs, e) {
+            $j("#popup_msg").text("Error into Follow/Un-Follow User...! Please try again.");
+            $j("#popScreen").show();
+          }
+        });
+      }
+      else if (follow_clas == 'follow') {
+
+        $j.ajax({
+
+          type: "POST",
+          url: "/follow/",
+          data: {'follow_id': follow_uid, 'csrfmiddlewaretoken': '{{csrf_token}}', 'skigit_id': '{{skigit.skigit_id.id}}'},
+          success: function (response) {
+            if (response.is_success) {
+              if (response.is_follow == 1 || response.is_follow == '1') {
+                $j("#" + follow_id).attr("title", "Follow");
+                $j("#" + follow_id).removeClass("follow");
+                $j("#" + follow_id).addClass("unfollow");
+                $j("#" + follow_id + "> img").attr("src", "{% static 'images/follow-golden.png'%}");
+              }
+              window.parent.skigit_statistics() // update skigit stats
+            }
+          },
+          error: function (rs, e) {
+            $j("#popup_msg").text("Error into Follow/Un-Follow User...! Please try again.");
+            $j("#popScreen").show();
+          }
+        });
+      }
+    };
+    close_followBox = function () {
+          $j("#followBox").removeClass('open');
+          $j('.overlay').removeClass('open')
+    };
+  });
+
+</script>
+
+<script>
+  $zz = jQuery.noConflict();
+  internalEmbed{{ skigit.id }} = function () {
+    $zz(".confirmBox").addClass('open');
+    $zz(".p_body").css("display", "block");
+    $zz(".p_body").addClass('fade in').css('background-color', 'rgba(229, 246, 255, 0.76)');
+    $zz("#id_homeframe{{ skigit.id }}")[0].contentWindow.postMessage('{"event":"command","func":"' + 'pauseVideo' + '","args":""}', '*');
+  }
+</script>
+
+<script>
+  $j = jQuery.noConflict();
+  $j(document).on('click', '#showModalpopup', function(e) {
+    let statisticModal = $j(".count-target, #statistic, #id_statistic, .count-s");
+
+
+    // if the target of the click isn't the container nor a descendant of the container
+    if ((!statisticModal.is(e.target) && statisticModal.has(e.target).length === 0))
+    {
+        statisticModal.removeClass('open');
+    }
+  });
+  $j(document).ready(function () {
+
+    $j(".count-s").click(function () {
+      $j(".count-target").addClass('open');
+      $j(".p_body").css("display", "block");
+    });
+
+    $j(".p_body").click(function () {
+      $j(".count-target").removeClass('open');
+      $j(".embed-skigit-target").removeClass('open');
+      $j(".p_body").css("display", "none");
+      $j(".p_body").removeClass('fade in').css('background-color', 'none');
+      $j(".confirmBox").removeClass('open');
+      {#$j("#id_homeframe{{ skigit.id }}")[0].contentWindow.postMessage('{"event":"command","func":"' + 'playVideo' + '","args":""}', '*');#}
+      $j('#embed_preview{{ skigit.id }}')[0].contentWindow.skigt_embed_stop()
+    });
+
+    $j(".embed-skigit-img").click(function () {
+      $j('#id_embed_ex_box{{ skigit.id }}').hide();
+      $j('#id_embed_ex_info{{ skigit.id }}').show();
+      $j('#show_preview{{ skigit.id }}').text('Show Preview');
+      $j("#_show_hide{{ skigit.id }}").hide();
+      $j(".embed-skigit-target").addClass('open');
+      $j(".p_body").css("display", "block");
+      $j(".p_body").addClass('fade in').css('background-color', 'rgba(229, 246, 255, 0.76)');
+
+      var iframe = document.querySelector('#id_homeframe{{ skigit.id }}_youtube_api');
+	  var video = document.querySelector('#id_homeframe{{ skigit.id }}_html5_api');
+	  if (iframe) {
+        $j(iframe)[0].contentWindow.postMessage('{"event":"command","func":"' + 'pauseVideo' + '","args":""}', '*');
+      }
+      if (video) {
+        $j(video)[0].pause();
+      }
+    });
+
+    // Inject YouTube API script
+    var tag = document.createElement('script');
+    tag.src = "//www.youtube.com/player_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    $j('.modal').on('hidden.bs.modal', function () {
+      $j("iframe").each(function () {
+        this.contentWindow.postMessage('{"event":"command","func":"' + 'stopVideo' + '","args":""}', '*');
+      });
+      if ($j('#embed_preview{{ skigit.id }}')[0]) {
+        $j('#embed_preview{{ skigit.id }}')[0].contentWindow.skigt_embed_stop();
+
+        if ($j('#show_preview{{ skigit.id }}').text() == 'Show Preview') {
+          $j('#show_preview{{ skigit.id }}').text('Hide Preview')
+        }
+        else {
+          $j('#show_preview{{ skigit.id }}').text('Show Preview')
+        }
+        $j("#_show_hide{{ skigit.id }}").slideToggle();
+        $j(".embed-skigit-target").removeClass('open');
+        $j(".p_body").css("display", "none");
+        $j(".p_body").removeClass('fade in').css('background-color', 'none');
+      }
+    });
+
+    /*** Stop playing Video on Model Box Close ***/
+    $j('.close_btn').click(function () {
+      $j("iframe").each(function () {
+        this.contentWindow.postMessage('{"event":"command","func":"' + 'stopVideo' + '","args":""}', '*');
+      });
+      if ($j('#embed_preview{{ skigit.id }}')[0]) {
+        $j('#embed_preview{{ skigit.id }}')[0].contentWindow.skigt_embed_stop()
+
+        if ($j('#show_preview{{ skigit.id }}').text() == 'Show Preview') {
+          $j('#show_preview{{ skigit.id }}').text('Hide Preview')
+        }
+        else {
+          $j('#show_preview{{ skigit.id }}').text('Show Preview')
+        }
+        $j("#_show_hide{{ skigit.id }}").slideToggle();
+        $j(".embed-skigit-target").removeClass('open');
+        $j(".p_body").css("display", "none");
+        $j(".p_body").removeClass('fade in').css('background-color', 'none');
+      }
+    });
+
+    $j('#show_preview{{ skigit.id }}').click(function () {
+      $j('#embed_preview{{ skigit.id }}')[0].contentWindow.skigt_embed_stop()
+      if ($j('#show_preview{{ skigit.id }}').text() == 'Show Preview') {
+        $j('#show_preview{{ skigit.id }}').text('Hide Preview')
+      }
+      else {
+        $j('#show_preview{{ skigit.id }}').text('Show Preview')
+      }
+      $j("#_show_hide{{ skigit.id }}").slideToggle();
+    });
+
+    $j('#id_ex_yes_embed_{{ skigit.id }}').click(function () {
+      $j.ajax({
+        type: "POST",
+        url: "/invoice/external-embed-invoice/",
+        data: {'skigit_id': {{ skigit.id }}},
+        success: function (response) {
+          if (response.is_success) {
+            $j('#id_embed_ex_box{{ skigit.id }}').show();
+            $j('#id_embed_ex_info{{ skigit.id }}').hide();
+          }
+        }
+      });
+    });
+
+    $j('#ok_embed_{{ skigit.id }}').click(function () {
+
+      $j.ajax({
+        type: "POST",
+        url: "/friends/internal-embed-post/",
+        data: {
+          'skigit_id': {{ skigit.skigit_id.id }}, 'from_id': {{ skigit.skigit_id.user.id }},
+          'to_id': {{ request.user.id }}, 'type': 'internal', 'csrfmiddlewaretoken': '{{csrf_token}}'
+        },
+        success: function (response) {
+          if (response.is_success) {
+            $j('#embed_success_msg').html('{{ skigit.title }} was successfully embedded into your Skigit profile page.')
+            $j('#embed_success_msg').show()
+            $j(".p_body").css("display", "none");
+            $j(".p_body").removeClass('fade in').css('background-color', 'none');
+            setTimeout(function () {
+              $j(".confirmBox").removeClass('open');
+              $j('#embed_success_msg').empty()
+              $j('#embed_success_msg').hide()
+            }, 3000)
+            $j("#id_homeframe{{ skigit.id }}")[0].contentWindow.postMessage('{"event":"command","func":"' + 'playVideo' + '","args":""}', '*');
+            $j('#embed_preview{{ skigit.id }}')[0].contentWindow.skigt_embed_stop()
+          }
+        },
+        error: function (rs, e) {
+          $j("#popup_msg").text("Error into Internel Embed Skigit...! Please try again");
+          $j("#popScreen").show();
+        }
+      });
+    });
+
+    $j('#no_embed_{{ skigit.id }}').click(function () {
+      $j(".p_body").css("display", "none");
+      $j(".p_body").removeClass('fade in').css('background-color', 'rgba(0, 0, 0, .4)');
+      $j(".confirmBox").removeClass('open');
+      manage_embed_video_controls();
+    });
+
+    $j('.close_embed').click(function () {
+      $j(".embed-skigit-target").removeClass('open');
+      $j(".p_body").css("display", "none");
+      $j(".p_body").removeClass('fade in').css('background-color', 'none');
+      manage_embed_video_controls();
+    });
+
+    $j('#btn_fb_comment_expand{{ skigit.id }}').click(function () {
+      if ($j(this).closest('[title]').attr('title') == 'Hide') {
+        $j(this).attr('title', 'Show');
+      }
+      else {
+        $j(this).attr('title', 'Hide');
+      }
+      $j("#fbcomment{{ skigit.id }}").slideToggle();
+    });
+  });
+
+  // When show/hide the embed popup, video should be paused!
+  manage_embed_video_controls = function () {
+    var iframe = document.querySelector('#id_homeframe{{ skigit.id }}_youtube_api');
+    var video = document.querySelector('#id_homeframe{{ skigit.id }}_html5_api');
+
+    if (iframe) {
+        $j(iframe)[0].contentWindow.postMessage('{"event":"command","func":"' + 'pauseVideo' + '","args":""}', '*');
+    }
+    if (video) {
+      $j(video)[0].pause();
+    }
+    $j('#embed_preview{{ skigit.id }}')[0].contentWindow.skigt_embed_stop()
+  }
+
+</script>
+
+<script type="text/javascript">
+
+  var $m = jQuery.noConflict();
+  $m("#inapp_form_can").click(function (e) {
+    $m(".dropdown").removeClass('open');
+  });
+
+  $m('.joinpopup').click(function () {
+    if ($m(this).next().css('display') == 'none') {
+      $m(this).next().slideDown("slow").css("display", "block");
+    }
+    else {
+      $m(this).next().slideUp("slow");
+    }
+  });
+
+  $m('.Joinclose').on("click", function () {
+    var pid = $m(this).attr("id");
+    var popup_id = pid.replace('skigitt_drop_close', '');
+    if ($m('#pop_upsingle' + popup_id))
+      $m('#pop_upsingle' + popup_id).slideUp("slow");
+    if ($m('#pop_uploop' + popup_id))
+      $m('#pop_uploop' + popup_id).slideUp("slow");
+    if ($m('#pop_upfav' + popup_id))
+      $m('#pop_upfav' + popup_id).slideUp("slow");
+    if ($m('#pop_uporigin' + popup_id))
+      $m('#pop_uporigin' + popup_id).slideUp("slow");
+  });
+
+  socialPost = function (ski_id, ski_user, social_type) {
+
+    var message;
+
+    jQuery.ajax({
+      url: "/invoice/post-social-network/",
+      type: "POST",
+      data: {
+        'skigit_id': ski_id,
+        'skigit_user': ski_user,
+        'social_type': social_type,
+        csrfmiddlewaretoken: '{{ csrf_token }}'
+      },
+      success: function (data) {
+        if (data.is_success) {
+
+          return true;
+        }
+        else {
+          message = data.message;
+        }
+      }
+    });
+    var title = encodeURIComponent("{{ skigit.title }}");
+    var share_url = encodeURIComponent($j('#social-share-url').text());
+    var video_share_url = encodeURIComponent("{{ video_share_url }}");
+
+    switch(social_type) {
+      case 'facebook':
+        window.open('https://www.facebook.com/dialog/share?app_id={{facebook_app_id}}&display=popup&href=' + share_url + '&quote=' + title + '&picture=' + video_share_url, 'width=700, height=500, toolbar=0, menubar=0, location=0, status=1, scrollbars=1, resizable=1, left=0, top=0');
+        break;
+      case 'twitter':
+        window.open('https://twitter.com/share?url=' + share_url + '&via=Skigit&related=Skigit,Dramaskigit,WakiSkigit', 'left=0, top=0, width=550, height=450, personalbar=0, toolbar=0, scrollbars=0, resizable=0');
+        break;
+      case 'linkedin':
+        window.open('https://www.linkedin.com/shareArticle?mini=true&url=' + share_url + '&modal=1&title=' + title + '&source={% if request.is_secure %}https://{% else %}http://{% endif %}{{ request.get_host }}', 'width=700,height=500,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0');
+        break;
+      case 'tumblr':
+        window.open('https://www.tumblr.com/widgets/share/tool?shareSource=legacy&posttype=photo&canonicalUrl=&url=' + share_url + '&content=' + video_share_url + '&caption=' + title + ' (via ' + share_url + ')', 'width=700, height=500, toolbar=0, menubar=0, location=0, status=1, scrollbars=1, resizable=1, left=0, top=0');
+        break;
+      case 'pinterest':
+        window.open('http://pinterest.com/pin/create/link/?url=' + share_url + '&media=' + video_share_url + '&description=' + title, 'width=700,height=500,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0');
+        break;
+    }
+    return true;
+  }
+
+</script>
+<script>
+  function logoclick(logo_id, url) {
+    var message;
+    jQuery.ajax({
+      url: "/invoice/business-logo/",
+      type: "POST",
+      data: {'logo_id': logo_id, csrfmiddlewaretoken: '{{ csrf_token }}'},
+      success: function (data) {
+        if (data.is_success) {
+          window.location.href = url;
+        }
+        else {
+          message = data.message;
+        }
+      }
+    });
+  }
+</script>
+
+<script type="text/javascript">
+
+  $j = jQuery.noConflict();
+  $j(document).ready(function () {
+
+    emailShareValidaion1{{ skigit.id }} = function () {
+
+      $j.validator.addMethod("multiEmailSharee", function (value, element) {
+        if (this.optional(element)) {
+          return true;
+        }
+        value = value.replace(/(,$)/g, "");
+        var emails = value.split(/,/), valid = true;
+        for (var i = 0, limit = emails.length; i < limit; i++) {
+          value = emails[i].trim();
+          valid = valid && $j.validator.methods.email.call(this, value, element);
+        }
+        return valid;
+      }, "Invalid email format: please use a comma (,) to separate multiple email addresses.");
+
+      var emailShareForm = $j("#email_share_formm{{ skigit.id }}");
+
+      errorLabelContainer: '#errors',
+        emailShareForm.validate({
+          rules: {
+            'emailShareInputt': {
+              required: true,
+              multiEmailSharee: true
+            }
+          },
+          messages: {
+            'emailShareInputt': {
+              required: 'Enter friends email address to skigit share.'
+            }
+          }
+        });
+      return emailShareForm.valid()
+    };
+    $j(document).on('click', '#email_share_btnn{{ skigit.id }}', function () {
+      emailShareValidaion1{{ skigit.id }}();
+      if (emailShareValidaion1{{ skigit.id }}()) {
+        var email_list = ($j('#idEmailSharee').val().replace(/(,$)/g, "")).trim();
+
+        $j('#email_share_btnn{{ skigit.id }}').prop('disable', true);
+        $j('#share_success_labell{{ skigit.id }}').empty();
+        $j('#share_success_labell{{ skigit.id }}').html('Please Wait...').css('color', 'orange');
+        $j.ajax({
+          url: "/email-share-skigit/",
+          type: "POST",
+          data: {
+            'email_list': email_list,
+            'video_id': {{ skigit.id }},
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+          },
+          success: function (data) {
+
+            if (data.is_success) {
+
+              $j('#share_success_labell{{ skigit.id }}').html('Your share was successful!').css('color', 'green');
+              $j("#email_share_formm{{ skigit.id }}")[0].reset();
+              $j('#email_share_btnn{{ skigit.id }}').prop('disabled', false);
+
+              setTimeout(function () {
+                $j('#share_success_labell{{ skigit.id }}').empty()
+              }, 2500)
+            }
+          }
+        });
+      }
+    });
+  });
+
+</script>
+
+<script>
+  // on video first time play 
+  var isFirstTimePlay = true;
+  $j = jQuery.noConflict();
+  $j(document).ready(function () {
+    loadPluginMap();
+    $j(document).on('keyup', '#friend_share_text{{ skigit.id }}', function (e) {
+      var currentTimezone = jstz.determine();
+      var timezone = currentTimezone.name();
+      $j.ajax({
+        url: "/friends/friend-share-search/",
+        type: "POST",
+        data: {
+          'search_text': $j(this).val(),
+          'video_id':{{skigit.id}},
+          'time_zone': timezone,
+          csrfmiddlewaretoken: '{{ csrf_token }}'
+        },
+        success: function (data) {
+
+          if (data.result) {
+            $j('#fsharee{{ skigit.id }}').empty();
+            $j('.shareCheckBox').remove();
+            if ($j('#select_alll' +{{ skigit.id }}).is(':checked')) {
+              $j('#select_alll' +{{ skigit.id }}).prop('checked', false)
+            }
+            if (data.search_list.length <= 0) {
+              $j('#select_alll' +{{ skigit.id }}).attr('disabled', 'disable')
+            }
+            else {
+              $j('#select_alll' +{{ skigit.id }}).removeAttr('disabled')
+            }
+            for (var i = 0; i < data.search_list.length; i++) {
+
+              var friends_id = data.search_list[i]['uid'];
+              var image = data.search_list[i]['image'];
+              var username = data.search_list[i]['username'];
+              var share_date = data.search_list[i]['share_date'];
+              var name = data.search_list[i]['name'];
+              var logged_indicator = '';
+              if(!data.search_list[i]['logged_in']) {
+                var logged_indicator = 'style="background: #fff !important;"';
+              }
+              var fshare_list = '<li class="list-group-item col-lg-12 col-md-12 col-sm-12 f_type" style="font-size: smaller; text-align: center;">' +
+                                    '<div class="col-lg-10 col-md-10 col-sm-10">' +
+                                                    '<a href="/profile/' + username + '" style="margin-left: 0px;"><img class="avatar" id="share_avatar" height="30" width="30" src="' + image + '"/></a>' +
+                                                    '<a href="/profile/' + username + '" style="margin-left: 0px;"><label class="f_type" style="width: auto; margin-left: -5px;">' + name + '</label></a>' +
+                                                    '<label class="f_type share_date" style="margin-left: 0px;Color: #000000;">' + share_date + '</label>' +
+                                    '</div>' +
+                                    '<div class="col-lg-2 col-md-2 col-sm-2">' +
+                                    '<div class="col-lg-6 col-md-6 col-sm-6" style="float: none; left: 19px;">' +
+                                                    '<input class="shareCheckBox" type="checkbox" onclick="sharebox(' + friends_id + ', {{ skigit.id }})" name="sharebox{{ skigit.id }}" value="' + friends_id + '" id="shareboxx{{ skigit.id }}{{ friend.uid }}" />' +
+                                    '<label for="shareboxx{{ skigit.id }}{{ friend.uid }}" style="overflow: visible;"></label>' +
+                                    '</div>' +
+                                    '<div class="col-lg-6 col-md-6 col-sm-6" style="left: -34px;top: -4px;">' +
+                                                    '<label id="circle" class="circle" ' + logged_indicator + '>' + '</label>' +
+                                    '</div>' +
+                                    '</div>' +
+                                '</li>';
+
+              $j('#fsharee{{ skigit.id }}').append(fshare_list);
+            }
+          }
+          else {
+            $j('#fsharee{{ skigit.id }}').empty();
+            $j('#flabel_count').html('No friends found')
+          }
+          if (data.search_list.length > 0) {
+            $j('#flabel_count').html(data.search_list.length + ' friends found.')
+          }
+          else {
+            $j('#flabel_count').html('No friends found.')
+          }
+          e.stopPropagation();
+          e.preventDefault
+        }
+      });
+    });
+
+    $j(document).on('click','#id_homeframe{{ skigit.id }}',  evt => {
+      countViews();
+    });
+
+  });
+
+  var checkFbComment = setInterval(function() {
+    if($j('.fb-comments').children().length > 0) {
+      $j('.loader').fadeOut(3000);
+      clearInterval(checkFbComment);
+    }
+  }, 500);
+
+  function countViews() {
+    if (isFirstTimePlay) {
+      isFirstTimePlay = false;
+      $j.ajax({
+        url: "/invoice/skigit-view/",
+        type: "POST",
+        data: {
+          skigit_id:"{{ skigit.id }}",
+          csrfmiddlewaretoken: '{{ csrf_token }}'
+        },
+        success: function (data) {
+          window.parent.skigit_statistics() // update skigit stats
+        }
+      });
+    } 
+  }
+
+  function loadPluginMap() {
+    $j.ajax({
+        url: "/skigit_data/{{ skigit.skigit_id_id }}/plugin-map-ajax",
+        data:{level: 1},
+        success: function (data) {
+          $j('#pluginMapModal').find('.loader').remove();
+          $j('.skigit_content_wrap').show();
+          $j('#pluginMapModal').find('.plugin-skigits').html(data);
+          $j('.more-skigits').html($j('.more-skigit-content').html())
+        }
+      });
+  }
+
+</script>

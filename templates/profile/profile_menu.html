@@ -1,0 +1,24 @@
+<div class="profile-sidebar" id="adjust_1">
+  <!-- SIDEBAR MENU -->
+  <div class="profile-usermenu padd-left">
+    <ul class="nav">
+      <li class="active"><a href="{% url 'user_profile' %}">Member Profile</a></li>
+      {% if is_business %}
+      <div  class="hidden-xs hidden-sm">
+        <li><a href="/brochure-preview" style="margin-left: 15px !important;">View/Print Brochure</a></li>
+        <li><a href="/wall-poster-preview" style="margin-left: 15px !important;">View/Print Wall Poster</a></li>
+      </div>
+      <li><a href="{% url 'user_payment_setup' %}">Invoice History</a></li>
+	     <li><a href="{% url 'business_analytics' %}">Business Analytics</a></li>
+      {% endif %}
+	  
+	 
+      <li><a href="{% url 'password_change' %}">Password and Security</a></li>
+      <li><a href="{% url 'user_profile_notifications' %}">Notification Settings</a></li>
+      <li><a href="{% url 'user_profile_delete' %}">Delete My Account</a></li>
+      <li><a href="{% url 'my_statistics' %}">My Skigistats</a></li>
+    
+    </ul>
+  </div>
+  <!-- END MENU -->
+</div>

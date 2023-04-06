@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load category_list %}
+
+ 
+<title>{{ user.first_name }} {{ user.last_name }} | Delete Account</title>
+
+{% block css %}
+    #delete-account{
+        display:inline;
+    }
+    form#deleteForm label.error_custom {
+        color: #ffa3a3;
+        padding: 2px;
+        font-weight: normal;
+        font-size: 16px;
+        line-height: 1.4;
+        font-family: 'laoui Sans',sans-serif;
+    }
+{% endblock css %}
+
+{% block content %}
+  <div class="overlay"></div>
+  <div id="confirmBox">
+      <center><p><img src="{% static 'images/Skigit_Logo_AI_master_white.png' %}" alt="Skigit logo" style="width:125px;"></p></center>
+      <div class="del-top"><p class="popup-noti" style="color:white;">Are you sure you want to Delete this account?</p></div>
+      <div class="del-bott">
+          <button type="button" id="ok_delete">Yes</button>
+          <button type="button" id="no_delete">Cancel</button>
+      </div>
+  </div>
+
+  <div class="row profile white-back">
+  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" >
+      <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12" style="margin-left: -15px;">
+
+        <div class="profile-sidebar" id="adjust_2" style="width: 92.5%;">
+          <div class="profile-usermenu padd-left ">
+            <ul class="nav">
+              <li><a href="{% url 'user_profile' %}">Member Profile </a></li>
+
+			    {% if is_business %}
+			   <div  class="hidden-xs hidden-sm" >
+					<li><a href="/brochure-preview" style="margin-left: 15px;">View/Print Brochure</a></li>
+					<li><a href="/wall-poster-preview" style="margin-left: 15px;">View/Print Wall Poster</a></li>
+				</div>
+                <li><a href="{% url 'user_payment_setup' %}">Invoice History</a></li>
+				<li><a href="{% url 'business_analytics' %}">Business Analytics</a></li>
+              {% endif %}
+
+              <!--<li><a href="{% url 'user_payment_setup' %}">Payment Setup </a></li>-->
+              <li><a href="{% url 'password_change' %}">Password and Security</a></li>
+              <li><a href="{% url 'user_profile_notifications' %}">Notification Settings</a></li>
+              <li class="active"><a href="{% url 'user_profile_delete' %}">Delete My Account</a></li>
+              <li><a href="{% url 'my_statistics' %}">My Skigistats</a></li>
+               
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" style="padding-top:40px;margin-left: -7px;">
+        <div class="profile-content col-lg-12 col-md-12 col-sm-12 col-xs-12" style="min-height: 500px; background: #404040;padding-bottom: 35px;width: 105.6%;">
+          <div class="row mar_zero profile-form">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 padd_zero margin_bottom_10">
+              <h3 class="mar margin_bottom_10" style="color: #fff;text-shadow: none;">Delete My Account
+              </h3>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 padd_zero margin_top_15">
+              <form method="post" action="{% url 'user_profile_delete' %}" id="deleteForm">
+                {% csrf_token %}
+
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                  <h4 class="sego word_space" style="color: #fff!important;text-shadow: none;">
+
+                    Deleting your account will deactivate and remove all of the content you have created per our
+                    <a href="/about-us/terms-of-service/" style="color: #78d2f4">Terms of Service.</a> Your account will be placed in a state of deactivation but Skigits for which you received a SkitBit, will remain active and visible to users for 30 days from their post date. Those Skigits will display your user name as the creator however links will be static and your user profile will not be accessible by other users.
+                  </h4>
+                </div>
+
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-bottom: 40px;">
+                   <p style="font-size: 16px;color: #baf3c9;font-style: italic;">{{ form.delete_account_confirm }}&nbsp;&nbsp;&nbsp;I understand the consequences of deleting my account and give my permission to do so. </p>
+                   <label id="delete_account_error" class="error_custom" style="top: 0px; display: none !important; color: #ffa3a3 !important;">
+                       <img src="{% static 'images/error_icon_dark.png' %}" width="25">Please confirm this checkbox
+                   </label>
+                </div>
+
+
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 margin_top_10 text-center delete-account-wrap">
+				
+				<a href="{% url 'user_profile' %}" class="btn lg-btn">Keep My Account</a>
+				
+                   {% if can_delete %}
+                      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding-left: 0px;padding-right: 50px;text-align: left !important;">
+                          <div style="font-size: 16px;padding-left: 0px;margin-left: 0px;padding-bottom: 5px;padding-top: 13px;">Reason for Deletion</div>
+                          {{ form.delete_reason }}
+                          <label id="delete_reason_error" class="error_custom" style="top: 0px; display:none !important;">
+                              <img src="{% static 'images/error_icon_dark.png' %}" width="25">Please select a reason
+                          </label>
+                      </div>
+                      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="other-reason-blk" style="display:none;padding-left: 0px;padding-right: 50px;text-align: left !important;">
+					  <div style="margin-top:10px;display: inline-block; padding-bottom: 5px;"> Delete Reason (other)</div><div style="color: #ffa2a7;font-size: 18px;display: inline-block;"> &nbsp*</div>
+                          {{ form.delete_reason_other }}
+                          <span id="delete_reason_other_error" class="error_custom" style="top: 0px; display: none !important;">
+                              <img src="{% static 'images/error_icon_dark.png' %}" width="25">Please enter details for why you want to delete your Skigit account.
+                          </span>
+                      </div>
+                      <button class="btn lg-btn" name="user_profile_delete" id="user_profile_delete">&nbsp;Delete&nbsp;</button>
+                      <button name="user_profile_delete" id="delete_btn" type="submit" style="display:none"></button>
+                   {% else %}
+                      <button
+                              title="Action Required"
+                              data-toggle="popover" data-trigger="hover"
+                              data-content="You need to clear all your pending invoices before deleting your account"
+                              type="submit" 
+                              class="btn lg-btn disabled"
+                              name="user_profile_delete"
+                              id="disabled_btn"
+                      >&nbsp;Delete&nbsp;</button>
+                   {% endif %}
+                     
+                </div>
+              </form>
+            </div>
+          </div>
+
+        </div>
+     </div>
+    </div>
+  </div>
+
+{% endblock content %}
+
+{% block js %}
+<script>
+
+  $j = jQuery.noConflict()
+  $j(document).ready(function(){
+      $j('[data-toggle="popover"]').popover();
+      $j('#disabled_btn').click((e)=>{
+        e.preventDefault();
+        return false;
+      });
+
+      $j('#id_delete_reason').on('change', function() {
+          $j('#delete_reason_other_error, #other-reason-blk, #delete_reason_error').hide();
+          value = $j(this).val();
+          if (value == 'other') {
+            $j('#other-reason-blk').show();
+          }
+      });
+
+      $j('#id_delete_reason_other').on('change', function() {
+          value = $j(this).val();
+          if (!value & $j('#id_delete_reason').val() == 'other') {
+            $j('#delete_reason_other_error').show();
+          } else {
+            $j('#delete_reason_other_error').hide();
+          }
+      });
+
+      $j('#delete-account').on('change', function() {
+        if ($j(this).is(":checked") != true) {
+            $j("#delete_account_error").show();
+        } else {
+            $j("#delete_account_error").hide();
+        }
+      });
+
+      $j("#user_profile_delete").click((e)=>{
+        e.preventDefault();
+        if($j("#delete-account").is(":checked") != true ) {
+            $j("#delete_account_error").show();
+            return false;
+        } else {
+            $j("#delete_account_error").hide();
+        }
+        reason_value = $j('#id_delete_reason').val();
+        if (!reason_value) {
+            $j('#delete_reason_error').show();
+            return false;
+        } else if (reason_value == 'other') {
+            reason_other_value = $j('#id_delete_reason_other').val();
+            if (!reason_other_value) {
+                $j('#delete_reason_other_error').show();
+                return false;
+            }
+        }
+        $j("#confirmBox").addClass('open');
+        $j(".overlay").addClass('open');
+        return false;
+      });
+
+      $j("#no_delete").click(function(){
+        $j("#confirmBox").removeClass('open');
+        $j(".overlay").removeClass('open');
+      });
+
+      $j("#ok_delete").click(function(){
+        $j("#confirmBox").removeClass('open');
+        $j(".overlay").removeClass('open');
+        $j("#delete_btn").click();
+      });
+
+  });
+  $j('#delete_reason_other_error, #delete_reason_error, #delete_account_error').attr('style', 'top: 0px; display: none;color: #ffa3a3 !important;');
+</script>
+
+{% endblock js %}
+
+

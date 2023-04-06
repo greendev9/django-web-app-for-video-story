@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block title %}{{ block.super }}Copyright Policy{% endblock %}
+
+{% block main-header-block %}
+    {% if not mobile_api_request %}
+        {{ block.super }}
+    {% endif %}
+{% endblock main-header-block %}
+
+{% block head_inline_css_block %}
+  <style>
+    .head_rules {
+      font-size: 18px;
+      text-align: center;
+    }
+
+    .img_rules {
+      width: 100%;
+      display: table;
+      text-align: center;
+      margin: 50px 0;
+    }
+
+    .head_rules {
+      font-size: 28px;
+      text-align: center;
+      color: #037bb8 !important;
+    }
+
+    .headpara_rules {
+      font-size: 19px;
+      text-align: center;
+      color: #037bb8 !important;
+    }
+
+    .headpara_rules {
+      padding-bottom: 25px;
+    }
+
+    .main_rules {
+      padding: 0px 161px;
+    }
+
+    .main_rules p {
+      text-align: justify;
+    }
+
+    @media screen and (max-width: 767px) {
+      .main_rules {
+        padding: 0px 80px;
+      }
+    }
+
+    @media screen and (max-width: 420px) {
+      .main_rules {
+        padding: 0px 20px;
+      }
+    }
+
+  </style>
+{% endblock %}
+{% block content %}
+  <div class="row mar_zero" id="main">
+    <div class="wrap cf">
+
+      <div role="main" id="content">
+
+        <div class="main_rules">
+		<h1>
+		<br>
+		<br>
+		</h1>
+		  <h1 class="sageo" style="text-align: center;">Our Rule for your Company Skigit</h1>
+		  		<br>
+		<br>
+          <div class="img_rules">
+            <img src="{% static 'images/rules.png' %}" style="width:250px;  margin-bottom: 50px;"/>
+          </div>
+    <h2 class="sageo"style="text-align:center"> Create your Skigit Through the Eyes of your Customers</h2>
+          </div>
+<br>
+
+          <p style="text-align: center; font-size:24px">
+            Make Skigits that are fun, spontaneous and engaging. Do NOT create Skigits that resemble
+            professionally written, scripted and directed television commercials. We reserve the right to remove your Skigit if
+            we deem that you’re promoting your company through "television-like" advertisements.
+          </p>
+		<br>
+		<br>
+				<br>
+		<br>
+				<br>
+		<br>
+        </div>
+      </div>
+    </div>
+{% endblock %}

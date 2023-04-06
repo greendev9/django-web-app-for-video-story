@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block head_title %}{% trans "Social Network Login Failure" %}{% endblock %}
+
+{% block content %}
+<div class="row mar_zero" id="main" style="min-height: 500px;">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 margin_top_30 text-center">
+        <h1 style="Text-align: center">{% trans "Social Network Login Failure" %}</h1>
+
+        <p style="font-size:24px; color:#000">{% trans "An error occurred while attempting to login via your social network account." %}</p>
+    </div>
+</div>
+{% endblock %}

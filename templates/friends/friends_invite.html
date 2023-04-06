@@ -1,0 +1,1115 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block title %}{{ super.block }}
+  {% if category_current.cat_name %}
+    {{ category_current.cat_name }}
+  {% elif category_current.sub_cat_name %}
+    {{ category_current.sub_cat_name }}
+  {% elif skigit_plug %}
+    Plugged Skigits into {{ skigit_plug }}
+  {% elif skigit_like %}
+    Liked Skigits by {{ skigit_like }}
+  {% else %}
+    Skigits by {{ category_current }}
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+
+  <style>
+ 
+#ok_confirm_text {
+color: #fff;
+}
+    .endless_more {
+      font-size: x-large;
+    }
+
+    .endless_more {
+      display: table;
+      margin: 0 auto;
+      clear: both;
+    }
+
+    .endless_loading {
+      display: table;
+      width: 100%;
+    }
+
+    .friend-header {
+      background: transparent !important;
+      border: none !important;
+	  width:100%;
+	  margin-bottom: 10px;
+    }
+
+    .tabbox ul li a:hover {
+      background-color: #ccf3ff;
+      width: inherit !important;
+	  color: #000000 !important;
+    }
+
+    .tabbox ul li a {
+       color: #ffffff;
+      width: inherit !important;
+    }
+
+    .tabbox ul li {
+      float: left;
+      display: table;
+      width: auto !important;
+      width: 50px !important;
+    }
+
+    .popover-title {
+      text-align: center;
+	  padding:3px;
+    }
+
+ .custom_popup .popover {
+     border: none;
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+	max-width:450px;
+	width:450px!important;
+	min-height:225px;
+	    background-color: #404040;
+}
+
+#invite_type_tabs {
+    border-bottom: none;
+}
+
+    .custom_popup .tabbox ul li {
+      width: auto !important;
+      display: table;
+      float: left;
+	  border-bottom: 1px solid #ddd;
+	  border-top: none;
+	  border-left: none;
+	  border-right: none;
+    }
+
+    .custom_popup .tabbox { /* width: 200px; */
+    }
+
+    .custom_popup .nav {
+      margin-left: 90px;
+    }
+
+    .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+ 
+	color: #333 ;
+      left: auto !important;
+
+    }
+
+    .tabbox ul {
+      border-bottom: none !important;
+      color: #a0f59e  !important;
+    }
+
+    .popover a {
+      border: none !important;
+    }
+
+    .nav-tabs > li > a {
+      margin-right: 0px !important;
+    }
+
+    .nav.nav-tabs {
+      border-bottom: none !important;
+    }
+
+    .tab.active > a {
+     color: #333 !important;
+    }
+
+    .tab a {
+    <!-- border-bottom: 1 px #037bb8 solid !important;
+    -->
+    }
+
+  label {
+    font-family:'LAOUI',sans-serif;
+	font-size:13px;
+    color: #fff;
+}
+
+    li.list-group-item.col-lg-12.col-md-12.col-sm-12 {
+      width: 95% !important;
+	      padding: 8px 8px;
+		  margin-left: 15px;
+		  border-bottom-right-radius: 0;
+		border-bottom-left-radius: 0;
+    }
+
+
+    .holder {
+      margin: 15px 0;
+    }
+
+    .holder a {
+      font-size: 12px;
+      cursor: pointer;
+      margin: 0 5px;
+      color: #333;
+    }
+
+    .holder a:hover {
+      background-color: #222;
+      color: #fff;
+    }
+
+    .holder a.jp-previous {
+      margin-right: 15px;
+    }
+
+    .holder a.jp-next {
+      margin-left: 15px;
+    }
+
+    .holder a.jp-current, a.jp-current:hover {
+      color: #FF4242;
+      font-weight: bold;
+    }
+
+    .holder a.jp-disabled, a.jp-disabled:hover {
+      color: #bbb;
+    }
+
+    .holder a.jp-current, a.jp-current:hover,
+    .holder a.jp-disabled, a.jp-disabled:hover {
+      cursor: default;
+      background: none;
+    }
+
+    .holder span {
+      margin: 0 5px;
+    }
+
+    .tabbox #itemContainer {
+      max-height: 200px !important;
+      overflow-y: auto;
+      -webkit-box-shadow: inset 0 0 0px rgba(0, 0, 0, 0.3);
+      width: 80%;
+      background-color: #666f77;
+      border-radius: 8px;
+      margin-left: 42px;
+    }
+
+    .tabbox #itemContainer::-webkit-scrollbar {
+      width: 10px;
+      background-color: #F5F5F5;
+    }
+
+    .tabbox #itemContainer::-webkit-scrollbar-thumb {
+      background-color: #0ae;
+      background-image: -webkit-gradient(linear, 0 0, 0 100%, color-stop(.5, rgba(255, 255, 255, .2)), color-stop(.5, transparent), to(transparent));
+    }
+
+    #itemContainer button {
+      background: none !important;
+      width: auto !important;
+	  	  box-shadow: none;
+		  margin: 0px;
+    }
+
+    #itemContainer button span {
+      color: #0987e7;
+      float: right;
+    }
+
+    #itemContainer button span:hover {
+      color: #73b1e0;
+    }
+
+    .skigit_content {
+      margin: 0 !important;
+      border: 1px solid #afa4a4;
+      padding: 15px;
+      text-align: center;
+      background-color: #fff;
+    }
+
+    .name_friend {
+      margin-bottom: 6px;
+      margin-top: 6px;
+
+    }
+
+    .img_friend {
+    background: #5e849c ;
+    padding: 10px 0px 10px 0px;
+    margin: 0 25px 0 25px;
+    border-radius: 4px;
+    }
+
+
+    .img_friend img {
+	height: 70px;
+	width: 70px;
+	object-fit: cover;
+	border-radius:4px;
+    }
+
+
+
+    .icon_friend {
+    height: 45px;
+    position: relative;
+    line-height: 2.4;
+    }
+
+    .icon_friend img {
+	position: absolute;
+	left: 132px;
+	bottom: 200px;
+	border-radius: 50%;
+	padding: 2px;
+	width:30px;
+	height:30px;
+    }
+
+    .box_friend {
+      width: 150px;
+      float: left;
+      margin:  30px -17px 20px 37px;
+    }
+
+
+
+    .box_footer {
+    font-size: 14px;
+    font-weight: normal;
+    color: #fff;
+    }
+
+    /* Popup */
+
+    .friends_popup .arrow {
+      top: -13px !important;
+      border-color: transparent !important;
+    }
+
+    .friends_popup .popover > .arrow:after {
+      border-bottom-color: #404040 !important;
+      top: 5px;
+    }
+
+#social_share_icons_friend {
+    filter: brightness(1);
+}
+
+#social_share_icons_friend:hover {
+    filter: hue-rotate(165deg);
+    background-color: transparent;
+}
+
+    .social_friends_popup .arrow {
+      top: -13px !important;
+      border-color: transparent !important;
+    }
+
+    .social_friends_popup .popover > .arrow:after {
+	top: 5px;
+	border-bottom-color: #404040  !important;
+    }
+
+    .share-ico li a, .share-ico li a:hover {
+      background: none !important;
+      width: auto !important;
+    }
+
+
+
+    ul.share-ico {
+      display: inline-block;
+	      margin-left: 50px;
+    }
+
+    .friend_list label {
+     width: 95px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+	font-size: 14px;
+	margin-right: 5px;
+	color: #fff;
+    }
+
+    .heade_friend {
+		font-size: 13px;
+		color: #ead63e;
+		/*background-color: #6526a8;*/
+	    padding: 12px 10px 15px 10px;
+		width: 85%;
+		height: 15px;
+		border-radius: 4px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		margin-left: auto;
+		margin-bottom: 5px;
+		TEXT-ALIGN: CENTER;
+		margin-right: auto;
+		font-weight:normal;
+    }
+
+    .name_friend span {
+      display: block;
+      text-transform: capitalize;
+	  color: #fff;
+    }
+
+	span.heade_friend {
+		color: #f6eda6;
+	}
+
+ 
+    .frien_notification .popover-content ul li label {
+    width: 170px;
+    text-align: left;
+    color: #fff;
+    margin: 0px 0px 0px 0px;
+	font-size:12px;
+    }
+
+    .sub_namefriend {
+      color: #fff;
+      font-size: 13px;
+	  margin-bottom: 2px!important;
+	  font-weight: normal;
+    }
+
+    .friend_followers {
+      font-size: 12px;
+    }
+
+    @media screen and (max-width: 767px) {
+      .box_friend {
+        width: 50%;
+        float: none;
+        margin: 20px auto;
+      }
+
+      .btn_invite {
+        float: none !important;
+        margin: 0 auto;
+        display: table;
+      }
+    }
+
+    .form-control .error {
+      background-color: transparent !important;
+      color: #2A2929 !important;
+    }
+
+    li.list-group-item img.avatar{
+      float: left !important;
+    }
+
+    @media screen and (max-width: 420px) {
+      .box_friend {
+        width: 90%;
+      }
+    }
+
+    @media screen and (min-device-width: 1200px) and (max-device-width: 992px) {
+    }
+
+  </style>
+
+  <script>
+
+    jQuery(function () {
+      jQuery("#btnPopover").popover({
+        html: true,
+        title: "Invite Friends",
+        placement: "bottom",
+        content: jQuery("#popoverContent").html(),
+      });
+    });
+
+
+    jQuery(function () {
+      jQuery("#socialFriends").popover({
+        html: true,
+        title: "Social Media Invite",
+        placement: "bottom",
+        content: jQuery("#socialFriendContent").html(),
+      });
+    });
+
+  </script>
+
+  <script>
+
+    jQuery(function () {
+
+      close_friend = function (frnd_id) {
+        let delayInMilliseconds = 0; //1 second
+        setTimeout(function() {
+          jQuery("#confirmBox").addClass('open');
+         jQuery(".overlay").addClass('open');
+          friend_id = frnd_id
+    
+          jQuery("#confirmBox").attr('u_id', friend_id);
+       }, delayInMilliseconds);
+		 
+      };
+
+      jQuery("#no-delete").click(function () {
+        jQuery("#confirmBox").removeClass('open');
+        jQuery(".overlay").removeClass('open');
+      });
+
+      un_follow_follow = function (follower) {
+
+        var follow_uid = jQuery("#follow_" + follower).attr('data-cuid');
+        var follow_id = jQuery("#follow_" + follower).attr('id');
+        var follow_clas = jQuery("#follow_" + follower).attr('class');
+
+        if (follow_clas == 'unfollow') {
+          jQuery.ajax({
+            type: "POST",
+            url: "/follow/",
+            data: {'follow_id': follow_uid, 'csrfmiddlewaretoken': '{{csrf_token}}'},
+            success: function (response) {
+
+              if (response.is_success) {
+                if (response.is_follow == 1 || response.is_follow == '1') {
+                  jQuery("#" + follow_id).attr("title", "Following");
+                  jQuery("#" + follow_id).removeClass("unfollow");
+                  jQuery("#" + follow_id).addClass("follow");
+                  jQuery("#follow_btn" + follower).html('Following').css({'color': '#fff'})
+                  jQuery("#follow_count" + follower).html(parseInt(jQuery("#follow_count" + follower).text()) + 1)
+
+                }
+              }
+            },
+            error: function (rs, e) {
+              jQuery("#popup_msg").text("Error when trying to Follow or Unfollow! Please try again.");
+              jQuery("#popScreen").show();
+            }
+          });
+        }
+        else if (follow_clas == 'follow') {
+
+          jQuery.ajax({
+
+            type: "POST",
+            url: "/unfollow/",
+            data: {'follow_id': follow_uid, 'csrfmiddlewaretoken': '{{csrf_token}}'},
+            success: function (response) {
+              if (response.is_success) {
+                if (response.is_follow == 1 || response.is_follow == '1') {
+                  jQuery("#" + follow_id).attr("title", "Click to Follow");
+                  jQuery("#" + follow_id).removeClass("follow");
+                  jQuery("#" + follow_id).addClass("unfollow");
+                  jQuery("#follow_btn" + follower).html('Click to Follow').css({'color': '#bfeeff'})
+                  jQuery("#follow_count" + follower).html(parseInt(jQuery("#follow_count" + follower).text()) - 1)
+                }
+              }
+            },
+            error: function (rs, e) {
+              jQuery("#popup_msg").text("Error when trying to Follow or Unfollow! Please try again.");
+              jQuery("#popScreen").show();
+            }
+          });
+        }
+
+      };
+
+    });
+
+  </script>
+
+  <script>
+    function removeFriend(user_id) {
+
+      jQuery("#confirmBox").addClass('open');
+      jQuery(".overlay").addClass('open');
+      friend_id = user_id
+      jQuery("#confirmBox").attr('u_id', friend_id);
+    }
+    jQuery(document).ready(function () {
+      jQuery("#ok-delete").click(function (e) {
+
+        var follow_clas = jQuery("#follow_" + friend_id).attr('class');
+        
+        if (follow_clas == 'follow') {
+          un_follow_follow(friend_id)
+        }
+        jQuery.ajax({
+          url: "/friends/friends-request-rejected/",
+          type: "POST",
+          data: {
+            'to_user': friend_id,
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+          },
+          success: function (data) {
+            if (data.result) {
+              jQuery("#friend_success").show(500)
+              let delayInMilliseconds = 2500; //1 second
+              setTimeout(function() {
+                jQuery("[data-skigt=" + friend_id + "]").css("display", "none");
+                jQuery("#confirmBox").removeClass('open');
+                jQuery(".overlay").removeClass('open');
+              }, delayInMilliseconds);
+              
+            }
+          },
+          error: function (rs, e) {
+            jQuery("#popup_msg").text("Error into Un friend... please try again later...");
+            jQuery("#popScreen").show();
+          }
+        });
+      });
+
+    });
+
+  </script>
+
+  <div class="row mar_zero section-box" id="main">
+  <div class="section-content grid-small" style="margin: 0 30px 0 30px">
+  <div id="okayBox" style="border: none !important;">
+    <div style="text-align: center !important;">
+      <p><img  src="{% static 'images/Skigit_Logo_AI_master_white.png' %}"  width="100px;">
+</p>
+      <p id="ok_confirm_text"></p>
+    </div>
+  </div>
+  <div class="overlay popover-title"></div>
+  <div id="confirmBox">
+    <center><p><img src="{% static 'images/Skigit_Logo_AI_master_white.png' %}" width="90px;"/></p></center>
+    <div class="del-top"><span>Are you sure you want to unfriend this person?</span></div>
+
+    <div class="del-bott">
+      <button type="button" id="ok-delete">Ok</button>
+      <button type="button" id="no-delete">Cancel</button>
+    </div>
+    <center><p id ="friend_success" style="color:rgb(221,255, 224);padding: 0px 22px 0 14px;font-size: 14px;display:none;">This person has been unfriended.</p></center>
+  </div>
+  <center class="heading-new-seg" style="width: 103.25%; margin: -15px 0 0 -30px;" id ="friends_invite_page_title">Friends and Invites</center>
+  
+  <div class="wrap cf f_type" style="margin-right: 15px!important;" id="friends_invite_header">
+    <div class="list-group-item friend-header custom_popup">
+	
+	<img src="{% static 'images/Friends_4x4.png' %}" title="Friends and Invites" height="66.33" class="img1" style="display:none; margin: -2% 0 5% 46%;border-radius: 50%;">
+	
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 dropdown text-center friends_popup">
+            <center>
+              <a class="btn popup_invfri" id="btnPopover" style="float: right" data-toggle="popover"
+                 data-placement="bottom">Invite Friends</a></center>
+            <div class="tabbable hide custom_popup" id="popoverContent">
+              <div class="tabbox">
+                <ul class="nav nav-tabs">
+                  <li class="tab active" id="invite_type_tabs" style="padding-right:35px;"><a href="#tab1" data-toggle="tab" >Skigit
+                    Members</a></li>
+                  <li class="tab" id="invite_type_tabs"><a href="#tab2" data-toggle="tab">Non-Members</a></li>
+                </ul>
+                <div class="tab-content">
+                  <div class="tab-pane active" id="tab1">
+                    <form id="friend_search">
+                      <div id="custom-search-input">
+                        <div class="input-group col-md-12">
+                          <input type="text" class="search-query form-control f_type"
+                                 id="friend_search_text" autocomplete="off" autocorrect="off" onkeypress="return event.keyCode!=13"
+                                 spellcheck="false" placeholder="Search Friends By Name">
+                        </div>
+                      </div>
+                      <div class="holder"></div>
+                      <div class='error' id="member-invite_error" style="display: None; width: 100%; text-align: center;"><span><img width='25' src='/static/images/error_icon.png'>Please search friends by entering name or username</span></div>
+                      <div class='error' id="member-invite_error_on_enter" style="display: None; width: 100%; text-align: center;"><span><img width='25' src='/static/images/error_icon.png'>No member was selected. Please try again</span></div>
+                      <ul id="itemContainer" class="list-group col-lg-12 col-md-12 col-sm-12 friend_list">
+                      
+                      </ul>
+                    </form>
+
+                    <script>
+                      function show_friends(event, page_number) {
+                          var str = $j('#friend_search_text').val()
+
+                          if (str.toLowerCase().indexOf('@') == -1) {
+                            $j('#member-invite_error').hide()
+
+                            if(page_number == 1) {
+                              $j('.friend_list').empty();
+                            } else {
+                              $j('.more-friends').remove();
+                            }
+
+                            $j.ajax({
+                              url: "/friends/friend-search/?page=" + page_number,
+                              type: "POST",
+                              data: {
+                                'search_text': $j('#friend_search_text').val(),
+                                csrfmiddlewaretoken: '{{ csrf_token }}'
+                              },
+                              success: function (data) {
+                                if (data.result) {
+                                  //$j('.friend_list').empty()
+                                  if (data.search_list.length === 0) {
+                                    $j('#member-invite_error').show()
+                                    $j('#member-invite_error_on_enter').hide()
+                                    if(event.which === 13) {
+                                      $j('#member-invite_error').hide()
+                                      $j('#member-invite_error_on_enter').show()
+                                    }
+                                  } else {
+                                    $j('#member-invite_error').hide()
+                                  }
+
+                                  for (i = 0; i < data.search_list.length; i++) {
+
+                                    if (data.search_list[i]['image']) {
+                                      image_src = data.search_list[i]['image']
+                                    }
+                                    else {
+                                      image_src = '/static/images/noimage_user.jpg'
+                                    }
+
+                                    if (data.search_list[i]['status'] == '3' && data.search_list[i]['title'] != 'Accept') {
+                                      var friend_list = '<li class="list-group-item col-lg-12 col-md-12 col-sm-12">' +
+                                        '<img class="avatar" height="40" width="40" style="border-radius:30px; object-fit: cover;width: 40px !important;margin:0!important" src="' + image_src + '"/>' +
+                                        '<label class="f_type" style="margin-bottom:-5px">' +
+                                        '' + data.search_list[i]['name'] + '</label><label class="f_type" style="margin-bottom:-5px">' + data.search_list[i]['username'] + '</label><span id="button_sapn' + data.search_list[i]['uid'] + '">' +
+                                        '<p id="id_invite_btn' + data.search_list[i]['uid'] + '" onclick="inviteFriends(' + data.search_list[i]['uid'] + ')">' +
+                                        '<span style="margin-top: 8px;" title="' + data.search_list[i]['title'] + '" id="id_internal_friends' + data.search_list[i]['uid'] + '" class="glyphicon glyphicon-user">&#43;</span>' +
+                                        '</p></span>' +
+                                        '</li>'
+                                    }
+                                    else if (data.search_list[i]['title'] == 'Accept') {
+                                      var friend_list = '<li class="list-group-item col-lg-12 col-md-12 col-sm-12">' +
+                                        '<img class="avatar" height="40" width="40" style="border-radius:30px; object-fit: cover;width: 40px !important;margin:0!important" src="' + image_src + '"/>' +
+                                        '<label class="f_type" style="margin-bottom:-5px">' +
+                                        '' + data.search_list[i]['name'] + '</label><label class="f_type" style="margin-bottom:-5px">' + data.search_list[i]['username'] + '</label> <span id="button_sapn' + data.search_list[i]['uid'] + '">' +
+                                        '<p id="id_accept_btn' + data.search_list[i]['uid'] + '" onclick="acceptFriend(' + data.search_list[i]['uid'] + ')">' +
+                                        '<span style="color:#c1f4c7;font-size: 22px;;margin-top: 6px;" title="Accept Request" id="id_internal_friends' + data.search_list[i]['uid'] + '" class="glyphicon glyphicon-ok-circle"></span>' +
+                                        '</p></span>' +
+                                        '</li>'
+                                    }
+                                    else if (data.search_list[i]['status'] == '1') {
+                                      var friend_list = '<li class="list-group-item col-lg-12 col-md-12 col-sm-12">' +
+                                        '<img class="avatar" style="border-radius:30px;object-fit: cover;width:40px!important;height: 40px;margin: 0 !important;" src="' + image_src + '"/>' +
+                                        '<label class="f_type" style="margin-bottom:-5px">' +
+                                        '' + data.search_list[i]['name'] + '</label><label class="f_type" style="margin-bottom:-5px">' + data.search_list[i]['username'] + '</label> <span id="button_sapn' + data.search_list[i]['uid'] + '">' +
+                                        '<p id="id_accept_btn' + data.search_list[i]['uid'] + '" onclick="acceptFriend(' + data.search_list[i]['uid'] + ')">' +
+                                        '<span style="color:#c1f4c7;font-size: 22px;margin-top: 8px;" title="Friend" id="id_internal_friends' + data.search_list[i]['uid'] + '" class="glyphicon glyphicon-ok-circle"></span>' +
+                                        '</p' +
+                                        '</li>'
+                                    }
+                                    else {
+                                      var friend_list = '<li class="list-group-item col-lg-12 col-md-12 col-sm-12">' +
+                                        '<img class="avatar" style="border-radius:30px;object-fit: cover;width:40px!important;height: 40px;margin: 0 !important;" src="' + image_src + '"/>' +
+                                        '<label class="f_type" style="margin-bottom:-5px">' +
+                                        '' + data.search_list[i]['name'] + '</label><label class="f_type" style="margin-bottom:-5px">' + data.search_list[i]['username'] + '</label> <span id="button_sapn' + data.search_list[i]['uid'] + '">' +
+                                        '<button id="id_invite_btn' + data.search_list[i]['uid'] + '"  disabled>' +
+                                        '<span style="color:#e2cb86;margin-left:-5px" title="' + data.search_list[i]['title'] + '" id="id_internal_friends' + data.search_list[i]['uid'] + '" class="glyphicon glyphicon-user">&#43;</span>' +
+                                        '</button></span>' +
+                                        '</li>'
+                                    }
+                                    $j('.friend_list').append(friend_list);
+                                  }
+                                  if (data.next_page) {
+                                    var more_friends = '<li class="more-friends list-group-item col-lg-12 col-md-12 col-sm-12" onclick="show_friends(event, ' + data.next_page + ')">' +
+                                        '<label class="f_type" style="margin-bottom:-5px;width: auto;">' +
+                                        '<span style="color:#c1f4c7;font-size: 22px;margin-top: 8px;" title="Friend">More friends...</span>' +
+                                        '</li>'
+                                    $j('.friend_list').append(more_friends);
+                                  }
+                                }
+                                else {
+
+                                  $j('.friend_list').empty()
+                                }
+                              }
+                            });
+                          }
+                          else {
+                            $j('.friend_list').empty()
+                            $j('#member-invite_error').show()
+
+                          }
+                        }
+
+                      var $j = jQuery.noConflict()
+                      $j(document).ready(function () {
+                        
+                        $j('#member-invite_error_on_enter').hide()
+                        $j('#friend_search_text').keyup(function(event) {
+                          show_friends(event, 1);
+                        });
+
+
+                      });
+
+                    </script>
+
+                    <script>
+
+                      function invitMsg() {
+                        $j('#invt_msg').hide()
+                      }
+
+                      function inviteFriends(user_id) {
+                        var user = user_id
+                        $j.ajax({
+                          url: "/friends/friends-internal-invite/",
+                          type: "POST",
+                          data: {
+                            'to_user': user_id,
+                            csrfmiddlewaretoken: '{{ csrf_token }}'
+                          },
+                          success: function (data) {
+                            if(data.result){
+                              $j('button[id^="id_invite_btn' + user + '"]').attr('disabled', true, 'title',
+                                  'Invitation already sent and awaiting response');
+                              $j('#ok_confirm_text').html('Your invite was sent to ' + data.user + "!")
+                              $j('#invt_msg_text').html('Your invite was successfully sent!')
+                            }else{
+                              $j('button[id^="id_invite_btn' + user + '"]').attr('disabled', true, 'title',
+                                'This user do not want to accept invite from not friend');
+                              $j('#ok_confirm_text').html('Your invite was not sent!')
+                              $j('#invt_msg_text').html('You can not send invitation to this user!')
+                            }
+
+                            $j('#id_internal_friends' + user).attr('style', 'color:#e2cb86;margin-left:0px;  margin-top: 8px;');
+                            $j('#okayBox').addClass('open')
+                            setTimeout(function () {
+                            $j('#okayBox').removeClass('open')
+                            }, 3000);
+                            $j('#invt_msg').show()
+                            setTimeout(invitMsg, 3000)
+
+                          }
+                        });
+                      }
+
+                      function acceptFriend(user_id) {
+                        var user = user_id
+                        $j.ajax({
+                          url: "/friends/friends-request-approve/",
+                          type: "POST",
+                          data: {
+                            'to_user': user_id,
+                            csrfmiddlewaretoken: '{{ csrf_token }}'
+                          },
+                          success: function (data) {
+                            if (data.result) {
+                              $j('#id_internal_friends' + user).attr('style', 'color:#e2cb86;font-size:22px');
+                              $j('button[id^="id_invite_btn' + user + '"]').attr('disabled', true, 'title', 'Friend ' +
+                                'Request Accepted');
+
+                              var friend_box = '<div class="box_friend" data-skigt="' + user_id + '"><div class="box_imgcontain">' +
+                                '<div class="name_friend"><span class="heade_friend" >' + data.username + '</span>' +
+                                '<span class="sub_namefriend">' + data.name + '</span><span class="friend_followers" >' +
+                                '<span style="display: inherit;">Followers :&nbsp;<label id="follow_count' + user_id + '">' + data.count + '</label></span></span></div><a href="/profile/' + data.username + '/{% if view_general_profile %}?view-general=yes{% endif %}"><div class="img_friend">' +
+                                '<img alt="skigit" src="' + data.image + '"></div></a><div class="icon_friend">' +
+                                '<a onclick="un_follow_follow(' + user_id + ')" id="follow_' + user_id + '"' +
+                                'class = "unfollow" data-cuid = "' + user_id + '" title = "Click to Follow"' +
+                                'style = "color: #bfeeff!;" > <span class="box_footer" ' +
+                                'id ="follow_btn' + user_id + '"  style = "color: #bbf2fd; " > Click to Follow </span></a >' +
+                                '<img width="30" height="30" src="/static/images/error.png"  onclick="close_friend(' + user_id + ')" class="close-friend"></div></div></div>'
+                              $j('#friendcontent').append(friend_box)
+                              if ($j('.badge-danger').text() > 1) {
+                                $j('.badge-danger').html($j('.badge-danger').text() - 1)
+                              }
+                              else {
+                                $j('.badge-danger').hide()
+                              }
+                            }
+                          }
+                        });
+                      }
+
+                      function rejectFriend(user_id) {
+
+                        $j.ajax({
+                          url: "/friends/friends-request-rejected/",
+                          type: "POST",
+                          data: {
+                            'to_user': user_id,
+                            csrfmiddlewaretoken: '{{ csrf_token }}'
+                          },
+                          success: function (data) {
+                            if (data.result) {
+                              $j('button[id^="id_accept_btn' + user_id + '"]').remove()
+                              $j('button[id^="id_declain_btn' + user_id + '"]').remove()
+                              var html = '<button id="id_invite_btn' + user_id + '"  box-shadow: none;" onclick="inviteFriends(' + user_id + ')"><span style="margin-top: 8px;" title="Send Invite" id="id_internal_friends' + user_id + '" class="glyphicon glyphicon-user">&#43;</span></button>'
+                              $j('#button_sapn' + user_id).html(html)
+                              if ($j('.badge-danger').text() > 1) {
+                                $j('.badge-danger').html($j('.badge-danger').text() - 1)
+                              }
+                              else {
+                                $j('.badge-danger').hide()
+                              }
+                            }
+                          }
+                        });
+                      }
+
+                    </script>
+
+                  </div>
+
+                  <div class="tab-pane" id="tab2">
+                    <form id="non_skigit_friend">
+                      <div class="form-group" style="margin-bottom: 25px;">
+                        <input class="form-control" type="text" name="email" id="id_f_email" onkeypress="return event.keyCode!=13"
+                               spellcheck="false" placeholder="Enter email addresses seperated by a comma"
+                               autocomplete="off"/>
+                      </div>
+                      <div>
+                        <input type="button" id="id_non_skigit_frd" style="float: left;margin-left: 35%;margin-bottom: -10px;" value="Invite"/>
+                      </div>
+                      <div>
+                        &nbsp;
+                      </div>
+                      <div style="text-align: center; padding-top: 1.5em;">
+                        <label id="id_f_email-error" class="error"
+                               for="id_f_email"  hidden>
+                        </label>
+                        <label id="id_f_email-success"
+                               for="id_f_email" style="color:#ffffff !important; font-size: 1em;
+                                                       background-color: transparent !important;
+                                                       top: -34px;display: inline-block;"
+                               hidden>
+                        </label>
+
+                      </div>
+
+                    </form>
+
+                    <script>
+                      $j = jQuery.noConflict();
+                      $j(document).ready(function () {
+
+                        function NonSkigitFormValidation() {
+                          $j.validator.addMethod("customemail",
+                            function (value, element) {
+                              emails = value.split(',')
+                              for (let email of emails ) {
+                                isValid = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/.test(email); 
+                                if (!isValid) {
+                                  return false
+                                }
+                              }
+                              return true
+                            }, "<img width='25' src='/static/images/error_icon.png'> Please enter a valid email address."
+                          );
+
+                          var friendInviteForm = $j("#non_skigit_friend")
+
+                          friendInviteForm: '#errors',
+                            friendInviteForm.validate({
+                              rules: {
+                                'email': {
+                                  required: {
+                                    depends: function () {
+                                      $j(this).val($j.trim($j(this).val()));
+                                      return true;
+                                    }
+                                  },
+                                  customemail: true,
+                                }
+                              },
+                              messages: {
+                                'email': {
+                                  required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'> Email field is required",
+                                  email: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'> Please enter a valid email address"
+                                },
+                              }
+                            });
+                          return friendInviteForm.valid()
+                        }
+
+                        function progress() {
+                          $j('#id_f_email-error').hide()
+                          $j('#id_f_email-error').empty()
+                          $j('#id_f_email-success').hide()
+                        }
+
+                        function send_invite() {
+                          if (NonSkigitFormValidation()) {
+                            let emails = $j('#id_f_email').val().split(',')
+                              $j.ajax({
+                                url: "/friends/new-friend-invite/",
+                                type: "POST",
+                                data: {
+                                  'emails': JSON.stringify(emails),
+                                  csrfmiddlewaretoken: '{{ csrf_token }}'
+                                },
+                                success: function (data) {
+
+                                  if (data.result) {
+                                    $j('#id_f_email-error').hide()
+                                    $j('#id_f_email-success').show()
+                                    $j('#id_f_email-success').html(data.messages).attr('color', 'green !important')
+                                    $j('#id_f_email').val('')
+                                    setTimeout(progress, 2500)
+                                  }
+                                  else {
+
+                                    $j('#id_f_email-error').show()
+                                    $j('#id_f_email-error').html("<div class='error'><span><img width='25' src='/static/images/error_icon.png'>" + data.messages)
+                                    setTimeout(progress, 2500)
+
+                                  }
+                                }
+                              });
+                              }
+                        }
+
+                        $j('#id_f_email').keyup(function (e) {
+                          if(e.which === 13) {
+                            $j('#id_f_email-success').hide()
+                            send_invite();
+                          }
+                        })
+
+                        $j('#id_non_skigit_frd').click(function (e) {
+                          $j('#id_f_email-success').hide()
+                            send_invite()
+                        });
+                      });
+
+                      function shareMsg() {
+
+                        $j('#invt_msg').hide()
+                        $j('#invt_msg_text').empty()
+                        $j('#invt_msg_text').html('Your Invite has been sent!')
+                      }
+
+                      var social_share_url = encodeURIComponent("{{ meta.url }}");
+
+                      function facebookShare() {
+                        var popup = window.open('https://www.facebook.com/v2.8/dialog/share?app_id={{facebook_app_id}}&display=popup&caption=Skigit.com&mobile_iframe=false&href=' + social_share_url + '&picture={{meta.image}}', 'true', 'width=700,height=500,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0');
+                        var popupTick = setInterval(function () {
+                          if (popup.closed) {
+                            clearInterval(popupTick);
+                          }
+                        }, 500);
+
+                        return false;
+                      }
+
+                      function twitterShare() {
+
+                        var popup = window.open('http://twitter.com/share?url=' + social_share_url + '?image={{meta.image}}&text=Posted by skigit@skigit.com ' + social_share_url + '&callback_url=' + social_share_url, 'true', 'width=700,height=500,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0');
+                        return true;
+                        var popupTick = setInterval(function () {
+                          if (popup.closed) {
+                            clearInterval(popupTick);
+                          }
+                        }, 500);
+                        return false;
+                      }
+
+                      function tumblrShare() {
+
+                        var popup = window.open(
+                          'http://www.tumblr.com/widgets/share/tool?shareSource=legacy&posttype=photo&cannonicalUrl=&url=' + social_share_url + '&content=' + '{{meta.image}}&caption=&url=' + social_share_url,
+                         'true',
+                         'width=700,height=500,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0');
+                        return true;
+                        var popupTick = setInterval(function () {
+                          if (popup.closed) {
+                            clearInterval(popupTick);
+                          }
+                        }, 500);
+
+                      }
+
+                    </script>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 social_friends_popup ">
+            <center>
+              <a id="socialFriends" class="btn btn_invite custom_popup popoper_socila" data-toggle="popover"
+                 data-placement="bottom" style="float:left;">
+                Invite Social Friends
+              </a>
+            </center>
+            <div class="tabbable hide custom_popup" id="socialFriendContent">
+
+              <div class="row" style="display:block">
+
+                <div class="col-xs-12 padd_zero pull-right">
+
+                  <div class="friend-ibacor_shareawesome">
+                    <ul class="share-ico">
+                      <li id="social_share_icons_friend">
+                        <a id="fb_post" title="Facebook" onclick=" facebookShare() ">
+                          <img src="{% static 'images/SN_Post_FB.png' %}" width="63.33">
+                        </a>
+                      </li>
+                      <li id="social_share_icons_friend">
+                        <a title="Twitter" onclick="twitterShare()">
+                          <img src="{% static 'images/SN_Post_Twitter.png' %}" width="63.33">
+                        </a>
+                      </li>
+                      <li id="social_share_icons_friend">
+                        <a title="Tumblr" onclick="tumblrShare()">
+                          <img src="{% static 'images/SN_Post_Tumblr.png' %}" width="63.33" style="margin-left: 4px;">
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+     </div>
+    </div>
+</div>
+  </div>
+
+  <div class="endless_page_template" id="skigit_content_list" >
+
+    <div class="nag cf" id="friendcontent">
+
+      {% if request.user.is_authenticated %}
+        {% include 'friends/friends_invite_body.html' %}
+      {% else %}
+        <center>
+          <span style="color: #0386b4; font-size: initial">
+            <strong>
+              There are no friends to display.
+            </strong>
+          </span>
+        </center>
+      {% endif %}
+
+    </div>
+
+  </div>
+
+  <!-- end .section-box -->
+  <!--<a id="latestinifiniteLoader" style="float:left; display:none; margin:5px 425px">
+    <img src="{% static 'images/inf2_loading.gif' %}"/>-->
+  </a>
+
+{% endblock %}
+
+{% block js %}
+    <script>jQuery.endlessPaginate({paginateOnScroll: true});</script>
+{% endblock js %}

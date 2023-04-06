@@ -1,0 +1,487 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block title %}{{ block.super }}Copyright Infringement{% endblock %}
+
+{% block content %}
+
+  <style>
+    
+.form-control {
+  height: 50px;
+}
+
+	.form-group .checkbox-label {
+        top: 0px;
+        display: inline-block !important;
+        float: left;
+        padding-right: 10px;
+     }
+
+     .checkbox-error-msg {
+        position: absolute;
+     }
+	 
+.checkbox-error-msg1 {
+    margin-top: -10px;
+}
+	 .checkbox-error-msg2 {
+   margin-top: 35px;
+	}
+	 .checkbox-error-msg3 {
+  margin-top: 35px;
+}
+
+.signture-error-msg3 {
+    margin-top: -28px;
+	 margin-left: 10px;
+}
+ 
+  
+  #submit_request_error_location{
+  width: 100%;
+    margin: 0 auto 0 auto;
+    text-align: center;
+	}
+	
+	
+  #confirm-label {
+  color: #baf3c9;
+  margin-left: -8px;
+    font-size: 18px;
+  }
+  
+  
+  </style>
+
+  <script>
+    $j = jQuery.noConflict();
+    $j(document).ready(function () {
+
+      function CopyrightFormValidation() {
+        $j.validator.addMethod("customemail",
+          function (value, element) {
+            return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value);
+          }, "Please enter a valid email address."
+        );
+        $j.validator.addMethod("lettersonly", function (value, element) {
+          return this.optional(element) || /^[a-z\s]+$/i.test(value);
+        }, "Only alphabetical characters");
+        var CopyrightForm = $j("#id_copyright_infringement_form");
+
+        errorLabelContainer: '#errors'
+        CopyrightForm.validate({
+          ignore: "", //Hidden inputs
+          rules: {
+            'urls': {
+              required: true,
+              {#                                    url:true,#}
+            },
+            'description': {
+              required: true
+            },
+            'submitter_request': {
+              required: true
+            },
+            'full_name': {
+              required: true,
+              lettersonly: true
+            },
+            'address': {
+              required: true
+            },
+            'city': {
+              required: true
+            },
+            'state': {
+              required: true
+            },
+            'country': {
+              required: true
+            },
+            'zip_code': {
+              required: true,
+              digits: true,
+              maxlength: 12,
+              minlength: 5
+            },
+            'phone': {
+              required: true,
+              digits: true,
+              maxlength: 15
+            },
+            'email': {
+              required: {
+                depends: function () {
+                  $j(this).val($j.trim($j(this).val()));
+                  return true;
+                }
+              },
+              customemail: true
+            },
+            'confirm_check1': {
+              required: true
+            },
+            'confirm_check2': {
+              required: true
+            },
+            'confirm_check3': {
+              required: true
+            },
+            'signature': {
+              required: true,
+              lettersonly: true
+            }
+          },
+          messages: {
+            'urls': {
+              required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Your website URL is required",
+            },
+            'description': {
+              required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Identify the infringed work on Skigit is required",
+            },
+            'submitter_request': {
+              required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>A selection is required",
+            },
+            'full_name': {
+              required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Your Full Name is required",
+              lettersonly: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Letters and spaces only please",
+            },
+            'address': {
+              required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Street Address is required",
+            },
+            'city': {
+              required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>City is required",
+            },
+            'state': {
+              required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>State/Province is required",
+            },
+            'country': {
+              required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Country is required",
+            },
+            'zip_code': {
+              required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Zip/Postal Code is required and must be 5 to 12 numbers",
+              digits: "Please enter between 5 and 12 numbers only.",
+              maxlength: "You must not enter more than (12) whole numbers",
+              minlength: "You must enter a minimum of (5) whole numbers",
+            },
+            'phone': {
+              required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Phone Number is required - no dashes, 15 numbers max.",
+              digits: "Please enter valid Phone Number. Only digits are allowed",
+              maxlength: " Phone Number must be less than or equal to 15 digits"
+            },
+            'email': {
+              required: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Email Address is required",
+              customemail: "Please enter a valid email address."
+            },
+            'confirm_check1': {
+              required: "<div class='checkbox-error-msg1'><span><div class='error'><span><img width='25' src='/static/images/error_icon.png'>Please check the box.</span></div>",
+            },
+            'confirm_check2': {
+              required: "<div class='checkbox-error-msg2'><span><div class='error'><span><img width='25' src='/static/images/error_icon.png'>Please check the box.</span></div>",
+            },
+            'confirm_check3': {
+              required: "<div class='checkbox-error-msg3'><span><div class='error'><span><img width='25' src='/static/images/error_icon.png'>Please check the box.</span></div>",
+            },
+            'signature': {
+              required: "<div class='signture-error-msg3'><span><div class='error'><span><img width='25' src='/static/images/error_icon.png'>Signature is required - letters only</span></div>",
+              lettersonly: "<div class='error'><span><img width='25' src='/static/images/error_icon.png'>Signature is required - letters only"
+            }
+          },
+          errorPlacement: function (error, element) {
+            if (element.attr("name") == "submitter_request") {
+                error.appendTo("#submit_request_error_location");
+            } else {
+                error.insertAfter(element)
+            }
+          }
+        });
+        return CopyrightForm.valid()
+      }
+
+      $j('#id_copyright_submit').click(function () {
+        CopyrightFormValidation();
+        $j('.errorlist').show();
+        $j('#err_msg').show()
+      });
+    });
+
+  </script>
+
+  <style>
+ .input[type=checkbox], input[type=radio] {
+    margin: 4px 10px 0;
+    margin-top: 1px\9;
+    line-height: normal;
+    transform: scale(1.5);
+   }
+   
+  </style>
+
+
+  <div class="row mar_zero profile" id="main" style="background-color: #cfe1ec;border-radius:0px">
+    <div class="profile-form">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 padd_zero margin_bottom_10">
+        <h3 class="mar margin_bottom_10"
+            style="color:#000; font-weight: normal !important; padding: 30px 0px 30px 0px !important;">
+          Copyright Infringement Form
+        </h3>
+      </div>
+      <div class="row">
+        <div class="col-lg-2 col-md-2"></div>
+        <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12" style="background: #333;background-color: #344254;border-radius: 4px;padding: 40px;width: 80%;margin-left: -100px;color:#fff">
+          <form id="id_copyright_infringement_form" role="form"
+                class="for-button" action="{% url 'copyright_infringement' skigitt_id %}"
+                method="post" novalidate="novalidate" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group f_type">
+              <div class="control-label col-sm-5 f_type" for="{{ form.urls.id_for_label }}">
+                Identify the video URL from the other site that this Skigit infringes
+                upon. Provide URL ie, http://...
+                <span class="red">*</span>
+              </div>
+              <div class="col-lg-7 col-md-7">{{ form.urls }}</div>
+              {% if form.urls.errors %}
+                <div class="col-lg-12 col-md-12 error_msg padd_zero">
+                  {{ form.urls.errors }}
+                </div>
+              {% endif %}
+            </div>
+            <div class="form-group f_type">
+              <div class="control-label col-sm-5 f_type" for="{{ form.skigit_id.id_for_label }}">
+                ID of Skigit.
+                <span class="red">*</span>
+              </div>
+              <div class="col-lg-7 col-md-7">{{ form.skigit_id }}</div>
+              {% if form.skigit_id.errors %}
+                <div class="col-lg-12 col-md-12 error_msg padd_zero">
+                  {{ form.skigit_id.errors }}
+                </div>
+              {% endif %}
+            </div>
+            <div class="form-group f_type">
+              <hr style="width:75%;">
+            </div>
+            <div class="form-group f_type">
+              <div class="control-label col-md-5 col-sm-7 col-xs-7 f_type"
+                   for="{{ form.submitter_request.id_for_label }}" id="remove_all_title">
+                Remove all
+                <span class="red">*</span>
+				 </div>
+					<br>
+                      <div id="remove_all_help">You can request the removal of only this specific Skigit, or all Skigits that contains
+                        the same video file.
+                        Please note that only identical copies of the video file can be removed by this
+                        function. If an image file
+                        has been altered in other way, then it cannot be detected or removed through thus
+                        function.<br><br>
+                        By clicking yes, you are asking Skigit to remove all Skigits containing the same video
+                        file. 
+					</div>
+<br>
+
+              <div class="col-lg-7 col-md-7 col-sm-5 col-sx-5" id="id_submitter_request_a">{{ form.submitter_request }} 
+			  
+				<div id="submit_request_error_location"></div>
+			  </div>
+			  
+              {% if form.submitter_request.errors %}
+                <div class="col-lg-12 col-md-12 error_msg padd_zero">
+                  {{ form.submitter_request.errors }}
+                </div>
+              {% endif %}
+			  
+            </div>
+			
+			
+			
+			
+			
+            <div class="form-group f_type">
+              <hr style="width:75%;">
+            </div>
+            <div class="form-group f_type">
+              <div class="control-label col-sm-5 f_type" for="{{ form.full_name.id_for_label }}">
+                Your Full Name
+                <span class="red">*</span>
+              </div>
+              <div class="col-lg-7 col-md-7">{{ form.full_name }}</div>
+              {% if form.full_name.errors %}
+                <div class="col-lg-12 col-md-12 error_msg padd_zero">
+                  {{ form.full_name.errors }}
+                </div>
+              {% endif %}
+            </div>
+            <div class="form-group f_type">
+              <div class="control-label col-sm-5 f_type" for="{{ form.address.id_for_label }}">
+                Street Address
+                <span class="red">*</span>
+              </div>
+              <div class="col-lg-7 col-md-7">{{ form.address }}</div>
+              {% if form.address.errors %}
+                <div class="col-lg-12 col-md-12 error_msg padd_zero">
+                  {{ form.address.errors }}
+                </div>
+              {% endif %}
+            </div>
+            <div class="form-group f_type">
+              <div class="control-label col-sm-5 f_type" for="{{ form.city.id_for_label }}">
+                City
+                <span class="red">*</span>
+              </div>
+              <div class="col-lg-7 col-md-7">{{ form.city }}</div>
+              {% if form.city.errors %}
+                <div class="col-lg-12 col-md-12 error_msg padd_zero">
+                  {{ form.city.errors }}
+                </div>
+              {% endif %}
+            </div>
+            <div class="form-group f_type">
+              <div class="control-label col-sm-5 f_type" for="{{ form.state.id_for_label }}">
+                State/Province
+                <span class="red">*</span>
+              </div>
+              <div class="col-lg-7 col-md-7">{{ form.state }}</div>
+              {% if form.state.errors %}
+                <div class="col-lg-12 col-md-12 error_msg padd_zero">
+                  {{ form.state.errors }}
+                </div>
+              {% endif %}
+            </div>
+            <div class="form-group f_type">
+              <div class="control-label col-sm-5 f_type" for="{{ form.zip_code.id_for_label }}">
+                Zip/Postal Code
+                <span class="red">*</span>
+              </div>
+              <div class="col-lg-7 col-md-7">{{ form.zip_code }}</div>
+              {% if form.zip_code.errors %}
+                <div class="col-lg-12 col-md-12 error_msg padd_zero">
+                  {{ form.zip_code.errors }}
+                </div>
+              {% endif %}
+            </div>
+            <div class="form-group f_type">
+              <div class="control-label col-sm-5 f_type" for="{{ form.country.id_for_label }}">
+                Country
+                <span class="red">*</span>
+              </div>
+              <div class="col-lg-7 col-md-7">{{ form.country }}</div>
+              {% if form.country.errors %}
+                <div class="col-lg-12 col-md-12 error_msg padd_zero">
+                  {{ form.country.errors }}
+                </div>
+              {% endif %}
+            </div>
+            <div class="form-group f_type">
+              <div class="control-label col-sm-5 f_type" for="{{ form.phone.id_for_label }}">
+                Phone Number
+                <span class="red">*</span>
+              </div>
+              <div class="col-lg-7 col-md-7">{{ form.phone }}</div>
+              {% if form.phone.errors %}
+                <div class="col-lg-12 col-md-12 error_msg padd_zero">
+                  {{ form.phone.errors }}
+                </div>
+              {% endif %}
+            </div>
+            <div class="form-group f_type">
+              <div class="control-label col-sm-5 f_type" for="{{ form.email.id_for_label }}">
+                Email Address
+                <span class="red">*</span>
+              </div>
+              <div class="col-lg-7 col-md-7">{{ form.email }}</div>
+              {% if form.email.errors %}
+                <div class="col-lg-12 col-md-12 error_msg padd_zero">
+                  {{ form.email.errors }}
+                </div>
+              {% endif %}
+            </div>
+            <div class="form-group f_type">
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 f_type">
+                <hr style="width:75%;">
+                <label id="confirm-label">
+                  By Clicking the following boxes, you confirm:
+                </label>
+
+                <hr style="width:75%;">
+              </div>
+            </div>
+            <div class="form-group f_type">
+              <div class="control-label col-lg-10 col-md-10 col-sm-10 col-xs-10 f_type">
+              I affirm and certify that all the information and answers to questions herein are
+complete, true and correct to the best of my knowledge. I understand that any
+misrepresentation, falsification, or omission of any facts may render it void and will be cause for termination, when discovered.<span class="red">*</span>
+              </div>
+              <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                <input type="checkbox" id="confirm_check1" name="confirm_check1" value="1"/>
+				<label for="confirm_check1"></label>
+              </div>
+            </div>
+            <div class="form-group" style="height: 40px;">
+              <div class="col-lg-offset-10 col-md-offset-9 col-sm-offset-9 col-xs-12" style="top: -12px;">
+                <label id="confirm_check1-error" class="checkbox-label error" for="confirm_check1" style="top:0px !important;"></label>
+              </div>
+            </div>
+            <div class="form-group f_type">
+              <div class="control-label col-lg-10 col-md-10 col-sm-10 col-xs-10 f_type">
+                I have a good faith belif that the disputed use of Copyrighted material is
+                not authorized by the copyright owner, its agent, or the law. (eg: as fair use)<span class="red">*</span>
+              </div>
+              <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                <input type="checkbox" id="confirm_check2" name="confirm_check2" value="2"/>
+				<label for="confirm_check2"></label>
+              </div>
+            </div>
+            <div class="form-group" style="height: 40px;">
+              <div class="col-lg-offset-10 col-md-offset-9 col-sm-offset-9 col-xs-12" style="top: -58px;">
+                <label id="confirm_check2-error" class="checkbox-label error" for="confirm_check2" style="top:0px !important;"></label>
+              </div>
+            </div>
+            <div class="form-group f_type">
+              <div class="control-label col-lg-10 col-md-10 col-sm-10 col-xs-10 f_type">
+                I state under penalty of perjury that i am the owner, or authorized to act
+                on behalf of the owner, of the Copyright or of an exclusive right under the
+                Copyrightthat is allegedly infringed.<span class="red">*</span>
+              </div>
+              <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                <input type="checkbox" id="confirm_check3" name="confirm_check3" value="3"/>
+				<label for="confirm_check3"></label>
+              </div>
+            </div>
+            <div class="form-group" style="height: 40px;">
+              <div class="col-lg-offset-10 col-md-offset-9 col-sm-offset-9 col-xs-12" style="top: -58px;">
+                <label id="confirm_check3-error" class="checkbox-label error" for="confirm_check3" style="top:0px !important;"></label>
+              </div>
+            </div>
+            <div class="form-group f_type">
+              <hr style="width:75%;">
+            </div>
+            <div class="form-group f_type">
+              <div class="control-label col-sm-5 f_type" for="{{ form.signature.id_for_label }}">
+                Type your full name in this box acts as your electronic signature
+                <span class="red">*</span>
+              </div>
+              <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">{{ form.signature }}</div>
+              {% if form.signature.errors %}
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 error_msg padd_zero">
+                  {{ form.signature.errors }}
+                </div>
+              {% endif %}
+            </div>
+            <div class="form-group f_type">
+              <hr style="width:75%;">
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
+              <input type="submit" value="Submit" class="btn" id="id_copyright_submit" name="copyright_submit"/>
+              <!--<a onclick="location.href = '/'" c>Cancel</a>-->
+			 <!--<button action="action" onclick="window.history.go(-1); return false;" class="btn" type="submit" formnovalidate="novalidate">Cancel</button>-->
+			<a href="{% url 'skigit_data' skigitt_id %}" class="btn" id="copyright_cancel_button">Cancel</a >
+			  
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% for vid in all_sub_cat_skigits %}
+    <div class="slide">
+      <div class="ca-item ca-item-1" data-skigt="{{ vid.id }}">
+        <div class="coursemeal__div">
+        
+         
+            <img src="{{ vid.skigit_id.default_thumbnail.url }}">
+      
+          <div class="coursemeal-info">
+            <a href="{% url 'skigit_data' vid.pk %}?modal=1"
+            id="sugestion{{ vid.id }}" title="Play {{ vid.title }} Skigit"
+            data-target="#new_vid{{ vid.id }}"
+            class="skigit_playback f_type coursemeal-info__link">{{ vid.title|slice:"0:20" }}</a>
+            
+        </div>
+        </div>
+      </div>
+    </div>
+{% endfor %}

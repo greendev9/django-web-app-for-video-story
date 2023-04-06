@@ -1,0 +1,122 @@
+{% load static %}
+{% load compress %}
+
+<div class="container" data-target="#landing_modal">
+    
+
+
+  <!-- Modal -->
+  <div class="modal fade" id="landing_modal" role="dialog">
+    <div class="modal-dialog landing-modal-dialog" style="transform: scale(0.9);">
+    
+      <div class="modal-content" style="border-radius: 10px !important;width: 65%;background-color: #000000; left: 20%;box-shadow: 4px 4px 4px #464545;">
+        <div class="modal-body">
+          <div class="">
+            <!--<img class="logo-class"  src="{% static 'images/logo_glow_2.png' %}" alt="Snow" style="
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+				margin-top: 10px;
+				width: 150px;
+				margin-bottom: -10px;
+            " >-->
+              <img class="image2-c" src="{% static 'images/landing/Welcome_images_4a.png' %}" alt="Snow" style="border-radius:6px">
+
+
+              <div class="bottom-left">
+              </div>
+              <div class="top-left">
+              </div>
+
+              <div class="top-right"><font color="#001f5d"><font class="login-c" size="7"><b style="
+    font-weight: bold">Help us get Started Right.</b><br><b style="
+    font-weight: bold">Login for Beta Now!</b></font></div>
+			  
+			  <div class="skigit-logo"><img src="{% static 'images/Skigit_Logo_AI_master.png' %}" title="Play Skigit" width="220px"></div>
+			  
+			  <div id="live-share"><img class="image4-c" src="{% static 'images/Live-Share_Icon_Landing-Banner.png' %}" alt="Snow1" align="LEFT" border="0"></div>
+			  
+		 <div class="top-right-app">
+			  <img class="image-app-c" src="{% static 'images/landing/login_app_image.png' %}" alt="Snow2">
+			   
+
+			  </div>
+							
+			  
+			  <div class="bottom-right">
+			  
+              <div class="bottom-right">
+              <div id="fixed-social">
+			  <img class="image2-c" src="{% static 'images/landing/social_landing_icons.png' %}" alt="Snow" style="margin: 0 55px 0 0;width: 70px;filter: hue-rotate(178deg);">
+              <!--<div>
+              <a class="fixed-facebook"><i class="fa fa-facebook"></i></a>
+              </div>
+              <div>
+                <a class="fixed-twitter"><i class="fa fa-twitter"></i></a>
+              </div>
+              <div>
+                <a class="fixed-instagrem"><i class="fa fa-instagram"></i></a>
+              </div>
+              <div>
+                <a class="fixed-linkedin"><i class="fa fa-linkedin"></i></a>
+              </div>
+              <div>
+                <a class="fixed-pinterest"><i class="fa fa-pinterest"></i></a>
+              </div>-->
+            </div>
+
+			<div id="get_app_group">
+            <b id="get-app">Get the Apps!</b>
+			  <br>
+			  <div  id="app-store-group" >
+              <!--Apple store image and link -->	
+			 <a class="mobile-app-link-apple"  href="#" onclick="window.open(encodeURI('https://apps.apple.com/app/instagram/id389801252?vt=lo'), '_blank', 'location=yes,enableViewPortScale=yes');">
+				<span class="mobile-app-span" style="display: block;">
+				<img class="image-app-d" alt="-" src="{% static 'images/landing/AppleStore.png' %}" style=" margin-top: 15px;">
+			</span>
+				</a>
+			</div>
+			
+			
+			  <!--Google play store image and link -->			
+				<a class="mobile-app-link-google" href="#" onclick="window.open(encodeURI('https://play.google.com/store/apps/details?id=com.instagram.android&referrer=utm_source%3Dinstagramweb%26utm_campaign%3DloginPage%26ig_mid%3D996C2F48-94F0-4CE2-BD02-A31A40B588E0%26utm_content%3Dlo%26utm_medium%3Dbadge'), '_blank', 'location=yes,enableViewPortScale=yes');">
+				<span class="mobile-app-span" >
+				<img class="image-app-d" alt="-" src="{% static 'images/landing/GoogleStore.png' %}" style=" margin-top: 5px;">
+			</span>
+			</a>
+		 </div>
+			<p style="margin: 20px;"><font color="#ffffff"><font face="Segoe UI, serif"><font size="7" class="font-join-c"><font class="font-join-c" size="7">Get recognized by <span style="font-size: 20px; font-weight:700;font-family: segoe print;color: #2be7d9;">Brands </span>just for showing-off your favorite things and places! Join
+              the <span style="font-size: 20px; font-weight:700;font-family: segoe print;color: #edce36;">Skigit Beta</span> program and help us test our site. It's easy and wicked fun! Just login and share a 30 second Skigits of your life. Post to your favorite Social Networks and invite your friends to join! Be one of the first 100 users to join and we'll send you a free Skigit T-shirt just for creating 5 Skigits and keeping your account active for at 60 days. Who does that?!!!</font></font></font></font>
+              </p>
+			   
+			  
+			  
+              <p class="lets-c"><font face="Segoe Print, serif">
+			  <font class="live font-lets-c" size="6"><a id="font-lets-c" href="/register/">Let's do it!</a></font>
+              <font face="Segoe Print, serif"><a data-dismiss="modal"><font class="live font-gets-c" size="6" >Get
+                me outta here</font></a></font></p>
+				<br>
+				<br>
+              <div class="form-check form-check-inline" style="float: left;position: relative;text-align: right;bottom: 36px;">
+                <input  font size="4" class="form-check-input landing-checkbox" type="checkbox" id="inlineCheckbox1" value="option1" style="margin: 0;">
+                <label font size="4" class="form-check-label" for="inlineCheckbox1" style="font-size: 12px;color: #cecece;font-family: 'laoui Sans',sans-serif;padding:0;"> &nbsp; Don’t show this page again</label>
+              </div>
+            </div>
+              <div class="centered">
+              </div>
+            </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+</div>
+
+<script>
+
+function closeWin() {
+  myWindow.close();
+}
+
+</script>

@@ -1,0 +1,27 @@
+{% load static %}
+{% load i18n %}
+ {% load el_pagination_tags %}
+{% if sperk_logo_list %}
+    {% lazy_paginate 14,14 sperk_logo_list %}
+      {% for logos in sperk_logo_list %}
+      <div class="col-sm-4 col-lg-2 col-xs-6 text-center">
+        <div class="sperk">
+          <div class="sperk-image">
+            <a href="javascript:void(0);" onclick="blogoclick({{ logos.img_id.id  }}, '/sperk/{{ logos.user.id }}/{{ logos.img_id.id }}/'); return true;"
+               title="{{logos.company_title | default:logos.user.get_full_name |default:logos.user.username }}" >
+              <img src="{{logos.b_img}}"  id="logo_image" style="margin-bottom: 5px; border-radius:4px;"/>
+            </a>
+          </div>
+          <p>{{ logos.company_title | default:logos.user.get_full_name |default:logos.user.username }}</p>
+          {% if logos.incentive %}
+              
+          <img class="img-responsive image-business image-skitbit"
+            src="{% static 'images/Skitbit_4x4.png' %}"  title="SkitBit!"/>
+          
+          {% endif %}
+        </div>
+
+      </div>
+    {% endfor %}
+  <span style='font-size:x-large' title="more">{% show_more ' ' ' ' 'show_more' %}</span>
+{% endif %}

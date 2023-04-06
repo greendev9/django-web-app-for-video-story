@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{{ block.super }}Sperks{% endblock %}
+
+{% block content %}
+
+<div class="row mar_zero" id="main">
+    <div class="wrap cf" >
+        <div id="content" class=" no-padd-form" role="main">
+            <div class="post-2110 page type-page status-publish hentry" id="post-2110">
+                <div style="text-align:center; ">
+                    <p class="text-center">
+                        <img src="{% static 'images/Skitbit_4x4.png' %}" width="110" height="auto"
+                             class="aligncenter" style="border-radius: 50%;filter: contrast(1.15);">
+                        <br>
+                        <br>
+                    </p>
+                    <h2 style = "margin: -50px 0 10px 0 !important;">
+                        <center style="color: #000;font-size: 28px;text-shadow: none;">Skigit-Approved Brands<img src="/static/images/Verified.png" title="Business Verified!" width="110"></center>
+						  <br>
+						<center style="color: #000;font-size: 18px;text-shadow: none;margin: -20px 0 0 0;">Click to see what <strong> SkitBits </strong>these <span style="color: #30853d;font-family:segoe print; font-weight:bold">BRANDS</span> are offering just to create a Skigit!</center>
+                    </h2>
+                    <br>
+                    <br>
+                    <!-- <span style="font-family: 'Segoe_Print'; font-size: 115%; color: #3D3D3D; text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.5); vertical-align: 30px;">
+                       Click on a logo to view the Sperks offered...
+                     </span>-->
+
+                </div>
+                <div class="endless_page_template" id="skigit_content_list" style="padding: 10px 20px 10px 20px;">
+
+                    <div class="row">
+
+                        <div class="col-lg-12" style="margin-left: 10%;margin-top: -4%;">
+
+                            <form method="GET"  id="search" class="form_search ng-pristine ng-valid" action=".">
+                                <div class="col-lg-7 col-md-7 col-sm-7">
+                                    <div class="input-group" id="search-input">
+                                        <input type="text" autofocus="on" spellcheck="false" autocomplete="off"
+                                               id="searchBox" name="searchBox" class="form-control f_type"
+                                               placeholder="Search by  Company Name" style="background-color: #fff;" onkeyup="return show_sperk()">
+                                        <span class="input-group-addon" style="margin: 0px" id="basic-addon1"><input
+                                                type="submit" value="Search" id="button"
+                                                style="margin-top: 8px;" ></span>
+                                    </div>
+                                </div>
+                            </form>
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="page-content rich-content row" id="sperk" style="margin: 0;">
+                    {% include 'sperk/sperk_body.html' %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+  <script>
+      function blogoclick (logo_id, url){
+          var message;
+          jQuery.ajax({
+              url: "/invoice/business-logo/",
+              type: "POST",
+              data: {'logo_id': logo_id},
+              success: function (data) {
+                  if(data.is_success)
+                  {
+                      window.location.href = url
+                  }
+                  else{
+                     message = data.message;
+                  }
+              }
+          });
+      }
+
+      function show_sperk() {
+        $j('#basic-addon1 #button').trigger('click');
+      }
+  </script>
+{% endblock js %}

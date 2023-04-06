@@ -1,0 +1,1613 @@
+{% load static %}
+{% load compress %}
+<html prefix="og: http://ogp.me/ns#">
+<head>
+  <meta prefix="og: http://ogp.me/ns#" property="og:title" content="{{ skigit.title }}"/>
+  <meta prefix="og: http://ogp.me/ns#" property="og:type" content="website"/>
+  <meta prefix="og: http://ogp.me/ns#" property="og:url"
+        content="{% if request.is_secure %}https://{% else %}http://{% endif %}{{ request.get_host }}/skigit_data/{{ skigit.id }}/"/>
+  <meta prefix="og: http://ogp.me/ns#" property="og:site_name" content="Skigit.com"/>
+  <meta prefix="og: http://ogp.me/ns#" property="og:description" content="{{ skigit.why_rocks }}"/>
+  <meta prefix="og: http://ogp.me/ns#" property="og:image" content="{{ video_share_url }}"/>
+
+  <meta property="twitter:title" content="{{ skigit.title }}"/>
+  <meta property="twitter:url"
+        content="{% if request.is_secure %}https://{% else %}http://{% endif %}{{ request.get_host }}/skigit_data/{{ skigit.id }}"/>
+  <meta property="twitter:site_name" content="Skigit.com"/>
+  <meta property="twitter:description" content="{{ skigit.why_rocks }}"/>
+  <meta property="twitter:image" content="{{ video_share_url }}"/>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'css/ibacor-sosmed-button.css' %}" type="text/css" media="all"/>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/jquery.bxslider.min.css' %}" type="text/css" media="all"/>
+
+  <script
+      src="https://code.jquery.com/jquery-1.12.4.min.js"
+      integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+      crossorigin="anonymous"></script>
+
+</head>
+
+<style>
+
+.libnk_skigitshair .popover {
+    padding: 50px;
+}
+
+.libnk_skigitshair .popover .popover-title {
+    font-size: 48px !important;
+    margin: 50px 0px 50px 0px !important;
+	color: #000000 !important;
+}
+
+.libnk_skigitshair .popover .nav.nav-tabs {
+    margin-left: 40px;
+}
+
+#video_actions li a {
+	font-size: 38px;
+	width: 300px!important;
+	margin-left: 10px;
+    margin-right: 10px!important;
+	margin-bottom: 30px;
+}
+
+.form-control {
+    height: 100px;
+	width: 120%;
+}
+
+.libnk_skigitshair .popover .selectall_label {
+    font-size: 32px;
+}
+.selectall_label {
+    right: 10px;
+	top:0px;
+}
+
+#showModalpopup .f_type {
+    font-size: 38px;
+}
+
+.libnk_skigitshair .notification_ul {
+    max-height: 800px !important;
+    height: 600px;
+	margin: -10px 0px 60px 0px;
+}
+
+.close_skigit_share {
+    position: absolute;
+    top: 50px !important;
+    right: 50px !important;
+    z-index: 1;
+    cursor: pointer;
+    width: 75px;
+    height: 75px;
+}
+
+input[type=checkbox], input[type=radio] {
+    width: 65px;
+    height: 65px!important;
+	right: 30px;
+}
+
+.libnk_skigitshair .popover ul li img {
+    height: 85px;
+    width: 85px;
+    right: 30px;
+    float: left;
+    margin-right: 10px;
+}
+
+#video_actions_ul .notification_ul > li.f_type {
+    margin: 30px 0px 30px 0px;
+}
+
+label#circle {
+    right: 120px;
+    top: 28px;
+    width: 30px!important;
+    height: 30px;
+}
+
+.notification_ul::-webkit-scrollbar {
+    width: 25px;
+}
+
+.libnk_skigitshair .popover ul li label {
+    width: 318px;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+input[type="submit"], input[type="file"], input[type="reset"], input[type="button"], button, a.btn {
+    font-size: 30px!important;
+    font-weight: normal;
+    width: 200px !important;
+    height: 62px !important;
+ }
+
+ input[type="submit"]:hover, input[type="reset"]:hover, input[type="button"]:hover, button:hover, a.btn:hover, .libnk_skigitshair input[type="button"][disable] {
+    font-size: 30px!important;
+    font-weight: normal;
+    width: 200px !important;
+    height: 62px !important;
+}
+
+label.f_type {
+    margin: 20px 10px 0px 0px;
+}
+
+
+</style>
+
+
+<body>
+
+<script src="//platform.linkedin.com/in.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+  $c = jQuery.noConflict();
+  $c('#ca-container').contentcarousel;
+</script>
+
+<style type="text/css">
+  .close_embed {
+    margin-top: -15px;
+    margin-right: -15px;
+  }
+
+  .bx-wrapper .bx-prev {
+    left: 10px;
+    background: url({% static 'images/animation/controls.png' %}) 0 -32px no-repeat;
+  }
+
+  .bx-wrapper .bx-next {
+    right: 10px;
+    background: url({% static 'images/animation/controls.png' %}) -43px -32px no-repeat;
+  }
+
+  #video_actions .libnk_skigitshair input[type="button"][disable] {
+    background: url({% static 'images/small_logout_btn_hover.png' %}) no-repeat !important;
+    color: black;
+  }
+
+
+
+  .slide {
+    margin-right: 0 !important;
+  }
+
+</style>
+
+<script>
+
+  $cmm = jQuery.noConflict();
+  $cmm(document).init(function () {
+
+    /*** Facebook Comment Box Javascript API ***/
+
+    var fb_script = ' ';
+    fb_script += '<div id="fb-root"></div> \r\n';
+    fb_script += '<script>\r\n';
+    fb_script += '(function(d, s, id){ \r\n';
+    fb_script += 'var js, fjs = d.getElementsByTagName(s)[0]; \r\n';
+    fb_script += 'if (d.getElementById(id)) return; \r\n';
+    fb_script += 'js = d.createElement(s); js.id = id; \r\n';
+    fb_script += 'js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.8&appId=131827690618542"; \r\n'
+    fb_script += 'fjs.parentNode.insertBefore(js, fjs); \r\n';
+    fb_script += '}(document, "script", "facebook-jssdk")) \r\n';
+    fb_script += '<\/script>\r\n\n';
+
+    $cmm('#fbcomment{{ skigit.id }}').append(fb_script);
+
+    if (window.FB) {
+      FB.XFBML.parse(); // re-parse all of the XFBML on a page (Reloads Comment Box)
+    }
+  });
+
+</script>
+
+<script type="text/javascript">
+
+  $j = jQuery.noConflict();
+
+  $j(document).ready(function () {
+
+    $j('.slider1').bxSlider({
+      hideControlOnEnd: true,
+      infiniteLoop: false,
+      slideWidth: 130,
+      minSlides: 2,
+      maxSlides: 6,
+      moveSlides: 4,
+      slideMargin: 10,
+      pager: false,
+      touchEnabled: false
+    });
+
+    var currentTimezone = jstz.determine();
+    var timezone = currentTimezone.name();
+
+    $j('#id_time_zone').val(timezone);
+    $j("#share_popoverr1{{ skigit.id }}").popover({
+      html: true,
+      title: 'Share this Skigit<img width="20" height="20" title="close" data-toggle="clickoverr{{skigit.id  }}"  src="/static/images/close(20x20).png" onclick="shareClose()" id="close_skigit" class="close_skigit_share" />',
+      placement: 'auto right',
+      cache: true,
+      content: $j("#shareContentt{{ skigit.id }}").html(),
+    }).click(function (e) {
+      $j(':checkbox').each(function () {
+        this.checked = false;
+      });
+    });
+
+    $j(document).on('change', '.select_alll{{skigit.id}}', function (e) {
+
+      if (this.checked) {
+        // Iterate each checkbox
+        $j(':checkbox').each(function () {
+          this.checked = true;
+        });
+      }
+      else {
+        $j(':checkbox').each(function () {
+          this.checked = false;
+        });
+      }
+    });
+
+    function unique(array) {
+      return $j.grep(array, function (el, index) {
+        return index === $j.inArray(el, array);
+      });
+    }
+
+    shareToFriends1 = function (skigit_id) {
+      var currentTimezone = jstz.determine();
+      var timezone = currentTimezone.name();
+      var share_value = [];
+      var plug_count = $j.trim($j('#share_count' + skigit_id).text());
+      $j("input[type=checkbox]:checked").each(function () {
+        if ($j('#shareboxx' + skigit_id + $j(this).val()).is(':checked')) {
+          share_value.push(parseInt($j(this).val()));
+        }
+      });
+
+      if (share_value.length > 0) {
+        $j('#button_share{{ skigit.id }}').prop('disabled', true);
+        $j('#share_msg{{ skigit.id }}').html('Please Wait...').css('color', 'orange');
+
+        $j.ajax({
+          type: "POST",
+          url: "/share-skigits/",
+          data: {
+            'vid_id': skigit_id, 'friend_list[]': unique(share_value), 'time_zone': timezone,
+            'csrfmiddlewaretoken': '{{csrf_token}}'
+          },
+          success: function (data) {
+            if (data.is_success) {
+              $j(':checkbox').each(function () {
+                this.checked = false;
+              });
+
+              for (var i = 0; i < unique(share_value).length; i++) {
+                $j('#id_date_label_popup' + skigit_id + unique(share_value)[i]).text(data.date)
+              }
+              $j('#share_msg{{ skigit.id }}').html('Sharing with friends successful').css('color', 'green');
+              $j('#button_share{{ skigit.id }}').prop('disabled', false);
+              $j('#share_count' + skigit_id).text(parseInt(plug_count) + parseInt(unique(share_value).length));
+              setTimeout(function () {
+                $j('#share_msg{{ skigit.id }}').empty()
+              }, 2500)
+            }
+          },
+          error: function (rs, e) {
+            $j("#popup_msg").text("Error into Share Skigit Index Page Please try again");
+            $j("#popScreen").show();
+            $j('#button_share{{ skigit.id }}').prop('disabled', false)
+          }
+        });
+      }
+      else {
+        $j('#share_msg{{ skigit.id }}').html('Mark options to share a skigit with friends').css('color', 'red');
+        $j('#button_share{{ skigit.id }}').prop('disabled', false);
+        setTimeout(function () {
+          $j('#share_msg{{ skigit.id }}').empty()
+        }, 2500)
+      }
+    };
+
+
+    shareboxx = function (friend_id, video_id) {
+      var share_id = $j('#shareboxx' + video_id + friend_id).attr('id');
+      var skigit_id = video_id;
+
+      if ($j('#select_alll' + video_id).is(':checked')) {
+        $j('#select_alll' + video_id).prop('checked', false)
+      }
+    };
+
+    fav_un_fav = function () {
+
+      var skigit_id = $j("#fav_" +{{skigit.skigit_id.id}}).attr('data-pid');
+      var fav_id = $j("#fav_" +{{skigit.skigit_id.id}}).attr('id');
+      var fav_class = $j("#fav_" +{{skigit.skigit_id.id}}).attr('class');
+
+      if (fav_class == 'unfavorite') {
+        $j.ajax({
+          type: "POST",
+          url: "/my_favourites/",
+          data: {'skigit_id': skigit_id, 'csrfmiddlewaretoken': '{{csrf_token}}'},
+          success: function (response) {
+            if (response.is_success) {
+              if (response.is_fav == 1 || response.is_fav == '1') {
+                $j("#" + fav_id).attr("title", "Remove Favorite");
+                $j("#" + fav_id).removeClass("unfavorite");
+                $j("#" + fav_id).addClass("favorite");
+                $j("#" + fav_id + "> img").attr("src", "{% static 'images/star-golden.png' %}");
+              }
+            }
+          },
+          error: function (rs, e) {
+            $j("#popup_msg").text("Error into Favorite/Un favorite Skigit...! Please try again");
+            $j("#popScreen").show();
+          }
+        });
+      }
+      else if (fav_class == 'favorite') {
+
+        $j.ajax({
+
+          type: "POST",
+          url: "/un_favourites/",
+          data: {'skigit_id': skigit_id, 'csrfmiddlewaretoken': '{{csrf_token}}'},
+          success: function (response) {
+            if (response.is_success) {
+              if (response.is_fav == 1 || response.is_fav == '1') {
+                $j("#" + fav_id).attr("title", "Add to Favorite");
+                $j("#" + fav_id).removeClass("favorite");
+                $j("#" + fav_id).addClass("unfavorite");
+                $j("#" + fav_id + "> img").attr("src", "{% static 'images/icons/favorites(22x22).png'%}");
+              }
+            }
+          },
+          error: function (rs, e) {
+            $j("#popup_msg").text("Error into Favorite/Un-favorite Skigit...! Please try again");
+            $j("#popScreen").show();
+          }
+        });
+      }
+    };
+
+    like_{{skigit.skigit_id.id}}_unlike = function () {
+
+      var skigit_id = $j("#like_" +{{skigit.skigit_id.id}}).attr('data-pid');
+      var post_id = $j("#like_" +{{skigit.skigit_id.id}}).attr('id');
+      var post_clas = $j("#like_" +{{skigit.skigit_id.id}}).attr('class');
+      var like_count = $j.trim($j('#like_count{{ skigit.skigit_id.id }}').text());
+
+      if (post_clas == 'unlike') {
+        $j.ajax({
+          type: "POST",
+          url: "/skigit_i_like/",
+          data: {'skigit_id': skigit_id, 'csrfmiddlewaretoken': '{{csrf_token}}'},
+          success: function (response) {
+            if (response.is_success) {
+              if (response.like == 1 || response.like == '1') {
+                $j("#" + post_id).attr("title", "Unlike");
+                $j("#" + post_id).removeClass("unlike");
+                $j("#" + post_id).addClass("like");
+                $j("#" + post_id + "> img").attr("src", "/static/images/icons/heart_liked(22x22).png");
+                $j('#like_count' +{{ skigit.skigit_id.id }}).text(parseInt(like_count) + 1)
+              }
+            }
+          },
+          error: function (rs, e) {
+            $j("#popup_msg").text("Error into like/unlike Skigit...! Please try again");
+            $j("#popScreen").show();
+          }
+        });
+      }
+      else if (post_clas == 'like') {
+
+        $j.ajax({
+          type: "POST",
+          url: "/skigit_i_unlike/",
+          data: {'skigit_id': skigit_id, 'csrfmiddlewaretoken': '{{csrf_token}}'},
+          success: function (response) {
+            if (response.is_success) {
+              if (response.unlike == 1 || response.unlike == '1') {
+                $j("#" + post_id).attr("title", "Like");
+                $j("#" + post_id).removeClass("like");
+                $j("#" + post_id).addClass("unlike");
+                $j("#" + post_id + "> img").attr("src", "/static/images/icons/heart(22x22).png");
+                $j('#like_count' +{{ skigit.skigit_id.id }}).text(parseInt(like_count) - 1)
+              }
+            }
+          },
+          error: function (rs, e) {
+            $j("#popup_msg").text("Error into like/unlike Skigit...! Please try again");
+            $j("#popScreen").show();
+          }
+        });
+      }
+    };
+
+
+    returnPicture = function () {
+      $j.ajaxSetup({async: false});
+      current_picture = '';
+      var video_id = "{{skigit.id}}";
+      $j.post("/vdo_thumbnail/get/", {video_id: video_id},
+        function (data, status) {
+          if (data.is_success) {
+            msg = data.message;
+            current_picture = data.url;
+          }
+          else {
+            return false;
+          }
+        });
+      $j.ajaxSetup({async: true});
+      return current_picture;
+    };
+
+    get_statistics_count = function (skigit_id, e) {
+      $j.ajax({
+        type: "POST",
+        url: "/skigit_statistics/",
+        data: {'skigit_id': skigit_id, 'csrfmiddlewaretoken': '{{csrf_token}}'},
+        success: function (response) {
+
+          if (response.is_success) {
+            $j('li').find('#id_plug_count').html(response.plug_count);
+            $j('li').find('#id_view_count').html(response.view_count);
+            $j('li').find('#id_favorites').html(response.fav_count);
+            $j('li').find('#id_likes').html(response.like_count);
+            $j('li').find('#id_share').html(response.share_count)
+          }
+        },
+        error: function (rs, e) {
+          $j("#popup_msg").text("Error into Skigit Statistic Please try again");
+          $j("#popScreen").show();
+        }
+      });
+    };
+
+    openPopup = function () {
+      $j('.msg_success').hide();
+    };
+
+    read_More = function () {
+      $j('#why_rocks_half').hide();
+      $j('#why_rocks_full').show();
+      $j('#read_more').hide();
+      $j('#hide_text').show()
+    };
+
+    hide_Text = function () {
+      $j('#why_rocks_half').show();
+      $j('#why_rocks_full').hide();
+      $j('#read_more').show();
+      $j('#hide_text').hide()
+    };
+
+    un_follow_follow = function () {
+
+      var follow_uid = $j("#follow_" +{{skigit.skigit_id.user_id}}).attr('data-cuid');
+      var follow_id = $j("#follow_" +{{skigit.skigit_id.user_id}}).attr('id');
+      var follow_clas = $j("#follow_" +{{skigit.skigit_id.user_id}}).attr('class');
+
+
+      if (follow_clas == 'unfollow') {
+        $j.ajax({
+          type: "POST",
+          url: "/unfollow/",
+          data: {
+            'follow_id': follow_uid,
+            'skigit_id': {{skigit.skigit_id.id}},
+            'csrfmiddlewaretoken': '{{csrf_token}}'
+          },
+          success: function (response) {
+            if (response.is_success) {
+              if (response.is_follow == 1 || response.is_follow == '1') {
+                $j("#" + follow_id).attr("title", "Un Follow");
+                $j("#" + follow_id).removeClass("unfollow");
+                $j("#" + follow_id).addClass("follow");
+                $j("#" + follow_id + "> img").attr("src", "{% static 'images/icons/follow(22x22).png' %}");
+              }
+            }
+          },
+          error: function (rs, e) {
+            $j("#popup_msg").text("Error into Follow/Un-Follow User...! Please try again.");
+            $j("#popScreen").show();
+          }
+        });
+      }
+      else if (follow_clas == 'follow') {
+
+        $j.ajax({
+
+          type: "POST",
+          url: "/follow/",
+          data: {'follow_id': follow_uid, 'csrfmiddlewaretoken': '{{csrf_token}}'},
+          success: function (response) {
+            if (response.is_success) {
+              if (response.is_follow == 1 || response.is_follow == '1') {
+                $j("#" + follow_id).attr("title", "Follow");
+                $j("#" + follow_id).removeClass("follow");
+                $j("#" + follow_id).addClass("unfollow");
+                $j("#" + follow_id + "> img").attr("src", "{% static 'images/icons/follow-golden(22x22).png'%}");
+              }
+            }
+          },
+          error: function (rs, e) {
+            $j("#popup_msg").text("Error into Follow/Un-Follow User...! Please try again.");
+            $j("#popScreen").show();
+          }
+        });
+      }
+    };
+  });
+
+</script>
+
+<script>
+  $zz = jQuery.noConflict()
+  internalEmbed{{ skigit.id }} = function () {
+    $zz(".confirmBox").addClass('open');
+    $zz(".p_body").css("display", "block");
+    $zz(".p_body").addClass('fade in').css('background-color', 'rgba(229, 246, 255, 0.76)');
+    $zz("#id_homeframe{{ skigit.id }}")[0].contentWindow.postMessage('{"event":"command","func":"' + 'pauseVideo' + '","args":""}', '*');
+  }
+</script>
+
+<script type="text/javascript" src="https://www.youtube.com/player_api"></script>
+
+<script>
+  $j = jQuery.noConflict();
+  $j(document).ready(function () {
+
+    $j(".count-s").click(function () {
+      $j(".count-target").addClass('open');
+      $j(".p_body").css("display", "block");
+    });
+
+    $j(".p_body").click(function () {
+      $j(".count-target").removeClass('open');
+      $j(".embed-skigit-target").removeClass('open');
+      $j(".p_body").css("display", "none");
+      $j(".p_body").removeClass('fade in').css('background-color', 'none');
+      $j(".confirmBox").removeClass('open');
+      {#$j("#id_homeframe{{ skigit.id }}")[0].contentWindow.postMessage('{"event":"command","func":"' + 'playVideo' + '","args":""}', '*');#}
+      $j('#embed_preview{{ skigit.id }}')[0].contentWindow.skigt_embed_stop()
+    });
+
+    $j(".embed-skigit-img").click(function () {
+      $j(".embed-skigit-target").addClass('open');
+      $j(".p_body").css("display", "block");
+      $j(".p_body").addClass('fade in').css('background-color', 'rgba(229, 246, 255, 0.76)');
+      $j("#id_homeframe{{ skigit.id }}")[0].contentWindow.postMessage('{"event":"command","func":"' + 'pauseVideo' + '","args":""}', '*');
+    });
+
+    // Inject YouTube API script
+    var tag = document.createElement('script');
+    tag.src = "//www.youtube.com/player_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    $j('.modal').on('hidden.bs.modal', function () {
+      $j("iframe").each(function () {
+        this.contentWindow.postMessage('{"event":"command","func":"' + 'stopVideo' + '","args":""}', '*');
+      });
+      if ($j('#embed_preview{{ skigit.id }}')[0]) {
+        $j('#embed_preview{{ skigit.id }}')[0].contentWindow.skigt_embed_stop()
+
+        if ($j('#show_preview{{ skigit.id }}').text() == 'Show Preview') {
+          $j('#show_preview{{ skigit.id }}').text('Hide Preview')
+        }
+        else {
+          $j('#show_preview{{ skigit.id }}').text('Show Preview')
+        }
+        $j("#_show_hide{{ skigit.id }}").slideToggle();
+        $j(".embed-skigit-target").removeClass('open');
+        $j(".p_body").css("display", "none");
+        $j(".p_body").removeClass('fade in').css('background-color', 'none');
+      }
+    });
+
+    /*** Stop playing Video on Model Box Close ***/
+    $j('.close_btn').click(function () {
+      $j("iframe").each(function () {
+        this.contentWindow.postMessage('{"event":"command","func":"' + 'stopVideo' + '","args":""}', '*');
+      });
+      if ($j('#embed_preview{{ skigit.id }}')[0]) {
+        $j('#embed_preview{{ skigit.id }}')[0].contentWindow.skigt_embed_stop()
+
+        if ($j('#show_preview{{ skigit.id }}').text() == 'Show Preview') {
+          $j('#show_preview{{ skigit.id }}').text('Hide Preview')
+        }
+        else {
+          $j('#show_preview{{ skigit.id }}').text('Show Preview')
+        }
+        $j("#_show_hide{{ skigit.id }}").slideToggle();
+        $j(".embed-skigit-target").removeClass('open');
+        $j(".p_body").css("display", "none");
+        $j(".p_body").removeClass('fade in').css('background-color', 'none');
+      }
+    });
+
+    $j('#show_preview{{ skigit.id }}').click(function () {
+      $j('#embed_preview{{ skigit.id }}')[0].contentWindow.skigt_embed_stop()
+      if ($j('#show_preview{{ skigit.id }}').text() == 'Show Preview') {
+        $j('#show_preview{{ skigit.id }}').text('Hide Preview')
+      }
+      else {
+        $j('#show_preview{{ skigit.id }}').text('Show Preview')
+      }
+      $j("#_show_hide{{ skigit.id }}").slideToggle();
+    });
+
+    $j('#id_ex_yes_embed_{{ skigit.id }}').click(function () {
+      $j.ajax({
+        type: "POST",
+        url: "/invoice/external-embed-invoice/",
+        data: {'skigit_id': {{ skigit.id }}},
+        success: function (response) {
+          if (response.is_success) {
+            $j('#id_embed_ex_box{{ skigit.id }}').show();
+            $j('#id_embed_ex_info{{ skigit.id }}').hide();
+          }
+        }
+      });
+    });
+
+    $j('#ok_embed_{{ skigit.id }}').click(function () {
+
+      $j.ajax({
+        type: "POST",
+        url: "/friends/internal-embed-post/",
+        data: {
+          'skigit_id': {{ skigit.skigit_id.id }}, 'from_id': {{ skigit.skigit_id.user.id }},
+          'to_id': {{ request.user.id }}, 'type': 'internal', 'csrfmiddlewaretoken': '{{csrf_token}}'
+        },
+        success: function (response) {
+          if (response.is_success) {
+            $j('#msg_toster').html('Skigit "{{ skigit.title }}" Embed Successful.')
+            $j('#msg_toster').show()
+            $j(".confirmBox").removeClass('open');
+            $j(".p_body").css("display", "none");
+            $j(".p_body").removeClass('fade in').css('background-color', 'none');
+            $j("#id_homeframe{{ skigit.id }}")[0].contentWindow.postMessage('{"event":"command","func":"' + 'playVideo' + '","args":""}', '*');
+            $j('#embed_preview{{ skigit.id }}')[0].contentWindow.skigt_embed_stop()
+            setTimeout(function () {
+              $j('#msg_toster').empty()
+              $j('#msg_toster').hide()
+            }, 2500)
+          }
+        },
+        error: function (rs, e) {
+          $j("#popup_msg").text("Error into Internel Embed Skigit...! Please try again");
+          $j("#popScreen").show();
+        }
+      });
+    });
+
+    $j('#no_embed_{{ skigit.id }}').click(function () {
+      $j(".p_body").css("display", "none");
+      $j(".p_body").removeClass('fade in').css('background-color', 'rgba(0, 0, 0, .4)');
+      $j(".confirmBox").removeClass('open');
+      $j("#id_homeframe{{ skigit.id }}")[0].contentWindow.postMessage('{"event":"command","func":"' + 'playVideo' + '","args":""}', '*');
+    });
+
+    $j('.close_embed').click(function () {
+      $j(".embed-skigit-target").removeClass('open');
+      $j(".p_body").css("display", "none");
+      $j(".p_body").removeClass('fade in').css('background-color', 'none');
+      $j("#id_homeframe{{ skigit.id }}")[0].contentWindow.postMessage('{"event":"command","func":"' + 'playVideo' + '","args":""}', '*');
+      $j('#embed_preview{{ skigit.id }}')[0].contentWindow.skigt_embed_stop()
+    });
+
+    $j('#btn_fb_comment_expand{{ skigit.id }}').click(function () {
+      if ($j(this).closest('[title]').attr('title') == 'Hide') {
+        $j(this).attr('title', 'Show');
+      }
+      else {
+        $j(this).attr('title', 'Hide');
+      }
+      $j("#fbcomment{{ skigit.id }}").slideToggle();
+    });
+  });
+
+  set_return = function() {
+    if (document.referrer.indexOf('?') > -1) {
+      if (document.referrer.split('?')[1].indexOf('id') > -1) {
+        window.location = document.referrer.split('?')[0];
+      }
+    } else {
+        history.back();
+    }
+  }
+
+</script>
+
+<div class="p_body js__p_body"></div>
+<div class="notify_join_msg mobile" style="display: none; ">
+  <div style='top: 0px; z-index:99999;' class='info message'>
+    <h3 style="font-family: segoe_print !important;font-size: 36px!important;">
+      You must be a Skigit member to access this feature. <br class="hidden-lg hidden-md" />
+      <a href="/register" style='color:#FFC90E !important; text-decoration:underline !important;font-size: 50px!important;'>Join Today!
+	  </a>
+    </h3>
+  </div>
+</div>
+
+<div class="modal-header no-mar" id="showModalpopup" style="background-color: #e6f3f7">
+
+ <div class="col-xs-3 text-center" style="top: 15px; margin-bottom: 100px; display:block; margin-left:auto;margin-right:auto; width:100%;">
+      {% if skigit.category|safe == "Dramaskigit" %}
+        <a href="/category/dramaskigit.html">
+          <img src="{% static 'images/drama_skigit_logo.png' %}" class="img1" style="width:25%"  />
+        </a>
+      {% elif skigit.category|safe == "Vibraskigit" %}
+        <a href="/category/vibraskigit.html">
+          <img src="{% static 'images/vibra-skigit-logo.png' %}" class="img1"  style="width:25%"/>
+        </a>
+      {% elif skigit.category|safe == "Demoskigit" %}
+        <a href="/category/demoskigit.html">
+          <img src="{% static 'images/demo-skigit-logo.png' %}" class="img1" style="width:25%"/>
+        </a>
+      {% elif skigit.category|safe == "Selfieskigit" %}
+        <a href="/category/selfieskigit.html">
+          <img src="{% static 'images/selfie-skigit-logo.png' %}" class="img1" style="width:25%" />
+        </a>
+      {% elif skigit.category|safe == "Wackiskigit" %}
+        <a href="/category/wackiskigit.html">
+          <img src="{% static 'images/wacki-skigit-logo.png' %}" class="img1" style="width:25%"/>
+        </a>
+      {% endif %}
+
+	  <a href="javascript:set_return()" class="close_btn pull-right" aria-label="Close" style="top:25px">
+      <img src="{% static 'images/close(20x20).png' %}" height="60" width="60"/>
+    </a>
+
+	</div>
+
+  <div class="row mar_zero padd_zero ski_header">
+
+
+
+    <div class="col-xs-12 text-center padd_zero" style="margin-top: -50px; margin-bottom:50px">
+
+      <div class=" col-xs-12 padd_zero">
+        <div class="col-xs-12 padd_zero text-center" >
+          <h2 class="modal-title f_type" id="myModalLabel" style="font-family: 'segoe_print!important; color: #000 !important; line-height: 150% !important; font-size:38px !important;">{{ skigit.title }}</h2>
+        </div>
+      </div>
+
+      <small class="f_type" >By
+        {% if request.user.is_authenticated %}
+          <a class="blue f_type" target="_blank" href="{% url 'user_profile_display' skigit.skigit_id.user.username %}" style="font-size:44px !important; white-space: nowrap;overflow: hidden;text-overflow: ellipsis; max-width: 300px;text-align: center;display: inline-block;">
+            {{ skigit.skigit_id.user.username }}
+          </a>
+        {% else %}
+          <a onclick="openMessage()" style="font-size:44px !important; white-space: nowrap;overflow: hidden;text-overflow: ellipsis; max-width: 300px;text-align: center;display: inline-block;">
+            {{ skigit.skigit_id.user.username }}
+          </a>
+        {% endif %}
+        on {{ skigit.created_date|date:"d, F, Y"|lower }}
+      </small>
+    </div>
+
+  </div>
+ <div class="row mar_zero">
+<div class="col-sm-4 col-xs-4"></div>
+<div class="col-sm-8 col-xs-8 padd_zero text-center margin_top_10 skigit_content_wrap"
+          id="video_actions" data-skigt="{{ skigit.id }}">
+  <ul id="video_actions_ul" class="list-inline" id="videoAction">
+
+      {% if request.user.is_authenticated %}
+        <li id="inappropriate" class=" dropdown text-center">
+              <a title="Inappropriate" dropdown-toggle data-toggle="dropdown">
+                <img
+                    src="{% static 'images/icons/flag(22x22).png' %}" class="img-responsive" style="margin-left: -30px;">
+              </a>
+              <ul class="dropdown-menu flag-drop">
+                <div class="descibe">
+                  <!--<span class="glyphicon glyphicon glyphicon-triangle-top"></span>-->
+                  <center><img src="{% static 'images/Skigit_gif.gif' %}" width="200px;" height="200px;"/></center>
+
+                  <h2 style="font-family: Segoe_Print !important;">Inappropriate Skigit</h2>
+                  <div class="reason-box">
+                    <form action="" method="post" id="inapp_form{{ skigit.id }}">
+                      {% csrf_token %}
+                      <b> </b>
+                      {% for reasion in all_reasion %}
+                        <div class=" form-group list-group-item"
+                             style="border: none; background: transparent; background-color: transparent; margin-bottom:-15px; ">
+                          <label>
+                            <input type="radio" skigit_reasons="{{ reasion.id }}" skigit_id="{{ skigit.skigit_id.id }}"
+                                   value="{{ reasion.id }}" id="{{ reasion.id }}" name="skigit_reasons"/>
+                            {{ reasion.reason_title }}
+                          </label>
+                        </div>
+                      {% endfor %}
+                      <input type="hidden" name="csrfmiddlewaretoken" value="$csrf_token"/>
+                    </form>
+                    <div class="form-group mrg-top flag_btn">
+                      <input type="button" onclick="flagSubmit({{ skigit.id }})" id="inapp_form_sub" value="Submit">
+                      <input type="button" onclick="flagCancel({{ skigit.id }})" id="inapp_flag_can" value="Cancel">
+                    </div>
+                    <div class="form-group mrg-top" style="text-align: center;">
+                      <label class="form-group" style='font-family: Segoe_Print; font-size:34px;'
+                             id="flag_msg{{ skigit.id }}"/>
+                    </div>
+                  </div>
+                </div>
+              </ul>
+            </li>
+
+
+        <li class="text-center">
+              <a title="Copyright" href="{% url 'copyright_infringement' skigit.id %}">
+                <img
+                    src="{% static 'images/icons/copyright(22x22).png' %}" class="img-responsive">
+              </a>
+            </li>
+
+          {% else %}
+        <li id="inappropriate" class=" dropdown text-center">
+              <a title="Inappropriate" onclick="openMessage()" data-toggle="modal" data-dismiss="modal">
+                <img src="{% static 'images/icons/flag(22x22).png' %}" class="img-responsive">
+              </a>
+            </li>
+        <li class="text-center">
+              <a title="Copyright" onclick="openMessage()" data-toggle="modal" data-dismiss="modal">
+                <img src="{% static 'images/icons/copyright(22x22).png' %}" class="img-responsive">
+              </a>
+            </li>
+
+          {% endif %}
+        <li class="text-center">
+          <a id='id_statistic' title="Statistics" onclick="get_statistics_count({{ skigit.skigit_id.id }})">
+            <img src="{% static 'images/icons/statastic(22x22).png' %}" class="img-responsive count-s" style="margin-left: 30px;">
+          </a>
+
+          <div class="count-target">
+            <!--<span class="glyphicon glyphicon glyphicon-triangle-top"></span>-->
+            <ul>
+              <li><span>Plugs</span><label id="id_plug_count">0</label></li>
+              <li><span>Views</span><label id="id_view_count">0</label></li>
+              <li><span>Favorites</span><label id="id_favorites">0</label></li>
+              <li><span>Likes</span><label id="id_likes">0</label></li>
+              <li><span>Shares</span><label id="id_share">0</label></li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+  </div>
+</div>
+  <div class="modal-body no-mar">
+    <div class="modal-body no-mar">
+      <div class="te">
+      </div>
+    </div>
+    <div class="row mar_zero">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 padd_zero">
+        <section>
+          {% if skigit.skigit_id.youtube_url %}
+            <video id='id_homeframe{{ skigit.id }}' height="360" class='video-js vjs-default-skin vjs-fill vjs-big-play-centered' controls preload='auto'
+                   poster="{{ skigit.skigit_id.thumbnails.all.0.get_absolute_url }}"
+                   data-setup='{"autoplay": false,
+                   "techOrder": ["youtube"], "sources": [{ "type": "video/youtube", "src": "{{ skigit.skigit_id.get_absolute_url }}"}],
+                   "youtube": {"rel": 0, "showinfo": 0, "enablejsapi": 1, "iv_load_policy": 3 }}'>
+              <p class='vjs-no-js'>
+                To view this video please enable JavaScript, and consider upgrading to a web browser that
+                <a href='https://videojs.com/html5-video-support/' target='_blank'>supports HTML5 video</a>
+              </p>
+            </video>
+
+            {% else %}
+            <video id='id_homeframe{{ skigit.id }}' class='homeframe video-js vjs-default-skin vjs-fill vjs-big-play-centered' controls preload='auto'
+                   poster="{{ skigit.skigit_id.thumbnails.all.0.get_absolute_url }}"
+                   data-setup='{"controls": true, "autoplay": false, "preload": "auto", "fluid": true, "aspectRatio":"16:9", }'>
+              <source src='{{ skigit.skigit_id.get_absolute_url }}' type="video/mp4" />
+              <p class='vjs-no-js'>
+                To view this video please enable JavaScript, and consider upgrading to a web browser that
+                <a href='https://videojs.com/html5-video-support/' target='_blank'>supports HTML5 video</a>
+              </p>
+            </video>
+            {% endif %}
+        </section>
+      </div>
+    </div>
+
+    <div class="row mar_zero">
+      <div class="col-sm-12 col-xs-12 padd_zero margin_top_10 text-center">
+        <ul class="list-inline bug_menu menu_decmenu" id="video_about">
+          <li class="about_your_things" style="padding-top: 10px; font-family: Segoe_Print !important; font-size: 46px">
+            {% if request.user.is_authenticated %}
+              <a href="{{ skigit.subject_category.get_absolute_url }}" title="{{ skigit.subject_category }}">
+                {% if skigit.subject_category|wordcount >= 3 %}
+                  {{ skigit.subject_category }}
+                {% endif %}
+              </a>
+            {% else %}
+             <a onclick="openMessage()" data-toggle="modal" data-dismiss="modal">
+                {% if skigit.subject_category|wordcount >= 3 %}
+                  {{ skigit.subject_category }}
+                {% endif %}
+              </a>
+            {% endif %}
+          </li>
+          <li class="about_your_things" style="font-size: 46px; margin-left: 100px">
+            {% if request.user.is_authenticated %}
+              <a onclick="learnMoreClick({{ skigit.skigit_id.user.id }}, {{ skigit.skigit_id.id }}, '{{ skigit.bought_at_url }}')"
+                 title="Learn More About my Awesome Thing"
+                 >Learn more
+              </a>
+            {% else %}
+              <a href="#" title="Learn More About my Awesome Thing" onclick="openMessage()" data-toggle="modal"
+                 data-dismiss="modal">
+                Learn More
+              </a>
+            {% endif %}
+          </li>
+        </ul>
+      </div>
+      <div class="col-sm-12 col-xs-12 padd_zero text-center margin_top_10 skigit_content_wrap"
+          id="video_actions" data-skigt="{{ skigit.id }}">
+        <ul id="video_actions_ul" class="list-inline" id="videoAction">
+
+          {% if request.user.is_authenticated %}
+            <li class="text-center nav-item">
+              <a href="{% url 'skigit_plugin' skigit.id %}"
+                 title="plug In" class="nav-link">
+                <img src="{% static 'images/icons/plug(40x40).png' %}" class="img-responsive">
+              </a>
+            </li>
+            <li class="text-center nav-item">
+              <a href="{% url 'my_skigits_view' skigit.skigit_id.user.id %}"
+                 title="View creators other work">
+                <img src="{% static 'skigit/detube/images/eye-blue.png' %}" class="img-responsive">
+              </a>
+            </li>
+            <input type="hidden" id="id_csrf_token" value="{{ csrf_token }}">
+
+            {% if skigit.skigit_id.id in video_likes %}
+              <li class="text-center">
+                <a class="like" onclick="like_{{ skigit.skigit_id.id }}_unlike()" id="like_{{ skigit.skigit_id.id }}"
+                   data-userid="1" title="Unlike" data-pid="{{ skigit.skigit_id.id }}">
+                  <img src="{% static 'images/icons/heart_liked(22x22).png' %}" class="img-responsive"/>
+                </a>
+              </li>
+
+            {% else %}
+
+              <li class="text-center">
+                <a class="unlike" onclick="like_{{ skigit.skigit_id.id }}_unlike()" id="like_{{ skigit.skigit_id.id }}"
+                   data-userid="1" title="Like" data-pid="{{ skigit.skigit_id.id }}">
+                  <img src="{% static 'images/icons/heart(22x22).png' %}" class="img-responsive"/>
+                </a>
+              </li>
+
+            {% endif %}
+
+            <li class="text-center">
+              <a title="Follow">
+                {% if skigit.skigit_id.user_id in video_follow %}
+                  <li class="followspan">
+                    <a onclick="un_follow_follow()" id="follow_{{ skigit.skigit_id.user_id }}"
+                       class="unfollow" data-cuid="{{ skigit.skigit_id.user_id }}"
+                       title="Unfollow">
+                      <img src="{% static 'images/icons/follow-golden(22x22).png' %}" class="img-responsive">
+                    </a>
+                  </li>
+                {% else %}
+                  <li class="followspan">
+                    <a onclick="un_follow_follow()" id="follow_{{ skigit.skigit_id.user_id }}"
+                       class="follow" data-cuid="{{ skigit.skigit_id.user_id }}"
+                       title="Follow">
+                      <img src="{% static 'images/icons/follow(22x22).png' %}" class="img-responsive">
+                    </a>
+                  </li>
+                {% endif %}
+            </li>
+            <li class="text-center libnk_skigitshair">
+              <a class="skigit_share" onclick="get_date_popup({{ skigit.id }})" data-toggle="clickoverr{{ skigit.id }}"
+                 id="share_popoverr1{{ skigit.id }}">
+                <img src="{% static 'images/icons/sharing(22x22).png' %}"
+                     class="share text-center img-responsive" title="Share">
+              </a>
+            </li>
+            <div class="tabbable hide custom_popup" id="shareContentt{{ skigit.id }}">
+              <div class="tabbox">
+                <ul class="nav nav-tabs">
+                  <li class="tab active"><a href="#sharetab1{{ skigit.id }}" data-toggle="tab">Skigit Friends</a></li>
+                  <li class="tab"><a href="#sharetab2{{ skigit.id }}" data-toggle="tab">Email Friends</a></li>
+                </ul>
+
+                <div class="tab-content" style="padding-top: 15px">
+
+                  <div class="tab-pane active" id="sharetab1{{ skigit.id }}">
+
+                    {% if friend_list %}
+
+                      <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 f_type">
+                          <div class="col-lg-8 col-md-8 col-sm-8 " style="padding-bottom: 10px;">
+                            <input type="text" class="search-query form-control f_type"
+                                   id="friend_share_textt{{ skigit.id }}" autocomplete="off" autocorrect="off"
+                                   spellcheck="false" placeholder="Search friend username"/>
+                          </div>
+                          <div class="col-lg-4 col-md-4 col-sm-4 check_box_sapn">
+                            <label class="selectall_label" id="selectall_label{{ skigit.id }}">All &nbsp;
+                              <input type="checkbox" value="" class="select_alll{{ skigit.id }}"
+                                     name="select_alll{{ skigit.id }}" id="select_alll{{ skigit.id }}"/>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+
+                      <ul class="list-group notification_ul " style="border:1px solid #eee !important;"
+                          id="fsharee{{ skigit.id }}">
+                        {% for friend in friend_list %}
+                          <li class="list-group-item col-lg-12 col-md-12 col-sm-12 f_type"
+                              style="font-size: smaller; text-align: center;">
+                            <img class="avatar" height="30" width="30" src="{{ friend.image }}"/>
+                            <label class="f_type" style="margin-left: 10px;">{{ friend.name }}</label>
+                            <label class="f_type share_date" id='id_date_label_popup{{ skigit.id }}{{ friend.uid }}'
+                                   style="margin-left: 10px;font-size: 28px!important;">
+                              {% for ski in skigit_list %}
+                                {% if friend.username == ski.username %}
+                                  {{ ski.share_date }}
+                                {% endif %}
+                              {% endfor %}
+                            </label>
+                            <label id="circle" {% for luser in users %} {% if friend.uid == luser %}
+                                   style="background: #fff!important;" {% endif %}{% endfor %} ></label>
+                            <span id="check_box_sapn">
+                              <input class="shareCheckBox" type="checkbox"
+                                     onclick="shareboxx({{ friend.uid }},{{ skigit.id }})"
+                                     name="shareboxx{{ skigit.id }}{{ friend.uid }}"
+                                     value="{{ friend.uid }}"
+                                     id="shareboxx{{ skigit.id }}{{ friend.uid }}"/>
+                            </span>
+                          </li>
+                        {% endfor %}
+                      </ul>
+
+                      <div class="button_share_div">
+                        <span class="f_type" id="flabel_count"
+                              style="font-size: 32px; color:lightslategray">{{ friend_list|length }} friends found</span>
+                        <button class="button_share" id="button_share{{ skigit.id }}" name="button_share{{ skigit.id }}"
+                                onclick="shareToFriends1({{ skigit.id }})" style="float:right">Share
+                        </button>
+                      </div>
+
+                      <div>
+                        <label id="share_msg{{ skigit.id }}" class="f_type"></label>
+                      </div>
+
+                    {% else %}
+
+                      <ul class="list-group notification_ul " style="border:1px solid #eee !important;"
+                          id="frnd_notification">
+                        <li class="f_type" style="align-content: center; text-align: center;">
+                          <center>
+                            <p>No friends found for Share Skigit.</p>
+                          </center>
+                        </li>
+                      </ul>
+
+                    {% endif %}
+
+                    <script>
+                      $j = jQuery.noConflict();
+                      $j(document).ready(function () {
+                        $j('#friend_share_textt{{skigit.id}}').keyup(function (e) {
+                          var currentTimezone = jstz.determine();
+                          var timezone = currentTimezone.name();
+                          console.log($j(this).val());
+                          $j.ajax({
+                            url: "/friends/friend-share-search/",
+                            type: "POST",
+                            data: {
+                              'search_text': $j(this).val(),
+                              'video_id':{{skigit.id}},
+                              'time_zone': timezone,
+                              csrfmiddlewaretoken: '{{ csrf_token }}'
+                            },
+                            success: function (data) {
+
+                              if (data.result) {
+                                $j('#fsharee{{ skigit.id }}').empty();
+                                $j('.shareCheckBox').remove();
+                                if ($j('#select_alll' +{{ skigit.id }}).is(':checked')) {
+                                  $j('#select_alll' +{{ skigit.id }}).prop('checked', false)
+                                }
+                                if (data.search_list.length <= 1) {
+                                  $j('#select_alll' +{{ skigit.id }}).attr('disabled', 'disable')
+                                }
+                                else {
+                                  $j('#select_alll' +{{ skigit.id }}).removeAttr('disabled')
+                                }
+                                for (var i = 0; i < data.search_list.length; i++) {
+
+                                  var friends_id = data.search_list[i]['uid'];
+                                  var image = data.search_list[i]['image'];
+                                  var username = data.search_list[i]['username'];
+                                  var share_date = data.search_list[i]['share_date'];
+                                  var name = data.search_list[i]['name'];
+
+                                  var fshare_list = '<li class="list-group-item col-lg-12 col-md-12 col-sm-12 f_type" style="color:#bbb9b9; border:1px solid #fff !important; font-size: smaller; text-align: center;">' +
+                        '<a href="/profile/' + username + '"><img class="avatar" height="30" width="30" src="' + image + '"/></a>' +
+                        '<a href="/profile/' + username + '"><label class="f_type" style="margin-left: 10px;">' + name + '</label></a>' +
+                        '<label class="f_type share_date">' + share_date + '</label>' +
+                        '<span id="check_box_sapn">' +
+                        '<input class="shareCheckBox" type="checkbox" onclick="sharebox(' + friends_id + ', {{ skigit.id }})" name="sharebox{{ skigit.id }}" value="' + friends_id + '" id="sharebox" />' +
+                        '</span></li>';
+
+                                  $j('#fsharee{{ skigit.id }}').append(fshare_list);
+                                }
+                              }
+                              else {
+                                $j('#fsharee{{ skigit.id }}').empty()
+                                $j('#flabel_count').html('No frienda found')
+                              }
+                              if (data.search_list.length > 0) {
+                                $j('#flabel_count').html(data.search_list.length + ' friends found.')
+                              }
+                              else {
+                                $j('#flabel_count').html('No friends found.')
+                              }
+                              e.stopPropagation()
+                              e.preventDefault
+                            }
+                          });
+                        });
+                      });
+                    </script>
+
+                  </div>
+
+                  <div class="tab-pane" id="sharetab2{{ skigit.id }}">
+
+                    <form id="email_share_formm{{ skigit.id }}">
+                      {% csrf_token %}
+                      <div class="form-group">
+                        <input type="text" autocomplete="off" autocorrect="off" spellcheck="false"
+                               id="idEmailSharee" name="emailShareInputt"
+                               class="form-control f_type" placeholder="Enter friends Email Address">
+                      </div>
+                      <div class="form-group">
+                        <input type="button" class="button_share" type="button"
+                               id="email_share_btnn{{ skigit.id }}" style="float:right;
+                                                   margin-bottom: 20px;" value="Share"/>
+                      </div>
+                      <center>
+                        <label for="idEmailSharee" class="f_type" id="share_success_labell{{ skigit.id }}"></label>
+                      </center>
+                      <label for="idEmailSharee" id="share_error_labell" class="error"></label>
+                    </form>
+
+                    <script type="text/javascript"
+                            src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.js"></script>
+
+                    <script type="text/javascript">
+
+                      $j = jQuery.noConflict();
+                      $j(document).ready(function () {
+
+                        emailShareValidaion1{{ skigit.id }} = function () {
+
+                          $j.validator.addMethod("multiEmailSharee", function (value, element) {
+                            if (this.optional(element)) {
+                              return true;
+                            }
+                            value = value.replace(/(,$)/g, "");
+                            var emails = value.split(/,/), valid = true;
+                            for (var i = 0, limit = emails.length; i < limit; i++) {
+                              value = emails[i].trim();
+                              valid = valid && $j.validator.methods.email.call(this, value, element);
+                            }
+                            return valid;
+                          }, "Invalid email format: please use a comma (,) to separate multiple email addresses.");
+
+                          var emailShareForm = $j("#email_share_formm{{ skigit.id }}");
+
+                          errorLabelContainer: '#errors',
+                            emailShareForm.validate({
+                              rules: {
+                                'emailShareInputt': {
+                                  required: true,
+                                  multiEmailSharee: true
+                                }
+                              },
+                              messages: {
+                                'emailShareInputt': {
+                                  required: 'Enter friends email address to skigit share.'
+                                }
+                              }
+                            });
+                          return emailShareForm.valid()
+                        };
+
+                        $j('#email_share_btnn{{ skigit.id }}').click(function () {
+                          emailShareValidaion1{{ skigit.id }}();
+                          if (emailShareValidaion1{{ skigit.id }}()) {
+                            var email_list = ($j('#idEmailSharee').val().replace(/(,$)/g, "")).trim();
+
+                            $j('#email_share_btnn{{ skigit.id }}').prop('disable', true);
+                            $j('#share_success_labell{{ skigit.id }}').empty();
+                            $j('#share_success_labell{{ skigit.id }}').html('Please Wait...').css('color', 'orange');
+                            $j.ajax({
+                              url: "/email-share-skigit/",
+                              type: "POST",
+                              data: {
+                                'email_list': email_list,
+                                'video_id': {{ skigit.id }},
+                                csrfmiddlewaretoken: '{{ csrf_token }}'
+                              },
+                              success: function (data) {
+
+                                if (data.is_success) {
+
+                                  $j('#share_success_labell{{ skigit.id }}').html('Skigit share successful').css('color', 'green');
+                                  $j("#email_share_formm{{ skigit.id }}")[0].reset();
+                                  $j('#email_share_btnn{{ skigit.id }}').prop('disabled', false);
+
+                                  setTimeout(function () {
+                                    $j('#share_success_labell{{ skigit.id }}').empty()
+                                  }, 2500)
+                                }
+                              }
+                            });
+                          }
+                        });
+                      });
+
+                    </script>
+
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+            {% if skigit.skigit_id.id in video_favorite %}
+              <li class="text-center">
+                <a class="favorite" onclick="fav_un_fav()" id="fav_{{ skigit.skigit_id.id }}"
+                   data-userid="1" title="Remove Favourite"
+                   data-pid="{{ skigit.skigit_id.id }}">
+                  <img src="{% static 'images/star-golden.png' %}" class="img-responsive"/>
+                </a>
+              </li>
+            {% else %}
+              <li class="text-center">
+                <a class="unfavorite" onclick="fav_un_fav()" id="fav_{{ skigit.skigit_id.id }}"
+                   data-userid="1" title="Add to Favourite"
+                   data-pid="{{ skigit.skigit_id.id }}">
+                  <img src="{% static 'images/icons/favorites(22x22).png' %}" class="img-responsive"/>
+                </a>
+              </li>
+            {% endif %}
+          {% else %}
+            <li class="text-center">
+              <a onclick="openMessage()" data-toggle="modal" data-dismiss="modal" title="plug In">
+                <img src="{% static 'images/icons/plug(40x40).png' %}" class="img-responsive">
+              </a>
+            </li>
+            <li class="text-center">
+              <a onclick="openMessage()" data-toggle="modal" data-dismiss="modal" title="View creators other Skigits ">
+                <img src="{% static 'images/eye-blue.png' %}" class="img-responsive">
+              </a>
+            </li>
+            <li class="text-center">
+              <a class="liked" onclick="openMessage()" data-toggle="modal" data-dismiss="modal" title="Like">
+                <img src="{% static 'images/icons/heart(22x22).png' %}" class="img-responsive"/>
+              </a>
+            </li>
+            <li class="followspan">
+              <a onclick="openMessage()" data-toggle="modal" data-dismiss="modal" title="Follow">
+                <img src="{% static 'images/icons/follow(22x22).png' %}" class="img-responsive">
+              </a>
+            </li>
+            <li class="text-center">
+              <a onclick="openMessage()" data-toggle="modal" data-dismiss="modal" title="Share">
+                <img src="{% static 'images/icons/sharing(22x22).png' %}" class="img-responsive">
+              </a>
+            </li>
+            <li class="text-center">
+              <a class="favorites" onclick="openMessage()" data-toggle="modal" data-dismiss="modal"
+                 title="Add to Favourite">
+                <img src="{% static 'images/icons/favorites(22x22).png' %}" class="img-responsive"/>
+              </a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+    <div class="row mar_zero share-ico">
+      <div class="col-sm-12 col-xs-12 padd_zero text-center margin_top_10" id="video_logo">
+
+        {% if skigit.business_logo.id %}
+          {% if skigit.made_by and skigit.business_logo.is_deleted == False %}
+            {% if request.user.is_authenticated %}
+              <a href="javascript:void(0);" onclick="logoclick({{ skigit.business_logo.id }}, '/sperk/{{ skigit.made_by.id }}/{{ skigit.business_logo.id }}/');return true;">
+                {% if skigit.business_logo %}
+                  <img class="img-responsive" id="bs_logo" src="{{ skigit.business_logo.logo.url }}"/>
+                {% endif %}
+              </a>
+            {% else %}
+              <a onclick="openMessage()" data-toggle="modal" data-dismiss="modal">
+                {% if skigit.business_logo %}
+                  <img class="img-responsive" id="bs_logo" src="{{ skigit.business_logo.logo.url }}"/>
+                {% endif %}
+              </a>
+            {% endif %}
+          {% else %}
+
+            {% for def in default_logo %}
+              {% if def.made_by == skigit.made_by.id %}
+                {% if skigit.business_logo %}
+                  {% if request.user.is_authenticated %}
+                    <a href="javascript:void(0);" onclick="logoclick({{ def.business_logo.id }}, '/sperk/{{ def.made_by }}/{{ def.business_logo.id }}/');return true;">
+                      <img class="img-responsive" id="bs_logo" src="{{ def.business_logo.logo.url }}"/>
+                    </a>
+                  {% else %}
+                    <a onclick="openMessage()" data-toggle="modal" data-dismiss="modal">
+                      <img class="img-responsive" id="bs_logo" src="{{ def.business_logo.logo.url }}"/>
+                    </a>
+                  {% endif %}
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+
+          {% endif %}
+        {% else %}
+
+        {% endif %}
+      </div>
+
+    </div>
+    <div class="row mar_zero share-ico">
+      <div id="" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <input type="hidden" id="id_time_zone" name="time_zone" value="">
+        <ul class="share-ico text-center" style="margin-left: -100px">
+          <li style="font-family:Segoe_Print !important; margin-top:30px; font-size: 32px; margin-left: -20px;">Post</li>
+          <li>
+            <a id="fb_post" title="Facebook"
+               onclick="socialPost({{ skigit.skigit_id_id }}, {{ skigit.skigit_id.user.id }}, 'facebook');
+                   pic_url=returnPicture();
+                   javascript:void window.open('https://www.facebook.com/v2.8/dialog/share?app_id=610672356545332&display=popup&caption={% if request.is_secure %}https://{% else %}http://{% endif %}{{ request.get_host }}&href={% if request.is_secure %}https://{% else %}http://{% endif %}{{ request.get_host }}/skigit_data/{{ skigit.id }}/?id={{ skigit.id }}&quote={{ skigit.title }}&picture={{ video_share_url }}', 'width=700, height=500, toolbar=0, menubar=0, location=0, status=1, scrollbars=1, resizable=1, left=0, top=0'); return false;">
+             <img src="{% static 'images/icons/SN_link_FB.png' %}" width="125" height="125">
+            </a>
+          </li>
+          <li>
+            <a title="Twitter"
+               onclick="socialPost({{ skigit.skigit_id_id }}, {{ skigit.skigit_id.user.id }}, 'twitter');
+                   javascript:void window.open('https://twitter.com/share?url={% if request.is_secure %}https://{% else %}http://{% endif %}{{ request.get_host }}/skigit_data/{{ skigit.id }}/?id={{ skigit.id }}&via=Skigit&related=Skigit,Dramaskigit,WakiSkigit', 'left=0, top=0, width=550, height=450, personalbar=0, toolbar=0, scrollbars=0, resizable=0');return false;">
+              <img src="{% static 'images/icons/SN_link_Twitter.png' %}" width="125" height="125">
+            </a>
+          </li>
+          <li>
+            <a title="Google+"
+               onclick="socialPost({{ skigit.skigit_id_id }}, {{ skigit.skigit_id.user.id }}, 'google');
+                   javascript:void window.open('https://plus.google.com/share?url={% if request.is_secure %}https://{% else %}http://{% endif %}{{ request.get_host }}/skigit_data/{{ skigit.id }}/?id={{ skigit.id }}', 'width=700, height=500, toolbar=0, menubar=0, location=0, status=1, scrollbars=1, resizable=1, left=0, top=0');return true;">
+              <img src="{% static 'images/icons/SN_link_Google.png' %}" width="125" height="125">
+            </a>
+          </li>
+          <li>
+            <a title="Linkedin"
+               onclick="socialPost({{ skigit.skigit_id_id }}, {{ skigit.skigit_id.user.id }}, 'linkedin');
+                   javascript:void window.open('https://www.linkedin.com/shareArticle?mini=true&url={% if request.is_secure %}https://{% else %}http://{% endif %}{{ request.get_host }}/skigit_data/{{ skigit.id }}&title={{ skigit.title }}&source={% if request.is_secure %}https://{% else %}http://{% endif %}{{ request.get_host }}', 'width=700,height=500,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0');return false;">
+              <img src="{% static 'images/icons/SN_link_LinkedIn.png' %}" width="125" height="125">
+            </a>
+          </li>
+          <li>
+            <a title="Pinterest"
+               onclick="socialPost({{ skigit.skigit_id_id }}, {{ skigit.skigit_id.user.id }}, 'pinterest ');
+                   javascript:void window.open('http://pinterest.com/pin/create/button/?url={% if request.is_secure %}https://{% else %}http://{% endif %}{{ request.get_host }}/skigit_data/{{ skigit.id }}/?id={{ skigit.id }}&media={{ video_share_url }}','width=700,height=500,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0');return false;">
+              <img src="{% static 'images/icons/SN_link_Pinterest.png' %}" width="125" height="125">
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="row mar_zero f_type">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 margin_top_10 padd_zero sm-txt">
+
+      <p class="title_vediocontain" id="why_rocks_full" style="display:none">{{ skigit.why_rocks }}
+        <a onclick="hide_Text()" style="color: #037bb8 !important; display:none;" id="hide_text" name="hide_text">
+          Show less
+        </a>
+      </p>
+<span><img src="{% static 'images/Quote_icon.png' %}" width="100px" height="90px" style="margin-top: 60px;margin-left:85px"></span>
+      <p class="title_vediocontain" id="why_rocks_half"
+         style="margin-top:-50px; margin-left:200px; margin-right:100px">{{ skigit.why_rocks|truncatewords:40 }}
+        {% if skigit.why_rocks|wordcount > 40 %}
+          <a onclick="read_More()" style="color:#037bb8 !important;" id="read_more" name="read_more">
+            Read more
+          </a>
+        {% endif %}
+      </p>
+
+    </div>
+  </div>
+
+  <div class="txt_bxhead">
+    <div class="row">
+      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 pull-right">
+
+      </div>
+      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="width: 80%">
+        <span class="txt_bxsldhead" style="font-size: 42px !important; text-align:center;"> Other Skigits You Might Like </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mar_zero f_type">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 padd_zero">
+      <div id="ca-container" class="ca-container">
+        <div class="ca-wrapper">
+          <div class="slider1">
+            {% for vid in all_sub_cat_skigits %}
+
+              <div class="slide">
+                <div class="ca-item ca-item-1" data-skigt="{{ vid.id }}">
+                  <div class="padd-l-r">
+                    <a href="{{ request.scheme }}://{{ request.META.HTTP_HOST }}/?id={{ vid.id }}"
+                       id="sugestion{{ vid.id }}" title="Play {{ vid.title }} Skigit"
+                       data-target="#new_vid{{ vid.id }}"
+                       class="skigit_playback f_type">
+                      <h4 style="font-family:Segoe_Print !important;">{{ vid.title|slice:"0:12" }}</h4>
+                      <img src="{{ vid.skigit_id.thumbnails.all.0.url }}">
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id='div_{{ skigit.id }}' class="row mar_zero margin_top_10">
+
+    <p id="comment_box{{ skigit.id }}" class="title_vediocontain f_type">
+      <span>Comment on this Work of Art</span>
+      <span id="btn_fb_comment_expand{{ skigit.id }}" title="Hide" class="fb_cmm_expand"> ... </span>
+    </p>
+
+    <div id="fbcomment{{ skigit.id }}" style="margin-left:16px; ">
+      <center><img src="{% static 'images/inf_loading.gif' %} " id="fb_loader" style="display: none"></center>
+      <div class="fb-comments"
+           data-href="{% if request.is_secure %}https://{% else %}http://{% endif %}{{ request.get_host }}/skigit_data/{{ skigit.id }}/#configurator{{ skigit.id }}"
+           data-width="850" data-numposts="2"></div>
+    </div>
+
+  </div>
+
+  <div class="alert alert-success msg_success" style="display:none" id="msg_toster"></div>
+</div>
+<script type="text/javascript">
+
+  var $m = jQuery.noConflict();
+  $m("#inapp_form_can").click(function (e) {
+    $m(".dropdown").removeClass('open');
+  });
+
+  $m('.joinpopup').click(function () {
+    if ($m(this).next().css('display') == 'none') {
+      $m(this).next().slideDown("slow").css("display", "block");
+    }
+    else {
+      $m(this).next().slideUp("slow");
+    }
+  });
+
+  $m('.Joinclose').on("click", function () {
+    var pid = $m(this).attr("id");
+    var popup_id = pid.replace('skigitt_drop_close', '');
+    if ($m('#pop_upsingle' + popup_id))
+      $m('#pop_upsingle' + popup_id).slideUp("slow");
+    if ($m('#pop_uploop' + popup_id))
+      $m('#pop_uploop' + popup_id).slideUp("slow");
+    if ($m('#pop_upfav' + popup_id))
+      $m('#pop_upfav' + popup_id).slideUp("slow");
+    if ($m('#pop_uporigin' + popup_id))
+      $m('#pop_uporigin' + popup_id).slideUp("slow");
+  });
+
+  function get_date_popup(video_id) {
+
+    var currentTimezone = jstz.determine();
+    var timezone = currentTimezone.name();
+
+    $m.ajax({
+      url: "/friends/share-skigit-date/",
+      type: "POST",
+      data: {
+        'video_id': video_id, 'time_zone': timezone,
+        csrfmiddlewaretoken: '{{ csrf_token }}'
+      },
+      success: function (result) {
+        if (result.is_success) {
+          for (var i = 0; i < (result.share_data).length; i++) {
+            $m('#id_date_label_popup' + video_id + result.share_data[i]['id']).text(result.share_data[i]['share_date'])
+          }
+        }
+      }
+    });
+  }
+
+  socialPost = function (ski_id, ski_user, social_type) {
+
+    var message;
+
+    jQuery.ajax({
+      url: "/invoice/post-social-network/",
+      type: "POST",
+      data: {
+        'skigit_id': ski_id,
+        'skigit_user': ski_user,
+        'social_type': social_type,
+        csrfmiddlewaretoken: '{{ csrf_token }}'
+      },
+      success: function (data) {
+        if (data.is_success) {
+
+          return true;
+        }
+        else {
+          message = data.message;
+        }
+      }
+    });
+    return true;
+  }
+
+</script>
+<script>
+  function logoclick(logo_id, url) {
+    var message;
+    jQuery.ajax({
+      url: "/invoice/business-logo/",
+      type: "POST",
+      data: {'logo_id': logo_id, csrfmiddlewaretoken: '{{ csrf_token }}'},
+      success: function (data) {
+        if (data.is_success) {
+          window.location.href = url
+        }
+        else {
+          message = data.message;
+        }
+      }
+    });
+  }
+</script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous">
+</script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous">
+</script>
+
+{% include 'javascripts.html' %}
+</body>
+</html>

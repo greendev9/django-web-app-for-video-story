@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block title %}{{ block.super }}
+  {% if category_current.cat_name %}
+    {{ category_current.cat_name }}
+  {% elif category_current.sub_cat_name %}
+    {{ category_current.sub_cat_name }}
+  {% elif skigit_plug %}
+    Plugged Skigits into {{ skigit_plug }}
+  {% elif skigit_like %}
+    Liked Skigits by {{ skigit_like }}
+  {% else %}
+    Skigits by {{ category_current }}
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+
+  <script>
+    $j = jQuery.noConflict();
+    function close_skigit(video_id, skigit_id,publish_at, insentive ) {
+      $j("#confirmBox").addClass('open');
+      $j(".overlay").addClass('open');
+      current_id = video_id;
+      skigit_inse = insentive;
+        if (skigit_inse) {
+          $j("#ok-delete").hide();
+          $j("#no-delete").html('Ok');
+          $j(".del-top").find('span').html(`This Skigit cannot be deleted because you received a Skitbit
+          for creating it so it must remain posted for 30 days. You can delete it on ${publish_at}.
+          Refer to Skigit Terms and Conditions`);
+        }
+        else {
+          $j("#ok-delete").show();
+          $j("#no-delete").html('Cancel');
+          $j(".del-top").find('span').html('Are you sure you want to delete this Skigit?')
+        }
+
+      $j("#confirmBox").attr('c_id', current_id);
+    }
+
+    $j(function ($) {
+      $j("#no-delete").click(function () {
+        $j("#confirmBox").removeClass('open');
+        $j(".overlay").removeClass('open');
+      });
+
+    });
+
+    $j(document).ready(function ($) {
+      function closeMessage() {
+        $j("#confirmBox").removeClass('open');
+        $j(".overlay").removeClass('open');
+        $j("#ok-delete").show();
+        $j("#no-delete").show();
+      }
+
+      $j("#ok-delete").click(function (e) {
+        $j.post("/profile/deleteskigit/", {skigit_v_id: current_id},
+          function (data, status) {
+            if (data.is_success) {
+              msg = data.message;
+              $j("[data-skigt=" + current_id + "]").css("display", "none");
+            }
+            else
+            $j('.notify_msg_div').html(`<div class="message error">
+                    <h3>${data.message}</h3>
+                  </div>`).show().delay(3000).fadeOut();
+            $j("#confirmBox").removeClass('open');
+            $j(".overlay").removeClass('open');
+          });
+      });
+    });
+
+  </script>
+
+  <div class="row mar_zero section-box" id="main">
+
+    <div class="section-content grid-small">
+      <div class="overlay"></div>
+      <div id="confirmBox">
+        <center><p><img src="{% static 'images/Skigit_Logo_AI_master_white.png' %}" width="125px;"/></p></center>
+        <div class="del-top"><span>Are you sure you want to delete this Skigit?</span></div>
+        <div class="del-bott">
+          <button type="button" id="ok-delete">Ok</button>
+          <button type="button" id="no-delete">Cancel</button>
+        </div>
+      </div>
+
+      <div class="endless_page_template" id="skigit_content_list">
+
+        <div class="nag cf" id="likedcontent">
+
+          <div class="row">
+            <div class="col-sm-4 col-xs-12">
+              <center class="link_uploadski hidden-lg hidden-sm hidden-md"><a href="/youtube/direct-upload/">Upload a Skigit</a></center>
+            </div><!--co-sm-4-->
+
+            <div class="col-sm-4 col-xs-12" id="myskigits_page_title">
+              <center class="heading-new-seg">My Skigits</center>
+            </div><!--co-sm-4-->
+
+            <div class="col-sm-4 col-xs-12">
+
+            </div><!--co-sm-4-->
+          </div>
+
+          <div class="skigit_content_list" >
+          <div class="row endless_page_template">
+          {% if video_detail %}
+            {% include 'includes/skigit_list.html' %}
+          {% else %}
+            <center>
+              <span style="font-size:20px">
+                No Skigits found
+              </span>
+            </center>
+          {% endif %}
+     </div>
+      </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+{% block js %}
+  <script>jQuery.endlessPaginate({paginateOnScroll: true});</script>
+{% endblock %}

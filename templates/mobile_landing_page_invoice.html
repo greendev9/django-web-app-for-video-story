@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load compress %}
+
+  {% block css %}
+    <link rel="stylesheet" href="{% static 'css/ibacor-sosmed-button.css' %}" type="text/css" media="all"/>
+    <link href="{% static 'css/font-awesome-4.1.0.min.css' %}" type="text/css" type="text/css" media="all">
+    <link rel="stylesheet" href="{% static 'css/jquery.bxslider.min.css' %}" type="text/css" media="all"/>
+  {% endblock css %}
+
+{% block main-header-block %}
+    <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <header id="header">
+              <div class="logo center-align pull-left">
+                <img style="height:70px;width:70px;" src="{% static 'images/invoice_landing.png' %}" alt="invoice landing" id="header_logo">
+                <br>
+              </div> 
+      </header>
+        </div>
+    </div>
+{% endblock main-header-block %}
+
+{% block content %}
+<div class="row mar_zero" id="main">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 welcome_text_div">
+        
+        <div class="welcome_content col-lg-12 col-md-12 col-sm-12 col-xs-12" style="text-align: left;width:110%">
+          <p>
+              <span style="font-size: 14px;text-align: center; ">
+              You cannot pay your invoice using the mobile app. Please login to the website on your PC or Laptop and make payments through your Profile and Settings/Invoice page.
+              <br><br> 
+              </span>     
+        </p>
+        <p>Thank you,</p>   
+    </div>
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding:0px;text-align: left;">
+        <div style="padding-bottom: 12px; text-align: left; margin-left:10%">
+            <a href="javascript:void(0);">
+                <img class="" src="{% static 'images/logo_65.png' %}" width="65" height="50"/>
+            </a>
+        </div>
+    </div>
+
+    </div>
+  </div>
+  </div>
+{% endblock content %}

@@ -1,0 +1,55 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+</head>
+
+<body>
+  <!-- 
+    <div>
+      <button class="btn btn-primary" onclick="openApp()">Open App</button>
+    </div> 
+-->
+  <script type="text/javascript" src="{% static 'js/app-redirect.js' %}"></script>
+  <script type="text/javascript">
+    // https://github.com/danielgindi/app-redirect
+    // https://github.com/EddyVerbruggen/Custom-URL-scheme/issues/156
+    // NOTE: In Chrome for Android, if the user writes the url manually, it assumes that he does not wish to be redirected outside of the browser. So you want to be redirected to this link or have clicked a link to this url.
+    // You have the whole queryString ready for you here in a key->value form.
+    // In the edge case where there are multiple values, the value is an array.
+    init();
+
+    function init() {
+
+      var android_fallback_url = "{{android_app_host}}/{{android_app_url|safe}}";
+      var ios_fallback_url = "{{ios_app_name}}://{{ios_app_host}}/{{ios_app_url|safe}}";
+
+
+      // Here we initiate the redirect process
+      AppRedirect.redirect({
+        iosApp: ios_fallback_url,
+        // iosAppStore: 'https://itunes.apple.com/il/app/{{ios_app_name}}/id{{ios_app_id}}',
+
+        // For this, your app need to have category filter: android.intent.category.BROWSABLE
+        android: {
+          'host': android_fallback_url, // Host/path/querystring part in a custom scheme URL
+          // 'action': '', // Equivalent to ACTION in INTENTs
+          // 'category': '', // Equivalent to CATEGORY in INTENTs
+          // 'component': '', // Equivalent to COMPONENT in INTENTs
+          'scheme': '{{android_app_scheme}}', // Scheme part in a custom scheme URL 'twitter'
+          'package': '{{android_app_package}}', // Package name in Play store 'com.twitter.android'
+          //'fallback': 'https://play.google.com/store/apps/details?id={{android_app_package}}' // 'https://play.google.com/store/apps/details?id={{android_app_package}}'
+        }
+      });
+    }
+
+    function openApp() {
+      init();
+    }
+
+  </script>
+</body>
+
+</html>

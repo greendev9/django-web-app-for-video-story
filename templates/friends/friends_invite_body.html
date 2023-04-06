@@ -1,0 +1,57 @@
+{% load static %}
+{% load el_pagination_tags %}
+{% lazy_paginate 12,12 friend_list %}
+
+{% for friend in friend_list %}
+
+    <div class="box_friend" data-skigt="{{friend.user}}">
+        <div class="box_imgcontain">
+            <div class="name_friend">
+                <span class="heade_friend">
+                    {{ friend.username }}
+                </span>
+                <span class="sub_namefriend">
+                    {{ friend.name }}
+                </span>
+                <span class="friend_followers">
+                    <span style="display: inherit;">Followers :
+                        <label id="follow_count{{friend.user}}">{{ friend.count }}</label>
+                    </span>
+                </span>
+            </div>
+
+            {% if friend.profile_img %}
+                <a href="{% url 'user_profile_display' friend.username %}{% if view_general_profile %}?view-general=yes{% endif %}" >
+                    <div class="img_friend">
+                        <img alt="skigit" src="{{friend.profile_img}}" title=" {{ friend.name }} " />
+                    </div>
+                </a>
+            {% else %}
+                <a href="." >
+                    <div class="img_friend">
+                        <img src="{% static 'images/noimage_user.jpg' %}" title=" {{ friend.name }} "  />
+                    </div>
+                </a>
+            {% endif %}
+
+            <div class="icon_friend">
+                {% if friend.user in follow_list %}
+                    <a onclick="un_follow_follow({{friend.user}})" id="follow_{{friend.user}}"
+                       class="follow" data-cuid="{{friend.user}}" title="Following" >
+                       <span class="box_footer" id="follow_btn{{friend.user}}">Following</span>
+                    </a>
+                {% else %}
+                    <a onclick="un_follow_follow({{friend.user}})" id="follow_{{friend.user}}"
+                       class="unfollow" data-cuid="{{friend.user}}" title="Click to Follow" style="color: #bfeeff; ">
+                        <span class="box_footer" id="follow_btn{{friend.user}}" style="color: #cde7fd">Click to Follow</span>
+                    </a>
+                {% endif %}
+
+                <img width="25" height="25"
+                     src='{% static 'images/error.png'%}'
+                     class="close-friend" onclick="close_friend({{friend.user}})">
+            </div>
+        </div>
+    </div>
+{% endfor %}
+<span>{% show_more ' ' ' ' 'show_more' %}</span>

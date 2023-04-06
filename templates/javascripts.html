@@ -1,0 +1,33 @@
+{% load compress %}
+{% load static %}
+
+{% compress js %}
+  <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/emailProvider.js' %}"></script>
+  {% if not mobile_api_request %}
+  <script type="text/javascript" src="{% static 'bower_components/angular/angular.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/skigit.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/pageUp.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/jstz.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/jquery.bxslider.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/jquery.validate.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'el-pagination/js/el-pagination.js' %}"></script>
+  <script type="text/javascript" src="{% static 'bower_components/angular-animate/angular-animate.js' %}"></script>
+  <script type="text/javascript" src="{% static 'bower_components/angular-resource/angular-resource.js' %}"></script>
+  <script type="text/javascript" src="{% static 'bower_components/angular-route/angular-route.js' %}"></script>
+  <script type="text/javascript" src="{% static 'bower_components/angular-cookies/angular-cookies.js' %}"></script>
+  <script type="text/javascript" src="{% static 'bower_components/angular-touch/angular-touch.js' %}"></script>
+  <script type="text/javascript" src="{% static 'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'bower_components/angular-sanitize/angular-sanitize.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/app.module.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/app.config.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/core/core.module.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/core/modal/modal.form.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/user/user.module.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/user/user.login.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/user/user.bug.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/user/user.share.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/popover/popover.module.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/popover/notification/notification.user.js' %}"></script>
+  {% endif %}
+{% endcompress %}

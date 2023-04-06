@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{{ block.super }}Video Formats{% endblock %}
+
+{% block main-header-block %}
+    {% if not mobile_api_request %}
+        {{ block.super }}
+    {% endif %}
+{% endblock main-header-block %}
+
+{% block content %}
+  <div class="row mar_zero" id="main">
+    <div class="wrap cf" style=" margin: 15px;">
+
+      <div role="main" id="content main-fnt-mch">
+        <div id="post-427" class="post-427 page type-page status-publish hentry">
+          <h1 class="sageo" style="text-align:center;">Video Formats</h1>
+          <div class="page-content rich-content">
+            <div style="width:100%; float:left;">
+              <img width="425" id="video_format_scene" src="{% static 'images/home_page_main_illustration.png' %}" alt="Format"
+                   style="float: left;" class="alignnone">
+              <ul style="float:left;line-height: 2.0;">
+                <br>
+                <br>
+                <li>WMV</li>
+                <li>AVI (VIDEO, AVI)</li>
+                <li>FLV (VIDEO, X-FLV)</li>
+                <li>MPEG4, MPG, MPE (VIDEO,MPEG)</li>
+                <li>WEBM (VIDEO, WEBM)</li>
+                <li>MOV (VIDEO, QUICKTIME)</li>
+                <li>WMV, WVX, WM, WMX (VIDEO, X-MS-WMV)</li>
+                <li>3GP, 3GPP, 3GPP2, 3G2 (VIDEO, 3GPP)</li>
+              </ul>
+            </div>
+            <p>&nbsp;</p>
+            <h2><span class="sageo" style="color: #19485f;">Can I link a video to any URL ?</span></h2>
+            <p><span>No, not by default. Skigit will only embed URLs matching an internal whitelist. This is for security purposes.</span>
+            </p>
+			<br>
+            <h2 style="color: #19485f;"> Okay, so what sites can I link to?</h2>
+
+            <p style="margin-bottom: 50px;"><span>At this time….</span><span title="http://sblip.tv/">&nbsp;&nbsp; </span><span
+                style="color: #3366ff;"><em><span>
+              <a target="_blank" href="https://www.youtube.com/"
+                 title="https://www.youtube.com/"><span
+                style="color: #3366ff;">YouTube</span></a></span></em></span></p>
+          </div>
+        </div><!--end .hentry-->
+
+      </div><!--end #content-->
+
+
+      <div role="complementary" id="sidebar">
+      </div><!--end #sidebar-->
+    </div>
+  </div>
+{% endblock %}

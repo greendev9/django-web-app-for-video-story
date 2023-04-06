@@ -1,0 +1,236 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block main_video_block %}
+{% endblock %}
+
+{% block title %}{{ block.super }}Copyright Policy{% endblock %}
+
+{% block main-header-block %}
+    {% if not mobile_api_request %}
+        {{ block.super }}
+    {% endif %}
+{% endblock main-header-block %}
+
+{% block css %}
+  <style type="text/css" media="screen">
+
+  h2.sageo {
+      font-size: 10px;
+  }
+
+a {
+    color: #307bb7;
+	}
+
+a:hover {
+    color: #000;
+	}
+	
+  @media screen and (max-width: 767px) {
+    #business-fee-table th, #business-fee-table td, #business-fee-table tr {line-height: 1.4 !important;}
+  }
+
+.table-bordered>tbody>tr>td, .table-bordered>tbody>tr>th, .table-bordered>tfoot>tr>td, .table-bordered>tfoot>tr>th, .table-bordered>thead>tr>td, .table-bordered>thead>tr>th
+{
+    border: 1px solid #707070;
+
+}
+
+.table {
+background-color: #fff;
+width: 70%;
+}
+
+.table-bordered  {
+border: 2px solid #181818;
+}
+
+
+  </style>
+{% endblock css %}
+
+{% block content %}
+  <div class="row mar_zero" id="main">
+    <div class="wrap cf">
+
+      <div role="main" id="content" style="margin-left: 25px;margin-right: 25px;">
+
+        <div id="post-7319" class="post-7319 page type-page status-publish hentry">
+          <h1 class="sageo" style="margin-top: 50px!important;text-align: center;margin-bottom: 50px!important;">Business Value Services and Fees</h1>
+          <div class="page-content rich-content">
+            <div class="tbl_value">
+              <table style="margin-left: auto;margin-right:auto;font-size: 22px" class="table table-bordered table-nonfluid table-responsive" id="business-fee-table">
+
+                <tr>
+				<br>
+				
+                  <th style="text-align:center;line-height: 3;color: #ffffff; background-color: #007cb9; font-weight: 200;" class="col-xs-1">Value Service</th>
+                  <th style="text-align:center;line-height: 3;color: #ffffff;background-color: #007cb9; font-weight: 200;" class="col-xs-1">Your cost (USD, $)</th>
+                </tr>
+
+
+                <tr>
+                  <td style="text-align:center;line-height: 3;" ><a href="#logo-monthly">Business Skigit Logo</a></td>
+                  <td style="text-align:center;line-height: 3;" >{{ fee_business_skigit_logo }}</td>
+                </tr>
+                <tr>
+                  <td style="text-align:center;line-height: 3;" ><a href="#skigit-monthly">Business Skigit Maintenance</a></td>
+                  <td style="text-align:center;line-height: 3;" >{{ fee_business_skigit_maintenance }}</td>
+                </tr>
+				<tr>
+                  <td style="text-align:center;line-height: 3;" ><a href="#skigit-view">Skigit View</a></td>
+                  <td style="text-align:center;line-height: 3;" >{{ fee_skigit_view }}</td>
+                </tr>
+                <tr>
+                  <td style="text-align:center;line-height: 3;" ><a href="#skigit-plugin">Skigit Plugin</a></td>
+                  <td style="text-align:center;line-height: 3;" >{{ fee_skigit_plugin }}</td>
+                </tr>
+                <tr>
+				  <td style="text-align:center;line-height: 3;" ><a href="#skigit-post">Social Network Post</a></td>
+                  <td style="text-align:center;line-height: 3;" >{{ fee_social_network_post }}</td>
+                </tr>
+                <tr>
+                  <td style="text-align:center;line-height: 3;" ><a href="#skigit-share">Skigit Share</a></td>
+                  <td style="text-align:center;line-height: 3;" >{{ fee_skigit_share }}</td>
+                </tr>
+				<tr>
+                  <td style="text-align:center;line-height: 3;" ><a href="#logo-ppc">Logo Click Thru (PPC)</a></td>
+                  <td style="text-align:center;line-height: 3;" >{{ fee_logo_click }}</td>
+                </tr>
+                <tr>
+				<tr>
+                  <td style="text-align:center;line-height: 3;" ><a href="#learn-more">Learn More</a></td>
+                  <td style="text-align:center;line-height: 3;" >{{ fee_learn_more }}</td>
+                </tr>
+                <tr>
+                  <td style="text-align:center;line-height: 3;" ><a href="#skigit-web">Website Links Click Through</a></td>
+                  <td style="text-align:center;line-height: 3;" >{{ fee_website_links_click }}</td>
+                </tr>
+                <tr>
+                  <td style="text-align:center;line-height: 3;" ><a href="#skigit-embed-site">Skigit Embed (My Site)</a></td>
+                  <td style="text-align:center;line-height: 3;" >{{ fee_skigit_embed_my_site }}</td>
+                </tr>
+                <tr>
+                  <td style="text-align:center;line-height: 3;" ><a href="#skigit-embed">Skigit Embed (Skigit)</a></td>
+                  <td style="text-align:center;line-height: 3;" >{{ fee_skigit_embed_profile_page }}</td>
+                </tr>
+
+              </table>
+            </div>
+          </div><!--end .hentry-->
+          <div class="para_value">
+            <a name="logo-monthly"></a>
+            <h2 class="sageo" style="margin: 50px 0px 30px 0px !important;font-size: 24px;font-family: 'laoui Sans', sans-serif;font-weight:bold">Business Skigit Logo</h2>
+            <p style="font-size:22px; margin-bottom: 30px;"> The monthly fee assigned to your account while at least one logo is uploaded into your profile page and available for promotion by other Skigit members.</p>
+			<li style="Margin-left:20px">When your company uploads new logo, a monthly fee will be assigned based on the current scheduled fee.  </li>
+			  
+			<li style="Margin-left:20px">You must maintain at least one logo in your account, which will be assigned as you default logo. </li>
+
+			<li style="Margin-left:20px">You are allowed to upload as many as five logos in your acount all for one low monthly cost.  </li>
+			
+			<li style="Margin-left:20px">If we modify the monthly logo fee at any time, existing accounts will be charged the new monthly fee beginning from 
+			 <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the first of the following month. </span></li>
+			
+			<li style="Margin-left:20px">If we modify the monthly logo fee at any time, new accounts created aftert his date, will immediately be charged the new 
+			<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;monthly fee from the day of account activation. <span></li>
+		 
+          </div>
+          <div class="para_value">
+            <a name="skigit-monthly"></a>
+            <h2 class="sageo" style="margin: 50px 0px 30px 0px !important;font-size: 24px;font-family: 'laoui Sans', sans-serif;font-weight:bold">Business Skigit Maintenance</h2>
+            <p style="font-size:22px; margin-bottom: 30px">The monthly fee assigned to each Skigit you create to promote your business and services.</p>
+			  
+			  <li style="Margin-left:20px">At the time you post your business Skigit, you will be assigned a monthly fee for the month of posting. No fees will be prorated for the month so it's suggested to post your Skigit on the first of the month. </li>
+			
+			<li style="Margin-left:20px">If you delete your Business Skigit you still pay the full fee for the current month. You will not be charged a fee for any month in which a Business Skigit is not active.</li>
+		
+			<li style="Margin-left:20px">Any changes to Business Skigit fees, will be reflected only in new Business Skigits posted seubsequent to the fee change and will not apply to existing Skigit posts. </li>
+		
+			<li style="Margin-left:20px">For all existing Business Skigits posted, changes to Business Skigit fees will be effective on the first of the month for all future fee changes.</li>
+  
+		<li style="Margin-left:20px">For all new Business Skigits posted, the current fee will be applied on the day the Skigit is posted. </li>
+		
+          </div>
+		 
+		  <div class="para_value">
+            <a name="learn-more"></a>
+            <h2 class="sageo" style="margin: 50px 0px 30px 0px !important;font-size: 24px; font-family: 'laoui Sans', sans-serif;font-weight:bold">Learn More (Pay per click) </h2>
+            <p style="font-size:22px; margin-bottom: 30px">The fee assigned to your account each time a member clicks on the Learn More logo. This logo redirects the member to the page specified by the Skigit creator when the Skigit is uploaded and profiled. This will be the page that gives viewers addiitonal detailed information about your awesome brand or product.
+           </p> </div>
+			
+          <div class="para_value">
+            <a name="logo-ppc"></a>
+            <h2 class="sageo" style="margin: 50px 0px 30px 0px !important;font-size: 24px;font-family: 'laoui Sans', sans-serif;font-weight:bold"><span>Logo Click-Through (Pay per click)</span></h2>
+            <p style="font-size:22px; margin-bottom: 30px">The fee assigned to your account each time a member clicks your business logo and is taken to your Skigit
+              Business profile page.</p>
+
+            <div class="boxservices_images">
+              <div class="row">
+                <div
+                    class="col-lg-4 col-lg-offset-1 col-md-4 col-md-offset-1  col-sm-5 col-sm-offset-0  col-xs-3 col-xs-offset-1">
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <div class="para_value">
+            <a name="skigit-web"></a>
+            <div class="para_value">
+              <h2 class="sageo" style="margin: 50px 0px 30px 0px !important;font-size: 24px;font-family: 'laoui Sans', sans-serif;font-weight:bold">Website Links Click Through</h2>
+              <p style="font-size:22px; margin-bottom: 30px">The fee assigned to your account each time a member clicks any one of the target external links specified in your profile page(Profile URL). This will direct the viewer to external URLs that you
+                specify to promote your business and services. This is optional and if you don’t specify any target
+                links, you will not be charged fees</p>
+            </div>
+            <!--- <table class="table table-borderless memberprofile_tbl">
+                    <tr><td class="col-xs-1">Member Profile Input Page</td><td class="col-xs-1">Business Profile Page View</td></tr>
+                    <tr><td><img src="{% static 'images/web-link.png'%}"/></td><td><img src="{% static 'images/web-view.png'%}" /></td></tr>
+                </table> --->
+	
+
+            </table>
+            <div class="para_value">
+              <a name="skigit-plugin"></a>
+              <h2 class="sageo" style="margin: 50px 0px 30px 0px !important;font-size: 24px;font-family: 'laoui Sans', sans-serif;font-weight:bold"><span>Skigit Plugin</span></h2>
+              <p style="font-size:22px; margin-bottom: 30px">The fee assigned to your account each time a member chooses to plugin to a Skigit that displays your
+                logo.</p>
+            </div>
+            <div class="para_value">
+              <a name="skigit-view"></a>
+              <h2 class="sageo" style="margin: 50px 0px 10px 0px !important;font-size: 24px;font-family: 'laoui Sans', sans-serif;font-weight:bold">Skigit View (Pay per view)</h2>
+              <p style="font-size:22px; margin-bottom: 30px">The fee assigned to your account each time a member or visitor clicks the play button to view a Skigit that displays
+                your business logo. This feature is designed to leave your viewers with an everlasting impresssion of your company thus the fee is a charge for per impresssion. It's assigned to your account each time the video is played by a Skigit member or visitor.</p>
+            </div>
+            <div class="para_value">
+              <a name="skigit-post"></a>
+              <h2 class="sageo" style=";margin: 50px 0px 30px 0px !important;font-size: 24px;font-family: 'laoui Sans', sans-serif;font-weight:bold">Social Network Post</h2>
+              <p style="font-size:22px; margin-bottom: 30px">The fee assigned to your account each time a member posts a Skigit containing your logo to one of Skigit's linked social
+                network through the Skigit POST feature.</p>
+            </div>
+            <div class="para_value">
+              <a name="skigit-share"></a>
+              <h2 class="sageo" style="margin: 50px 0px 30px 0px !important;font-size: 24px;font-family: 'laoui Sans', sans-serif;font-weight:bold">Skigit Share</h2>
+              <p style="font-size:22px; margin-bottom: 30px">The fee assigned to your account each time a member shares a Skigit that displays your business logo
+                with either another Skigit member or a non-member through an email link.</p>
+            </div>
+            <div class="para_value">
+              <a name="skigit-embed-site"></a>
+              <h2 class="sageo" style="margin: 50px 0px 30px 0px !important;font-size: 24px;font-family: 'laoui Sans', sans-serif;font-weight:bold">Skigit Embed </h2>
+              <p style="font-size:22px; margin-bottom: 30px">The fee assigned to your account each time that you opt to embed a Skigit into your own external URL. Business
+                Members can Embed an ulimited number of times and will be only be assessed a single flat rate for
+                copying the embedded code for a Skigit.
+                There is no charge to embed a Skigit into Skigit Business Profile page.</p>
+            </div>
+            <div class="para_value">
+              <a name="skigit-embed"></a>
+            </div>
+          </div><!--end #content-->
+
+
+          <div role="complementary" id="sidebar">
+          </div><!--end #sidebar-->
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

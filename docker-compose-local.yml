@@ -1,0 +1,91 @@
+version: '3'
+services:
+  migration:
+    build: .
+    image: skigit_backend
+    command: python manage.py migrate
+    volumes:
+      - ./logs:/opt/logs
+      - ./static:/opt/static
+      - ./media:/opt/media
+    env_file:
+      - ./.env.local
+    depends_on:
+      - db     
+  skigitbackend:
+    restart: always
+    image: skigit_backend
+    container_name: skigit
+    command: gunicorn skigit_project.wsgi:application --bind 0.0.0.0:8000  --workers 3 --reload --timeout 300
+    env_file:
+      - ./.env.local
+    expose:
+      - 8000
+    volumes:
+      - ./logs:/opt/logs
+      - ./core:/opt/core
+      - ./friends:/opt/friends
+      - ./invoices:/opt/invoices
+      - ./sperks:/opt/sperks
+      - ./skigit_project:/opt/skigit_project
+      - ./social:/opt/social
+      - ./skigit:/opt/skigit
+      - ./mailpost:/opt/mailpost
+      - ./user:/opt/user
+      - ./templates:/opt/templates
+      - ./static:/opt/static
+      - ./media:/opt/media
+      - .:/code
+    depends_on:
+      - migration
+    ports:
+      - 8000:8000
+  celery:
+    container_name: skigit_celery
+    image: skigit_backend
+    command: celery -A skigit_project worker -l info -P eventlet --loglevel=DEBUG --without-gossip --without-mingle --without-heartbeat -Ofair --pool=solo
+    volumes:
+      - ./logs:/opt/logs
+      - ./static:/opt/static
+      - ./media:/opt/media
+      - .:/code
+    env_file:
+      - ./.env.local
+    depends_on:
+      - db
+      - redis
+      - skigitbackend
+  celery_beat:
+    container_name: skigit_celery_beat
+    image: skigit_backend
+    command: celery -A skigit_project beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    volumes:
+      - ./logs:/opt/logs
+      - ./static:/opt/static
+      - ./media:/opt/media
+      - .:/code
+    env_file:
+      - ./.env.local
+    depends_on:
+      - db
+      - redis
+      - skigitbackend
+  nginx:
+    build: ./data/nginx/local
+    ports:
+      - 80:80
+    volumes:
+      - ./static:/opt/static
+      - ./media:/opt/media
+    depends_on:
+      - skigitbackend
+  redis:
+    image: redis:alpine
+  db:
+    image: postgres:alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env.local.db
+volumes:
+  postgres_data:

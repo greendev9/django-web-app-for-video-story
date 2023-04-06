@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load category_list %}
+
+{% block title %}{{ block.super }}Register Success{% endblock %}
+
+{% block content %}
+  <div class="row" style="min-height: 400px;width: 100% !important;margin-left: 0px;" id="main">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 margin_top_50">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="row mar_zero">
+          <h2 class="text-center margin_top_10 sego word_space_2">
+            {% trans "You're almost done!" %}</h2>
+          <h4 class="text-center margin_top_30 sego1">An account activation link was sent to the email address you
+            registered with. Please click the link and activate your account now!</h4>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+{% endblock %}

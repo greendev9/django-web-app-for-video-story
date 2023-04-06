@@ -1,0 +1,279 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block window_page_title_block %}
+  {% if category_current.cat_name %}
+    {{ category_current.cat_name }}
+  {% elif category_current.sub_cat_name %}
+    {{ category_current.sub_cat_name }}
+  {% elif skigit_plug %}
+    Plugged Skigits into {{ skigit_plug }}
+  {% elif skigit_like %}
+    Liked Skigits by {{ skigit_like }}
+
+  {% else %}
+    Skigits by {{ category_current }}
+  {% endif %}
+{% endblock %}
+{% block main_div_block_middel_content %}
+{% endblock %}
+
+{% block main_video_block %}
+
+<div class="section-content grid-small">
+      {% if category_current.cat_name|safe == "Just here for the Drama" %}
+        {% if video_detail %}
+          <div class="categories-video-logo"><img src="{% static 'images/drama_skigit_logo.png' %}"/></div>
+        {% endif %}
+        
+
+      {% elif category_current.cat_name|safe == "Let Me Show You Where to Put That" %}
+        {% if video_detail %}
+          <div class="categories-video-logo"><img src="{% static 'images/demo-skigit-logo.png' %}"/></div>
+        {% endif %}
+        
+      {% elif category_current.cat_name|safe == 'I\'ll do Me, You do You' %}
+        {% if video_detail %}
+          <div class="categories-video-logo"><img src="{% static 'images/selfie-skigit-logo.png' %}"/></div>
+        {% endif %}
+        
+      {% elif category_current.cat_name|safe == "Where Words Fail, Music Speaks" %}
+        {% if video_detail %}
+          <div class="categories-video-logo"><img src="{% static 'images/vibra-skigit-logo.png' %}"/></div>
+        {% endif %}
+        
+      {% elif category_current.cat_name|safe == "Normal is Overrated" %}
+        {% if video_detail %}
+          <div class="categories-video-logo"><img src="{% static 'images/wacki-skigit-logo.png' %}"/></div>
+        {% endif %}
+        
+
+      {% endif %}
+
+      <div class="categories-sort-box">
+        <ul>
+          <li><a href="">Sort Date</a></li>
+          |
+          <li><a href="">Titles</a></li>
+          |
+          <li><a href="">Views</a></li>
+          |
+          <li><a href="">Like</a></li>
+          |
+          <li><a href="">Comments</a></li>
+          |
+          <li><a href="">Randam</a></li>
+          |
+        </ul>
+      </div>
+
+
+      <div class="nag cf" id="likedcontent">
+        {% if video_detail %}
+          {% for vid in video_detail %}
+            <div class="inner_post_box">
+
+              <script type="text/javascript">
+                function add_affiliate(pid) {
+                  window.location = 'https://demo.mrphpguru.com/skigitdev/affiliate?postid=' + pid;
+                }
+              </script>
+              <script>
+
+                function sample() {
+                  document.getElementById('my_modal').style.display = 'block';
+                  $(document).ready(function () {
+
+                    $('.my_modal_open').click(function () {
+                      $('#my_modal').popup({
+                        'autoopen': true
+                      });
+                    });
+                    $('#my_tooltip').popup({
+                      type: 'tooltip',
+                      autozindex: true,
+                      horizontal: 'center',
+                      vertical: 'top'
+                    });
+                  });
+                }
+
+              </script>
+
+              <style>
+                body {
+                  margin: 0;
+                  padding: 0;
+                }
+
+                .clear {
+                  clear: both;
+                }
+              </style>
+              <div id="skigit_content_list" class="endless_page_template" >
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 padd_zero skigit_content_wrap"
+                     data-skigt="{{ vid.id }}">
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 skigit_content padd_some">
+                    <h4>{{ vid.category.cat_name }}</h4>
+                    <div class="row mar_zero skigit_contents bord">
+                      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 padd_zero skigit_img">
+
+                        <img alt="skigit" src="{{ vid.skigit_id.thumbnails.all.0.url }}">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 skigit_social_option">
+                          <ul class="list-inline skigit_social_option_container pull-right">
+                            <li><a href="{% url 'skigit_plugin' vid.skigit_id.id %}"><img
+                                src="{% static 'images/icons/plug.png' %}" height="40" width="60"
+                                class="plugin text-center" title="Plugged In"/></a></li>
+
+                            {% if user.is_authenticated %}
+                              {% if vid.skigit_id.id in video_likes %}
+                                <li class="text-center "><a class="liked like_unlike" id="like_{{ vid.skigit_id.id }}"
+                                                            data-userid="1" title="Unlike"
+                                                            data-pid="{{ vid.skigit_id.id }}"><img
+                                    src="{% static 'images/icons/heart.png' %}"
+                                    class="img-responsive" style="width: 30px;margin-left: 8px;"/></a></li>
+                              {% else %}
+                                <li class="text-center"><a class="like like_unlike" id="like_{{ vid.skigit_id.id }}"
+                                                           data-userid="1" title="Like"
+                                                           data-pid="{{ vid.skigit_id.id }}"><img
+                                    src="{% static 'images/icons/heart.png' %}" class="img-responsive" style="width: 30px;margin-left: 8px;"/></a></li>
+                              {% endif %}
+                            {% else %}
+                              <li class="text-center"><a class="like like_unlike" id="like_{{ vid.skigit_id.id }}"
+                                                         data-userid="0" title="Like" data-pid="{{ vid.skigit_id.id }}"><img
+                                  src="{% static 'images/icons/heart.png' %}" class="img-responsive" style="width: 30px;margin-left: 8px;"/></a>
+                              </li>
+                            {% endif %}
+
+                            <li><a href="#" class="skigit_share" onclick="return false;" id="share_popover{{ vid.id }}"><img
+                                src="{% static 'images/icons/sharing.png' %}" height="22" width="22"
+                                class="share categori text-center" title="Share"/></a></li>
+                            {% include 'pages/friends_share.html' %}
+                          </ul>
+                          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center skigit_play">
+                            <a href="{% url "skigit_data" vid.pk %}" title="Play {{ vid.title }} Skigit"
+                               class="skigit_playback" data-dismiss="modal" data-target="#{{ vid.pk }}"
+                               data-toggle="modal"><img src="{% static 'images/Skigit_Logo_Glow.png' %}"
+                                                        title="Play Skigit"/></a>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 skigit_content_detail">
+                        <div class="row">
+                          <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 skigit_creator">
+                            <a href="{% url 'user_profile_display' vid.skigit_id.user.username %}" targret="_blank">
+                              {% if vid.get_profile_img.profile_img %}
+                                <img class="img-responsive img-rounded" src="{{ vid.get_profile_img.profile_img.url }}"
+                                     alt="{{ vid.skigit_id.user.username }}"/>
+                              {% else %}
+                                <img class="img-responsive img-rounded"
+                                     src="{% static 'skigit/detube/images/noimage_user.jpg' %}"
+                                     alt="{{ vid.skigit_id.user.username }}"/>
+                              {% endif %}
+                            </a>
+                          </div>
+                          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 padd_zero skigit_creator_title">
+                            <p><a href="{% url 'user_profile_display' vid.skigit_id.user.username %}"
+                                  target="_blank">{{ vid.skigit_id.user.username }}</a></p>
+                            <p><a href="{% url 'user_profile_display' vid.skigit_id.user.username %}"
+                                  target="_blank">{{ vid.title }}</a></p>
+                          </div>
+                          <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 pull-right skigit_creator_logo">
+                            <a target="_blank" href="{% url 'user_profile_display' vid.made_by %}">
+                              {% if vid.business_logo %}
+                                <img class="img-responsive" src="{{ vid.business_logo.logo.url }}"/>
+                              {% else %}
+                                <img class="img-responsive" src="{% static 'skigit/detube/images/noimage_user.jpg' %}"/>
+                              {% endif %}
+                            </a>
+                          </div>
+                          <!--<div class="business_enlarge" id="business_enlarge{{ vid.id }}">
+                            {% if vid.business_logo %}
+                              <img id='business_enlarge_img{{ vid.id }}' src="{{ vid.business_logo.logo.url }}"/>
+                            {% else %}
+                              <img id='business_enlarge_img{{ vid.id }}'
+                                   src="{% static 'skigit/detube/images/noimage_user.jpg' %}"/>
+                            {% endif %}
+                          </div>-->
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div aria-hidden="true" id="{{ vid.pk }}" class="modal fade" tabindex="-1" role="dialog"
+                   aria-labelledby="Play Video">
+                <div class="modal-dialog modal-lg">
+				 <!-- Modal content category_detail_view.html-->
+                  <div class="modal-content" style="-webkit-box-shadow: none;box-shadow: none;border:none">
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+
+    </div><!-- end .section-content -->
+
+
+  <div class="home-featured-full wall" style="position:relative;">
+    {% if video_detail %}
+	<!--<div id="CategoryImage" class="categories-video-logo">-->
+      <div id="video" class="wrap cf">
+        {% for videos in video_detail %}
+          {% if forloop.first %}
+            <div id="screen">
+              <div id="screen-inner">
+                <div align="center">
+                  <iframe id="homeframe" class="homeframe" title="YouTube video player" width="{{ width }}"
+                          height="250px"
+                          src="https://www.youtube.com/embed/{{ videos.skigit_id.video_id }}?autoplay=0&modestbranding=0&showinfo=0"
+                          frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen/>
+                  </iframe>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <div id="headline" class="cf">
+        <center><span><strong class="no-skigit-text">
+                        {% if category_current.cat_name %}
+                          Currently no Skigit uploaded in {{ category_current.cat_name }}
+                        {% elif category_current.sub_cat_name %}
+                          Currently no Skigit uploaded in {{ category_current.sub_cat_name }}
+                        {% elif skigit_plug %}
+                          Currently no Skigit Plugged into {{ skigit_plug }}
+                        {% elif skigit_like %}
+                          Currently no Skigit liked by {{ skigit_like }}
+                        {% else %}
+                          Currently no Skigit uploaded by {{ category_current }}
+                        {% endif %}
+
+                    </strong></span>
+        </center>
+		</div>
+      <!--</div>-->
+      <!-- end #headline -->
+    {% endif %}
+    <!-- end #screen --><!--</div>&lt;!&ndash; end #video &ndash;&gt;-->
+  </div><!-- end #wall -->
+
+{% endblock %}
+
+{% block main_div_block_video_list_content %}
+  <div class="section-box">
+    
+  </div>
+  <!-- end .section-box -->
+  <!--<a id="latestinifiniteLoader" style="float:left;display:none;margin:5px 425px"><img
+    src="{% static 'skigit/detube/images/inf_loading.gif' %}"/></a>-->
+{% endblock %}
+{% block js %}
+  <script>jQuery.endlessPaginate({paginateOnScroll: true});</script>
+{% endblock %}

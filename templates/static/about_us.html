@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{{ block.super }}About Us{% endblock %}
+
+{% block main-header-block %}
+    {% if not mobile_api_request %}
+        {{ block.super }}
+    {% endif %}
+{% endblock main-header-block %}
+
+{% block content %}
+  <div class="row mar_zero" id="main">
+    <div class="wrap cf">
+      <div role="main" id="content main-fnt-mch">
+        <div id="post-139" class="post-139 page type-page status-publish hentry">
+		<h1>
+          <h1 class="sageo" style="text-align: center;">About Us</h1>
+          <div class="page-content rich-content">
+{#            <img width="68" height="50" alt="logo" src="{% static 'images/logo.png' %}" style="position: relative;">#}
+            <p>The video website that brings people and their favorite things together in an
+               intimate way through drama, improvisation and just plain video fun. Advances in video capture and formatting have
+               afforded people everywhere the opportunity to create compelling video at the click of a
+               smart-phone button. These advancements offer us the ability to capture ours lives and our favorite
+               things all in a matter of seconds when the moment strikes us, when our creativity is peaked or when we
+               have that exciting experience we simply can't wait to share with others!
+            </p>
+            <p><span style="font-family: segoe print;font-weight: bold;color: #1c6890;">Skigit</span> enables you to connect with others and offers you the opportunity to collaborate with businesses to give through your generosity and compassion without spending a single penny. <span style="font-family: segoe print;font-weight: bold;color: #1c6890;">Skigit</span> is not only fun, it makes a difference and we're excited to have you!
+            </p>
+            <p>
+            <span class="imgCenter">
+              <img width="100.666" alt="puzzle" class="center" id="heart_gif" src="{% static 'images/Live-Share_Icon_Landing-Banner.png' %}" style="position: relative;margin-top:60px;">
+            </span>
+			<h2>
+            <h2 style="font-size:32px; color: #19485f;">Our Mission </h2>
+
+              <p>To provide a free video sharing feature-rich website available to all users across the universe
+                 for the purpose of providing the means for personal expression in a way that intimately connects
+                 people and brings value to all of our lives.
+              </p>
+			  <br>
+              <p>To provide users the opportunity to partner with businesses in donating incentives to make a
+                lasting impact on our world. We think this is kind of important.
+              </p>
+			   <br>
+              <p>To continuously improve <span style="font-family: segoe print;font-weight: bold;color: #1c6890;">Skigit</span> through user feedback and technology solutions to make our site the
+                easiest and most fun to use.
+              </p>
+            </p>
+			<br>
+            <p>
+            <span class="imgCenter">
+              <img width="200" alt="puzzle" class="center" src="{% static 'images/aboutus_sun2.png' %}" style="position: relative;">
+              </span>
+			  <h2>
+              <h2 style="font-size: 32px;color: #19485f;">Our Location</h2>
+            <p><span style="font-family: segoe print;font-weight: bold;color: #1c6890;">Skigit</span> is headquartered in sunny Land O' Lakes, Florida, USA. </p>
+			<br>
+			<br>
+			<h2 style="font-size: 32px;color: #19485f;">Contact Us</h2>
+            <p>General inquiries: <a href="mailto:fspina@skigit.com"><span style="color: #3366ff;">info@skigit.com</span></a></p>
+			<br>
+            </p>
+          </div>
+        </div><!--end .hentry-->
+
+      </div><!--end #content-->
+
+
+      <div role="complementary" id="sidebar">
+      </div><!--end #sidebar-->
+    </div>
+  </div>
+{% endblock %}

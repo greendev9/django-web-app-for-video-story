@@ -1,0 +1,76 @@
+{% if request.user.is_authenticated %}
+
+<div class="form-group " style="margin-top: 40px;line-height: 1.4;color: rgb(18, 13, 13);">
+   
+   <input required="required" type="checkbox" id="type_check" tabindex="5" name="type_check">
+   <label id="type_check-error" class="checkbox-label error" for="type_check"></label>
+<span>
+     I agree to the
+     {% if acc_type == "general" %}
+     <a class="blue" href="/about-us/terms-of-service/" target="_blank" style="color: #8cabff;">
+     {% else %}
+     <a class="blue" href="/about-us/business-terms-of-service/" target="_blank" style="color: #8cabff;">
+     {% endif %}
+     Skigit Terms
+     of Service</a> , <a class="blue" href="/about-us/acceptable-use-policy/" style="color: #8cabff;" target="_blank">Skigit Acceptable Use Policy</a> and <a class="blue" href="/about-us/privacy-policy/" target="_blank" style="color: #8cabff;">Privacy Policy</a>
+    
+   </span>
+
+</div>
+
+<div class="form-group" style="margin-top: 30px;line-height: 1.4;color: rgb(16, 13, 13);">
+  
+  <input required="required" type="checkbox" id="usepolicy_check" tabindex="6" name="usepolicy_check">
+  <label id="usepolicy_check-error" class="checkbox-label error" for="usepolicy_check"></label>
+<span style="margin-left: 130px;display: block;">
+    I agree to the <a class="blue" href="/about-us/acceptable-use-policy/" style="color: #8cabff;" target="_blank">Skigit Acceptable Use Policy</a>
+  </span>
+</div>
+
+<div class="form-group" style="margin-top: 30px;line-height: 1.4;">
+ 
+  <input required="required" type="checkbox" id="ageconfirm_check" tabindex='7' name="ageconfirm_check">
+  <label id="ageconfirm_check-error" class="checkbox-label error" for="ageconfirm_check"></label>
+
+<span>
+    I confirm that I am at least 13 years of age
+  </span>
+</div>
+
+{% else %}
+
+<!--<div class="form-group" style="margin-top: 40px;line-height: 1.4;color: #fff;">
+
+   <input required="required" type="checkbox" id="type_check" tabindex="5" name="type_check">
+   <label id="type_check-error" class="checkbox-label error" for="type_check"></label>
+   <span style="margin-left: 130px;display: block;">
+     I agree to the 
+     {% if acc_type == "general" %}
+     <a class="blue" href="/about-us/terms-of-service/" target="_blank" style="color: #fff38c;">
+     {% else %}
+     <a class="blue" href="/about-us/business-terms-of-service/" target="_blank" style="color: #fff38c;">
+     {% endif %}
+     Skigit Terms
+     of Service</a> and <a class="blue" href="/about-us/privacy-policy/" target="_blank" style="color: #fff38c;">Privacy Policy</a>
+   </span>
+</div>
+
+<div class="form-group" style="margin-top: 30px;line-height: 1.4;color: #fff;">
+  
+  <input required="required" type="checkbox" id="usepolicy_check" tabindex="6" name="usepolicy_check">
+  <label id="usepolicy_check-error" class="checkbox-label error" for="usepolicy_check"></label>
+<span style="margin-left: 130px;display: block;">
+    I agree to the <a class="blue" href="/about-us/acceptable-use-policy/" style="color: #fff38c;" target="_blank">Skigit Acceptable Use Policy</a>
+  </span>
+</div>
+
+<div class="form-group" style="margin-top: 30px;line-height: 1.4;color: #fff;">
+  
+  <input required="required" type="checkbox" id="ageconfirm_check" tabindex='7' name="ageconfirm_check">
+  <label id="ageconfirm_check-error" class="checkbox-label error" for="ageconfirm_check"></label>
+<span style="margin-left: 130px;display: block;">
+    I confirm that I am at least 13 years of age
+  </span>
+</div>-->
+
+{% endif %}

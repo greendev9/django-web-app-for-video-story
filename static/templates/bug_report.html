@@ -1,0 +1,76 @@
+
+
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 padd_zero bugModel" ng-hide="succ">
+  <div class="mar_zero">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 modal-header" style="border-bottom: none;">
+      <center><img src="/static/images/bug-report_white.png" style="border-radius: 50%;background-color:#8d9396;width: 48.33px;padding: 8px"></center>
+	  
+
+      <h4 class="modal-title">Report a Bug</h4>
+    </div>
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 modal-body" style="margin:5px ; padding: 0px 20px 20px 20px;">
+      <form id="bug_report_form" name="bugReport" role="form">
+        <div class="form-group">
+          <div style="padding-bottom: 20px; display: none;">
+            <span>Page URL/Skigit ID: {{ data.id_bug_page_url }}</span>
+          </div>
+          <input type="hidden" id="id_bug_page_url"
+                 value="{{ data.id_bug_page_url }}">
+          <input type="hidden" id="id_bug_title" value="{{ data.id_bug_title }}">
+        </div>
+        <div class="form-group">
+          <div style="margin: 10px 10px 10px 0px;">
+            <span>Please describe the problem in detail.</span>
+          </div>
+          <textarea id="bug_description" placeholder="Bug description" rows=5 style="width: 100%;color: #000; font-size:14px;max-width: 245px;" required
+                    ng-model="data.bug_description" name="bug_description" ng-disabled="sync"></textarea>
+        </div>
+        <div class="form-group">
+          <div style="margin-top: -8px !important;">
+            <div style="display: block" >
+              <span id="bug_repeat">Have you been able to repeat this? </span>
+				<div id="bug_popup">
+                  <input id="id_bug_repeated_0" name="bug_repeated" class="bugpopupradiodrop" type="radio" value="1" ng-model="data.bug_repeated" required>&nbsp;Yes
+                  <input style="margin-left: 20%;" id="id_bug_repeated_1" name="bug_repeated" class="bugpopupradiodrop" type="radio" value="0" ng-model="data.bug_repeated" required>&nbsp;No
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group text-center">
+          <button type="button" id='id_bug_submit' tabindex="3" class="btn btn-default btn-sm" ng-click="ok(bugReport)" ng-disabled="sync">Submit</button>
+          <button type="button" id='id_bug_close' class="btn btn-default btn-sm" data-dismiss="modal"
+                  ng-click="cancel()" ng-disabled="sync">Cancel
+          </button>
+        </div>
+      </form>
+      <div class="form-group" style="text-align: center;" id="login_info_msg">
+        <div ng-if="sync && !success" style="color:orange;">
+          Please wait...
+        </div>
+        <p class="success_msg" ng-show="success">
+        <!--<span class='sign-error'>
+          <i class='glyphicon glyphicon-ok-circle'/>
+        </span>-->
+          <span class="text-error" id="bug_report_success"><img width='25' src='/static/images/success_icon.png'>Thanks for making Skigit better!</span>
+        </p>
+        <p class="error_msg" ng-show="erro!=''">
+
+          <!--<span class='sign-error' ng-show="error!=''">
+          <i class='glyphicon glyphicon-remove-circle'/>
+        </span>-->
+          <span class='text-error'>{{ error }}</span>
+        </p>
+        <p class="error_msg" ng-show="form.bug_description.$error.required">
+          
+            <span class="text-error" id="bug_report_error"><img width='25' src='/static/images/error_icon.png'> Please enter a bug description</span>
+        </p>
+        <p class="error_msg" ng-show="form.bug_repeated.$error.required">
+         <!-- <span class='sign-error' >
+          <i class='glyphicon glyphicon-remove-circle'/>
+            </span>-->
+            <span class="text-error" id="bug_report_error"><img width='25' src='/static/images/error_icon.png'> Please select an option</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

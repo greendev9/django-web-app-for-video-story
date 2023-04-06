@@ -1,0 +1,577 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+{% load category_list %}
+
+{% block title %}{{ block.super }}Brochure{% endblock %}
+
+{% block content %}
+
+  <style>
+    .box_rightfun p {
+      width: 78% !important;
+      display: table;
+    }
+
+    .broshar_main {
+      width: 100%;
+      margin: 0 auto;
+      box-sizing: border-box;
+    }
+
+    .box_spon {
+      display: table;
+      padding: 20px 20px 0px 20px;
+      box-sizing: border-box;
+      width: 100%;
+    }
+
+
+    .broshar_head {
+      background-color: #005a9e;
+      padding: 5px;
+      display: table;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .head_1broshar {
+      display: table;
+      float: left
+    }
+
+    .head_1broshar span {
+      display: table;
+      font-size: 15px;
+      float: left;
+      color: #fff;
+      padding: 16px;
+	  margin-top: 25px;
+    }
+
+    .head_1broshar img {
+      width: 65px;
+      padding: 5px;
+      background: #fff;
+      margin-top: 2px;
+      margin-left: 0px;
+      border: 3px solid #3dbae6;
+      border-radius: 10px;
+	  margin-top: 25px;
+    }
+
+    .logo_right {
+      margin: 0px 25px 0px 0px;
+      display: table;
+      float: right;
+      padding: 1px;
+    }
+
+    .logo_right img {
+      width: 100px;
+      max-width: 100%;
+      display: table;
+      margin: 0 auto;
+    }
+
+    .contain_broshar {
+      width: 100%;
+      background-image: url('{{ poster_2 }}');
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+    }
+
+    .contain_broshar1 {
+      width: 100%;
+      background-image: url('{{ poster_1 }}');
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+    }
+
+    .contain_01 {
+      display: table;
+      width: 100%;
+    }
+
+    .head_2broshar {
+      display: table;
+      float: left;
+      padding: 40px 20px 20px 50px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .logo_funbox {
+      padding: 10px 30px 0px 20px;
+      width: 115px;
+      float: left;
+      background-color: #fff;
+      border-radius: 60%;
+      -webkit-box-shadow: 0px 0px 10px 5px rgba(255, 255, 255, 255) !important;
+	  margin: 20px 0px 0px 40px;
+    }
+
+    .logo_funbox img {
+      width: 100%;
+    }
+
+    .box_rightfun span {
+	display: table;
+	color: #0e0e0e;
+	font-size: 36px;
+	font-weight: 600;
+	padding-left: 30px;
+	padding-bottom: 5px;
+	text-shadow: 2px 2px 6px #dedddd;
+    }
+
+    .createbox {
+	color: #f4f4c9;
+	font-size: 28px;
+	margin: 0;
+	line-height: 1.2;
+	width: 1300px;
+	margin-left: 115px;
+	text-shadow: 2px 2px 6px #030303;
+    }
+
+    .linkbox {
+      color: #fff;
+      font-size: 28px;
+      margin: 30px 10px;
+      text-align: right;
+	  font-family: 'segoe print' !important;
+    }
+
+    .linkbox a {
+      text-decoration: none;
+      font-size: 22px;
+      color: #318db7;
+      font-weight: bold;
+      color: #318db7;
+      font-weight: bold;
+      margin-top: 0px;
+      display: table;
+      float: right;
+    }
+
+    .contain_02 {
+      display: table;
+      padding: 0px 0px 10px 50px;
+      margin-top: 10px;
+      box-sizing: border-box;
+      max-width: 40%;
+    }
+
+    .contain_02 p {
+      color: #fff;
+      font-size: 27px;
+      margin: 0;
+      font-family: segoe print !important;
+    }
+
+    .footerpara_print p {
+      background-color: #000;
+      color: #fff;
+      margin: 0;
+      padding: 20px 20px;
+      text-align: center;
+      font-size: 22px;
+      margin-top: 5px;
+      font-family: segoe print !important;
+    }
+
+    .box_spon p {
+      display: table;
+      width: 100%;
+      margin-right: 0px;
+      float: right;
+      color: #fff;
+      margin-top: 90px;
+      font-size: 24px;
+	  text-align: center;
+    }
+
+    .img_funnlogo {
+      width: 55px;
+      margin-left: 5px;
+      margin-bottom: 5px;
+    }
+
+    a:hover {
+      color: #318db7 !important;
+    }
+
+    @media screen and (max-width: 1200px) {
+      .logo_right img {
+        width: 66px;
+      }
+
+      .logo_right {
+        padding: 15px;
+      }
+
+      .poster_size_box {
+        max-width: 40%;
+      }
+    }
+
+    @media screen and (max-width: 992px) {
+
+      .head_2broshar {
+        padding: 25px;
+      }
+
+     
+
+      .box_rightfun span {
+        font-size: 22px;
+      }
+
+      .createbox, .contain_02 p, .box_spon p {
+        font-size: 15px;
+      }
+
+      .linkbox a {
+        font-size: 19px;
+      }
+
+      .logo_funbox {
+        width: 85px;
+        padding: 10px;
+        margin-right: 15px;
+      }
+
+      .logo_right {
+        width: 90px;
+      }
+
+      .logo_right img {
+        width: 50px;
+      }
+
+      .poster_size_box {
+        max-width: 40%;
+      }
+    }
+
+    @media screen and (max-width: 767px) {
+      .box_rightfun span {
+        font-size: 12px;
+      }
+
+      .createbox, .contain_02 p, .box_spon p, .footerpara_print p {
+        font-size: 11px;
+      }
+
+      .contain_broshar {
+        margin-bottom: 10px;
+      }
+
+      .contain_broshar1 {
+        margin-bottom: 10px;
+      }
+
+      .contain_02 {
+        padding: 5px 50px;
+      }
+
+
+
+      .head_1broshar img {
+        width: 43px;
+      }
+
+      .head_1broshar span {
+        font-size: 10px;
+        padding: 10px
+      }
+
+      .logo_right {
+        margin-bottom: -10px;
+      }
+
+      .contain_02 {
+        max-width: 80%;
+      }
+
+      .img_funnlogo {
+        width: 25px;
+      }
+
+      .logo_funbox {
+        width: 74px;
+      }
+
+      .linkbox a {
+        font-size: 11px;
+        margin-top: 10px;
+      }
+
+      .poster_size_box {
+        max-width: 70%;
+      }
+    }
+
+    iframe {
+      display: block;
+      height: 0;
+      width: 0;
+      border: 0;
+    }
+
+  </style>
+
+  <script>
+    $j = jQuery.noConflict();
+    posterSize = function (val) {
+      if (val == 0) {
+        $j('#id_print18x24').show();
+        $j('#id_section18x24').show();
+        $j('#id_print24x36').hide();
+        $j('#id_section24x36').hide();
+      }
+      else if (val == 1) {
+        $j('#id_print18x24').hide();
+        $j('#id_section18x24').hide();
+        $j('#id_print24x36').show();
+        $j('#id_section24x36').show();
+      }
+
+    };
+
+    refreshIframe18x24 = function () {
+      var ifr18x24 = document.getElementsByName('frame18x24')[0];
+      ifr18x24.src = ifr18x24.src;
+    };
+
+    refreshIframe24x36 = function () {
+      var ifr24x36 = document.getElementsByName('frame24x36')[0];
+      ifr24x36.src = ifr24x36.src;
+    };
+
+    selectLogo = function (logo_id) {
+      var logoImg, url;
+      logoImg = $j("input[type='radio'][name='select_logo']:checked").closest('[data-img]').attr('data-img')
+
+      $j.ajax({
+        url: '/friends/set-poster-b-logo/',
+        type: "POST", // http method
+        data: {'b_logo': logoImg, 'logo_id': logo_id, 'user_id': {{ request.user.id }}}, // data sent with the post request
+        success: function (data) {
+          if (data.is_success) {
+            $j('#id_b_logo_poster24x36').attr('src', logoImg);
+            $j('#id_b_logo_poster18x24').attr('src', logoImg);
+            refreshIframe18x24();
+            refreshIframe24x36();
+          }
+        }
+      });
+    };
+
+    $j(document).ready(function () {
+
+      $j.getJSON('/friends/wall-poster-b-logos/', function (data) {
+        var idd, check, current_logo, i, imagesCollection, image_div;
+        imagesCollection = data.all_business_logo;
+        if (imagesCollection) {
+
+          for (i = 0; i < imagesCollection.length; i++) {
+            idd = imagesCollection[i][0];
+            if ((idd.length == 0)) {
+              continue;
+            }
+            current_logo = '{{ poster_obj.b_logo }}';
+
+            if (current_logo == imagesCollection[i][1]) {
+              check = 'checked'
+            }
+            else {
+              check = ''
+            }
+
+            image_div = ' <input type="radio" class="b_logo_poster"  data-img="' + imagesCollection[i][1] + '" onclick="selectLogo(' + idd + ')" id=' + idd + ' value=' + idd + '  name="select_logo" ' + check + '/>' + '<label for=' + idd + ' class="label"><div class="dz-image"> <img data-dz-thumbnail="" src=' + imagesCollection[i][1] + '></div></label>'
+            $j('.logo-url').append(image_div);
+          }
+        }
+      });
+
+    });
+
+  </script>
+
+  <div class="list-group" style="margin-top:15px; background: transparent; border:none;">
+    {% if wall_post_exists %}
+      <section class="list-group-item text-center" style="background: transparent; border: none;" id="id_logo_section">
+        <h3 class="f_type">Select business logo:</h3>
+        <div class="logo-url f_type" id="logos" style="margin-bottom:20px;">
+        </div>
+
+        <div class="list-group poster_size_box" style="  background: transparent; border: none;">
+          <div class="list-group-item " style="background: transparent; border: none;">
+            <h4 class="f_type">Select Wall Poster Size</h4>
+          </div>
+          <div class="list-group-item" style="background: transparent; border: none;">
+            <label>
+              <input type="radio" onclick="posterSize(0)" name="poster_size" id='id_poster18x24' value="0"
+                     checked /> 18"x24"
+            </label>
+            <label>
+              <input type="radio" onclick="posterSize(1)" name="poster_size" id='id_poster24x36' value="1"/>
+              24"x36"
+            </label>
+          </div>
+        </div>
+
+      </section>
+      <section class="list-group-item text-center" style="background: transparent; border: none;" id="id_print_section">
+        <iframe src="/friends/brochure-skigit-24x36/" name="frame24x36"></iframe>
+        <iframe src="/friends/brochure-skigit-18x24/" name="frame18x24"></iframe>
+        <input type="button" id="id_print24x36" onclick="refreshIframe24x36(); return frames['frame24x36'].print();"
+               value="Print" hidden>
+        <input type="button" id="id_print18x24" onclick="refreshIframe18x24(); return frames['frame18x24'].print();"
+               value="Print">
+        <input type="button" onclick="javascript:history.go(-1)" value="Cancel"/>
+      </section>
+      <section id="id_section24x36" style="margin: 15px;" hidden>
+
+        <div class="broshar_main">
+          <div class="broshar_head">
+
+            <div class="head_1broshar" style="width:83%">
+              <span class="f_type box"> Download The <strong>Skigit</strong> App today ! </span>
+              <img src="{{ skigit_logo }}" alt=""/>
+              <p class="f_type linkbox"
+                 style="float:right;color:aqua;margin-top: 15px;font-weight: 600;font-family: 'segoe print' !important;"> {{ wall_post.content4 }} </p>
+            </div>
+
+            <div class="logo_right">
+              <img id="id_b_logo_poster24x36" src="{{ poster_obj.b_logo }}" style=""/>
+            </div><!--logo_right-->
+          </div><!--broshar_head-->
+
+          <div class="contain_broshar">
+            <div class="contain_01">
+              <div class="head_2broshar">
+                <div class="logo_funbox" style="">
+                  <img src="{% static 'skigit/images/logo.png' %}"/>
+                </div>
+                <div class="box_rightfun">
+                        <span class="f_type fun_box">
+                             {{ wall_post.header_text }}
+                        </span>
+                  <p class="f_type createbox">
+                    {{ wall_post.content1 }}
+                  </p>
+                </div>
+              </div><!--head_1broshar-->
+            </div><!--contain_01-->
+
+            <div class="contain_02" style="">
+
+              <p class="f_type">
+                {{ wall_post.content2 }}
+              </p>
+
+            </div><!--contain_02-->
+
+            <div class="f_type box_spon" style="">
+              <p style="float:left;width:28%;color:#72f2f9;margin-top:0;margin-left: 40px;font-size: 22px;">
+                Your face in our place starring you and your favorite cast!<br/>
+                <img style="margin-top:25px;" src="{% static 'skigit/all_cat.png' %}"/>
+              </p>
+              <p style="font-family: segoe print !important;">
+                {{ wall_post.content3 }}
+              </p>
+              <p style="margin-top:10px;font-size:20px;font-family: segoe print !important;">
+                Post it from <span style="font-family:'segoe print' !important;">Skigit</span> to your favorite social
+                networks!
+                <img style="margin-left:5px;" src="{% static 'skigit/images/facebook.png' %}">
+                <img style="margin-left:3px;" src="{% static 'skigit/images/twitter.png' %}">
+                <img style="margin-left:3px;" src="{% static 'skigit/images/instagram.png' %}">
+                <img style="margin-left:3px;" src="{% static 'skigit/images/linkedin.png' %}">
+				<img style="margin-left:3px;" src="{% static 'skigit/images/Pinterest.png' %}">
+              </p>
+            </div>
+          </div><!--contain_broshar-->
+          <div style="margin-left:70%;margin-top:-27px;margin-bottom:-27px;">
+            <img src="{{ header_image }}" style="width: 50px;"/>
+          </div>
+        <!--<div class="contain_03 f_type footerpara_print">-->
+            <p style="color: #e573ee;font-weight: bold;">
+              Live, Share ...make a Difference!<img src="https://static.skigit.com/images/giving_heart.png" style="width: 50px;margin-left:10px; margin-bottom:20px;">
+            </p>
+  
+          </div><!--contain_03-->
+
+        </div><!--broshar_main-->
+      </section>
+
+      <section id="id_section18x24" style="margin: 15px;">
+        <div class="broshar_main">
+          <div class="broshar_head">
+            <div class="head_1broshar" style="width:83%">
+                        <span class="f_type box">
+                            Download The <strong style="font-family:'segoe print' !important;">Skigit</strong> App today !
+                        </span>
+              <img src="{{ skigit_logo }}" alt=""/>
+              <p href="#" class="f_type linkbox" style="float:right">
+                {{ wall_post.content4 }}
+              </p>
+            </div>
+            <div class="logo_right">
+              <img id="id_b_logo_poster18x24" src="{{ poster_obj.b_logo }}" style=""/>
+            </div><!--logo_right-->
+          </div><!--broshar_head-->
+          <div class="contain_broshar1">
+            <div class="contain_01">
+              <div class="head_2broshar">
+                <div class="logo_funbox" style="">
+                  <img src="{% static 'skigit/images/logo.png' %}"/>
+                </div>
+                <div class="box_rightfun">
+                                <span class="f_type fun_box">
+                                {{ wall_post.header_text }}</span>
+                  <p class="f_type createbox">{{ wall_post.content1 }}</p>
+                </div>
+              </div><!--head_1broshar-->
+            </div><!--contain_01-->
+            <div class="contain_02" style="">
+              <p class="f_type">{{ wall_post.content2 }}</p>
+            </div><!--contain_02-->
+            <div class="f_type box_spon" style="">
+              <p style="float:left;width:28%;color:#72f2f9;margin-top:0;margin-left: 40px;font-size: 22px;">
+                Your face in our place starring you and your favorite cast!<br/>
+                <img style="margin-top:25px;" src="{% static 'skigit/all_cat.png' %}"/>
+              </p>
+              <p style="font-family: segoe print !important;">{{ wall_post.content3 }}</p>
+              <p style="margin-top:10px;font-size:20px">
+                Post it from <span style="font-family:'segoe print' !important;">Skigit</span> to your favorite social
+                networks!
+                <img style="margin-left:5px;" src="{% static 'skigit/images/facebook.png' %}">
+                <img style="margin-left:3px;" src="{% static 'skigit/images/twitter.png' %}">
+                <img style="margin-left:3px;" src="{% static 'skigit/images/instagram.png' %}">
+                <img style="margin-left:3px;" src="{% static 'skigit/images/linkedin.png' %}">
+				<img style="margin-left:3px;" src="{% static 'skigit/images/Pinterest.png' %}">
+              </p>
+            </div>
+          </div><!--contain_broshar-->
+          <!--<div style="margin-left:70%;margin-top:-27px;margin-bottom:-27px;">
+            <img src="{{ header_image }}" style="width: 50px;"/>-->
+          </div>
+            <div class="contain_03 f_type footerpara_print">
+            <p style="color: #e573ee;font-weight: bold;">
+              Live, Share ...make a Difference!<img src="https://static.skigit.com/images/giving_heart.png" style="width: 50px;margin-left:10px; margin-bottom:20px;">
+            </p>
+  
+          </div><!--contain_03-->
+        </div><!--broshar_main-->
+      </section>
+
+    {% else %}
+      <center><label class="f_type">No Wall Poster are Available Now. Coming Soon...</label></center>
+    {% endif %}
+
+  </div>
+
+{% endblock %}

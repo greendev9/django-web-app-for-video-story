@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load category_list %}
+
+{% block title %}{{ block.super }}Register{% endblock %}
+
+{% block css %}
+    <style>
+	
+	 a#cancel_logout {
+		color: #fff;
+		background-color: #d9534f;
+		border-color: #d43f3a;
+		}
+
+	a#cancel_logout:hover {
+		background-color: #f75757;
+		}
+	
+.container {
+    background-color: #fff;
+}
+	
+	  .error {
+			color: #ffa2a2
+		}
+		
+        .form-control.error {
+          top: inherit !important;
+        }
+
+        .form-control.valid {
+          top: inherit !important;
+        }
+
+        .form-group .checkbox-label {
+            top: 0px;
+            display: inline-block !important;
+            float: left;
+            margin-left: 15%;
+            padding-right: 10px;
+        }
+
+        .checkbox-error-msg {
+            position: absolute;
+        }
+		
+		input[type=checkbox], input[type=radio] {
+    margin: 4px 5px 0 25px;
+}
+
+    </style>
+{% endblock css %}
+
+{% block content %}
+  <div class="row mar_zero" id="main" style="min-height: 400px;background-color: #fff;">
+      <form action="." method="POST" name="reg_type">
+        {% csrf_token %}
+        <h3 class="text-center sego word_space_2" style="Margin:50px!important">Register for Skigit!</h3>
+        <div class="text-center sego  small-text" style="Font-size:20px!important; color:#000 ">Are you
+          joining Skigit as a General or Business user?
+        </div>
+		
+		<div class="text-center sego  small-text" style="Font-size:14px!important; color:#000;margin: 20px 0 0 0; "><strong>General User: </strong> Are you
+          a general consumer who wants to create Skigits for the things you love and want to share with others? 
+        </div>
+		
+		<div class="text-center sego  small-text" style="Font-size:14px!important; color:#000;"><strong>Business User: </strong>Are you legally able to represent a Business? Business users will be required to provide verification for the businesses for whom they represent.
+        </div>
+        <!--<h2 class="text-center sego margin_top_50 small-text"
+            style="Font-size:18px !important;">Choose one account type</h2>-->
+			
+			<br>
+			<span style="text-align:center;display: block;Font-size: 14px;background-color: #373636 ;padding: 10px;margin: 0 16% 0 16%;border-radius: 6px;color: #fff;">
+     By Continuing, you agree Skigits'
+     
+     <a class="blue" href="/about-us/terms-of-service/" target="_blank" style="color: #fff38c;">
+     
+     Skigit Terms
+     of Service</a>,<a class="blue" href="/about-us/acceptable-use-policy/" target="_blank" style="color: #fff38c;">
+     
+     Skigit Acceptable Use Policy</a> and <a class="blue" href="/about-us/privacy-policy/" target="_blank" style="color: #fff38c;">Privacy Policy</a> and affirm that you are at least 13 years of age or older.
+   </span>
+		
+		
+		
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center  sego "
+             style="Font-size: 16px !important; color:#000000 !important; font-weight: bold; margin-top: 30px;">
+          <label for="acc_type1" style="font-size: 18px;color: #000;">
+            <input name="acc_type" type="radio" value="general" checked="checked" id="acc_type1" tabindex='0'/>
+            General User
+          </label>
+          <label for="acc_type2" style="font-size: 18px;color: #000;">
+            <input name="acc_type" type="radio" value="business" id="acc_type2" tabindex='0'/>
+            Business User
+          </label>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-3 col-md-3 col-sm-3 hidden-xs padd_zero">
+              &nbsp;
+            </div>
+          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"></div>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center margin_top_30 for-button">
+          <!-- <a href="javascript:void(0);"{% if social_register %}onclick="remove_social_register();"{% else %} onclick="location.href = ''"{% endif %} class="btn no-p" style="padding: 5px;" >Cancel</a> -->
+          {% if social_register %}
+    		    <a onclick="remove_social_register()" class="btn" id="cancel_logout">Cancel</a>
+          {% else %}
+            <a href="{% url 'index' %}" onclick="location.href = '/login'" class="btn" id="cancel_logout">Cancel</a>
+          {% endif %}
+    		  <button type="submit" class="btn no-p" name="register_type" style="padding: 5px; margin-bottom: 10px;" >&nbsp;Next&nbsp;</button>
+        </div>
+      </form>
+  </div>
+{% endblock content %}
+
+{% block js %}
+  <script type="text/javascript">
+    
+    const radioButtons = document.querySelectorAll('input[name="acc_type"]');
+
+    function remove_social_register() {
+      $j.post(
+        "/social/register/delete/{{ request.user.id }}/",
+        "csrfmiddlewaretoken=" + $j("input[name=csrfmiddlewaretoken]").val(),
+        function(output) {
+          window.location.href = '/';
+        },
+        'json'
+      );
+      return true;
+    }
+
+    function checkboxValidations() {
+        var registrationForm = $j("form[name='reg_type']");
+
+        errorLabelContainer: '#errors',
+          registrationForm.validate({
+            ignore: "", //Hidden inputs
+            rules: {
+              'type_check': {
+                required: true
+              },
+              'usepolicy_check': {
+                required: true
+              },
+              'ageconfirm_check': {
+                required: true
+              }
+            },
+            messages: {
+              'type_check': {
+                required: "<div class='checkbox-error-msg'><span>Please check the box to proceed</span></div>",
+              },
+              'usepolicy_check': {
+                required: "<div class='checkbox-error-msg'><span>Please check the box to proceed</span></div>",
+              },
+              'ageconfirm_check': {
+                required: "<div class='checkbox-error-msg'><span>Please check the box to proceed</span></div>",
+              }
+            }
+          });
+        return registrationForm.valid()
+      }
+
+      $j('button[name="register_type"]').click(function () {
+        checkboxValidations();
+        $j('.errorlist').show();
+        $j('.err_msg').show();
+
+        let selectedType;
+        for (const radioButton of radioButtons) {
+            if (radioButton.checked) {
+                selectedType = radioButton.value;
+                break;
+            }
+        }
+        sessionStorage.setItem('acc_type', selectedType);
+      });
+  </script>
+{% endblock js %}

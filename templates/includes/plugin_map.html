@@ -1,0 +1,79 @@
+{% load static %}
+{% load thumbnail %}
+<div class="modal fade" id="pluginMapModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-body pt-0">
+          <div class="row">
+              <div class="col-sm-6" id="plugin-map-header"><h3 class="plugin-title"><img src="/static/images/plug_thumb.png" class="plugin text-center lazy" title="Plug-In" style="width: 80px;display: inline-block;">Plugin Connections for this Skigit!</h3></div>
+              <div class="col-sm-6 text-right more-skigits"></div>
+          </div>
+
+          <div class="loader"></div>
+          {% thumbnail skigit_thumbnail "x200" as im %}
+         <div class="circle_skigitvid main-skigit skigit_content_wrap " id="home_page"
+               data-skigt="{{ skigit.id }}" style="background-image:url({{ im.url }})">
+            <div class="main-skigit-inner">
+
+              <div class="mar_zero skigit_contents">
+                <div class="pull-right skigit_creator_logo">
+                  {% if skigit.business_logo.id %}
+                    {% if skigit.made_by and skigit.business_logo.is_deleted == False %}
+                      {% if not is_anonymous %}
+                        <a onclick="logoclick({{ skigit.business_logo.id }},'{% url 'sperk_profile' skigit.made_by.id skigit.business_logo.id %}')"
+                         id="profile_hover{{ skigit.id }}">
+                      {% else %}
+                        <a onclick="openMessage()">
+                      {% endif %}
+                        {% if skigit.business_logo %}
+                          {% thumbnail skigit.business_logo.logo "x200" as im %}
+                            <img class="img-responsive image-business lazy"
+                                 src="{{ im.url }}" data-vid="{{ skigit.id }}"
+                                 alt="{{ skigit.skigit_id.user.username }}"/>
+                          {% endthumbnail %}
+                        {% endif %}
+                      </a>
+                    {% else %}
+
+                        {% if default_logo %}
+                            {% if not is_anonymous %}
+                              <a href="{% url 'sperk_profile' skigit.made_by.id default_logo.id %}"
+                               data-vid="{{ skigit.id }}"
+                               class="image-business">
+                            {% else %}
+                               <a onclick="openMessage()">
+                            {% endif %}
+                                {% thumbnail default_logo.logo "x200" as im %}
+                                    <img class="img-responsive"
+                                         src="{{ im.url }}" class="lazy"/>
+                                {% endthumbnail %}
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                  {% endif %}
+
+                </div>
+              </div>
+
+                  <div class="text-center skigit-icon">
+                    <a href="{% url 'skigit_data' skigit.pk %}"
+                       title="Play {{ skigit.title }} Skigit" class="skigit_playback hidden-xs hidden-sm"
+                       data-skigit="#{{skigit.pk}}">
+                      <img src="{% static 'images/Skigit_Logo_AI_master.png' %}"
+                           title="Play Skigit" class="lazy"/>
+                    </a>
+                  </div>
+
+
+
+
+            </div>
+            <div class="plugin-skigits">
+            </div>
+          </div>
+         {% endthumbnail %}
+
+      </div>
+    </div>
+  </div>
+</div>

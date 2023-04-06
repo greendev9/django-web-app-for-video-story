@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block title %}{{ block.super }}
+  {% if category_current.cat_name %}
+    {{ category_current.cat_name }}
+  {% elif category_current.sub_cat_name %}
+    {{ category_current.sub_cat_name }}
+  {% elif skigit_plug %}
+    Plugged Skigits into {{ skigit_plug }}
+  {% elif skigit_like %}
+    Liked Skigits by {{ skigit_like }}
+  {% else %}
+    Skigits by {{ category_current }}
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+
+  <style>
+
+    .endless_more {
+      font-size: x-large;
+    }
+
+    .endless_more {
+      display: table;
+      margin: 0 auto;
+      clear: both;
+    }
+
+    .endless_loading {
+      display: table;
+      width: 100%;
+    }
+
+    .close-skigit {
+      z-index: 1 !important;
+    }
+
+    #ordering_link {
+      padding: 4px 0px !important;
+      /*background: url({% static 'skigit/images/verfy_btn.png' %}) no-repeat !important;*/
+      width: 175px !important;
+      height: 32px !important;
+      line-height: 24px !important;
+      font-size: 14px !important;
+    }
+
+    #ordering_link:hover {
+      /*background: url(https://static.skigit.com/images/verfy_btn_hover.png) no-repeat !important;*/
+    }
+
+
+	
+	
+	
+  </style>
+
+  <div class="row mar_zero section-box" id="main">
+
+    <div class="section-content grid-small">
+
+      <div class="endless_page_template" id="skigit_content_list" style="padding: 0 0 25px 0;">
+
+        <div class="row">
+
+          <div class="col-lg-12">
+
+            <form method='POST' class="form_search" action='{% url 'skigit_search' %}'>
+
+              {% csrf_token %}
+              <div class="col-lg-3 col-md-3 col-sm-3" id="token">
+			  
+			  
+              </div>
+
+              <div class="col-lg-7 col-md-7 col-sm-7">
+                <div class="input-group" id="search-input">
+                  <input type="text" autofocus="on" spellcheck="false" autocomplete="off" id="searchBox"
+                         name='searchBox' class="form-control f_type"
+                         {% if search_text %}value="{{ search_text }}"{% endif %}
+                         placeholder="Search by Title / Username / Company Name">
+                  <span class="input-group-addon" style="margin: 0px" id="basic-addon1"><input type="submit" value="Search" id="search-button" style="margin-top: 12px;"></span>
+                </div>
+              </div>
+            </form>
+              <div class="col-lg-2 col-md-2 col-sm-2">
+                <a id='ordering_link' class="btn"
+                   href="{% url 'skigit_search_ordering' order_value %}">
+                  {% if togal_val == '1' %}
+                    Latest Skigits first
+                  {% elif togal_val == '2' %}
+                    Oldest Skigits first
+                  {% endif %}
+                </a>
+              </div>
+
+            </div>
+          </div>
+          </div>
+
+        </div>
+
+       <div class="row endless_page_template" id="likedcontent">
+         {% include "includes/skigit_list.html" %}
+       </div>
+      </div>
+
+    </div><!-- end .section-content -->
+
+    {#        <script type="text/javascript" src="{% static 'js/pageUp.js' %}"></script>#}
+
+  </div>
+
+  <!-- end .section-box -->
+  <!--<a id="latestinifiniteLoader" style="float:left;display:none;margin:5px 425px">
+    <img src="{% static '/images/inf_loading.gif' %}"/>-->
+  </a>
+
+  <script>
+    $j = jQuery.noConflict()
+    var $a = $j('#ordering_link').attr('href');
+    var url = $a.split("-");
+    if ($j.trim($j('#searchBox').val()) != '') {
+      $j('#ordering_link').attr('href', url[0] + '&' + $j('#searchBox').val());
+    }
+    else {
+      $j('#ordering_link').attr('href', url[0]);
+    }
+
+      $j('#search_ordering').change(function () {
+        $j.ajax({
+          type: "POST",
+          url: "/skigit_i_unlike/",
+          data: {'skigit_id': skigit_id, 'csrfmiddlewaretoken': '{{csrf_token}}'},
+          success: function (response) {
+            if (response.is_success) {
+              if (response.unlike == 1 || response.unlike == '1') {
+                $j("#" + post_id).attr("title", "Like");
+                $j("#" + post_id).removeClass("like");
+                $j("#" + post_id).addClass("unlike");
+                $j("#" + post_id + "> img").attr("src", "/static/images/icons/heart(22x22).png");
+              }
+            }
+          },
+          error: function (rs, e) {
+            $("#popup_msg").text("Error into like the Skigit...! Please try again");
+            $("#popScreen").show();
+          }
+        });
+      });
+
+      $j('#searchBox').on('change', function () {
+        var $a = $j('#ordering_link').attr('href');
+        var url = $a.split("-");
+        $j('#ordering_link').attr('href', url[0] + '&' + $j('#searchBox').val());
+      });
+
+  </script>
+
+{% endblock %}
+{% block js %}
+  <script>jQuery.endlessPaginate({paginateOnScroll: true});</script>
+{% endblock %}

@@ -1,0 +1,644 @@
+{% load static %}
+
+
+
+<div class="libnk_skigitshair">
+
+<img src="{% static 'images/share_thumb.png' %}" class="share text-center" title="Share" id="share_icon_popup">
+
+<h3 class="popover-title" id="share_popup" style="margin: 10px 0 10px 0!important;">
+  Share this Skigit
+</h3>
+<div class="tabbable sharing custom_popup" id="shareContent{{ vid.id }}">
+
+  <div class="tabbox">
+    <ul class="nav nav-tabs">
+      <li class="tab active" ><a href=".share1{{ vid.id }}" data-toggle="tab" style="border: none!important;">Skigit Friends</a></li>
+      <li class="tab"><a href=".share2{{ vid.id }}" data-toggle="tab" style="border: none!important; margin-left: 30px;">Email Friends</a></li>
+    </ul>
+
+    <div class="tab-content" style="padding-top: 8px">
+      <div class="tab-pane active share1{{ vid.id }}">
+        {% if friend_list %}
+          <div class="row" style="">
+            <div class="col-lg-12 col-md-12 col-sm-12 f_type">
+              <div class="col-lg-8 col-md-8 col-sm-8 " style="padding-bottom: 10px;margin-left: 5px;">
+                <input type="text" class="search-query form-control f_type" style="border-radius: 2px;width: 250px;height: 34px;"
+                       id="friend_share_text{{ vid.id }}" autocomplete="off" autocorrect="off"
+                       spellcheck="false"
+                       placeholder="Search friends by username"/>
+              </div>
+			  <label class="selectall_label" id="selectall_label{{ vid.id }}">All &nbsp;</label>
+              <div class="col-lg-4 col-md-4 col-sm-4 check_box_sapn" id="all_check">
+                <input type="checkbox" value="" class="select_alll{{ vid.id }}"
+                name="select_alll{{ vid.id }}" id="select_alll{{ vid.id }}"/>
+              <label for = "select_alll{{ vid.id }}"></label>
+			  
+			  <!--<span id="check_box_sapn">
+                  <input class="shareCheckBox" type="checkbox"
+                         onclick="sharebox({{ friend.uid }},{{ vid.id }})"
+                         name="sharebox{{ vid.id }}" value="{{ friend.uid }}"
+                         id="sharebox{{ vid.id }}{{ friend.uid }}">
+                  <label for = "sharebox{{ vid.id }}{{ friend.uid }}"</label>
+                </span>-->
+				
+
+              </div>
+            </div>
+          </div>
+         
+		  <script>
+                      $j = jQuery.noConflict();
+                      $j(document).ready(function () {
+                        $j('#friend_share_textt{{vid.id}}').keyup(function (e) {
+                          var currentTimezone = jstz.determine();
+                          var timezone = currentTimezone.name();
+                          console.log($j(this).val());
+                          $j.ajax({
+                            url: "/friends/friend-share-search/",
+                            type: "POST",
+                            data: {
+                              'search_text': $j(this).val(),
+                              'video_id':{{ vid.id}},
+                              'time_zone': timezone,
+                              csrfmiddlewaretoken: '{{ csrf_token }}'
+                            },
+                            success: function (data) {
+
+                              if (data.result) {
+                                $j('#fsharee{{ vid.id }}').empty();
+                                $j('.shareCheckBox').remove();
+                                if ($j('#select_alll' +{{ vid.id }}).is(':checked')) {
+                                  $j('#select_alll' +{{ vid.id }}).prop('checked', false)
+                                }
+                                if (data.search_list.length <= 1) {
+                                  $j('#select_alll' +{{ vid.id }}).attr('disabled', 'disable')
+                                }
+                                else {
+                                  $j('#select_alll' +{{ vid.id }}).removeAttr('disabled')
+                                }
+                                for (var i = 0; i < data.search_list.length; i++) {
+
+                                  var friends_id = data.search_list[i]['uid'];
+                                  var image = data.search_list[i]['image'];
+                                  var username = data.search_list[i]['username'];
+                                  var share_date = data.search_list[i]['share_date'];
+                                  var name = data.search_list[i]['name'];
+                                  var fshare_list = '<li class="list-group-item col-lg-12 col-md-12 col-sm-12 f_type" style="color:#bbb9b9; font-size: smaller;">' +
+                        '<a href="/profile/' + username + '"><img class="avatar" id="share_avatar" height="30" width="30" src="' + image + '"/></a>' +
+                        '<a href="/profile/' + username + '"><label class="f_type" style="margin-left: 0px;">' + name + '</label></a>' +
+                        '<label class="f_type share_date">' + share_date + '</label>' +
+                        '<span id="check_box_sapn">' +
+                        '<input class="shareCheckBox" type="checkbox" onclick="sharebox(' + friends_id + ', {{ vid.id }})" name="sharebox{{ vid.id }}" value="' + friends_id + '" id="friends_id"/>' +
+                        '<label for="friends_id"</label></span></li>';
+
+
+                                  $j('#fsharee{{ vid.id }}').append(fshare_list);
+                                }
+                              }
+                              else {
+                                $j('#fsharee{{ vid.id }}').empty();
+                                $j('#flabel_count').html('No friends found')
+                              }
+                              if (data.search_list.length > 0) {
+                                $j('#flabel_count').html(data.search_list.length + ' friends found.')
+                              }
+                              else {
+                                $j('#flabel_count').html('No friends found.')
+                              }
+                              e.stopPropagation();
+                              e.preventDefault
+                            }
+                          });
+                        });
+                      });
+                    </script>
+
+					<script type="text/javascript">
+
+  $j = jQuery.noConflict();
+
+  $j(document).ready(function () {
+
+    $j('.slider1').bxSlider({
+      hideControlOnEnd: true,
+      infiniteLoop: false,
+      slideWidth: 130,
+      minSlides: 2,
+      maxSlides: 6,
+      moveSlides: 4,
+      slideMargin: 10,
+      pager: false,
+      touchEnabled: false
+    });
+
+    var currentTimezone = jstz.determine();
+    var timezone = currentTimezone.name();
+
+    $j('#id_time_zone').val(timezone);
+    $j(".share_popoverr1{{ vid.id }}").popover({
+      html: true,
+      title: 'Share this Skigit<img width="32" height="30" title="close" data-toggle="clickoverr{{vid.id  }}"  src="{% static 'images/close(32x32).png' %}" onclick="shareClose()" id="close_skigit" class="close_skigit_share" />',
+      placement: 'auto right',
+      cache: true,
+      content: $j("#shareContentt{{ vid.id }}").html(),
+    }).click(function (e) {
+      $j(':checkbox').each(function () {
+        this.checked = false;
+      });
+    });
+
+    $j(document).on('change', '.select_alll{{vid.id}}', function (e) {
+
+      if (this.checked) {
+        // Iterate each checkbox
+        $j(':checkbox').each(function () {
+          this.checked = true;
+        });
+      }
+      else {
+        $j(':checkbox').each(function () {
+          this.checked = false;
+        });
+      }
+    });
+
+    function unique(array) {
+      return $j.grep(array, function (el, index) {
+        return index === $j.inArray(el, array);
+      });
+    }
+
+    shareToFriends1 = function (skigit_id) {
+      var currentTimezone = jstz.determine();
+      var timezone = currentTimezone.name();
+      var share_value = [];
+      var plug_count = $j.trim($j('#share_count' + skigit_id).text());
+      $j("input[type=checkbox]:checked").each(function () {
+        if ($j('#shareboxx' + skigit_id + $j(this).val()).is(':checked')) {
+          share_value.push(parseInt($j(this).val()));
+        }
+      });
+
+      if (share_value.length > 0) {
+        $j('#button_share{{ vid.id }}').prop('disabled', true);
+        $j('#share_msg{{ vid.id }}').html('Please Wait...').css('color', 'orange');
+
+        $j.ajax({
+          type: "POST",
+          url: "/share-skigits/",
+          data: {
+            'vid_id': skigit_id, 'friend_list[]': unique(share_value), 'time_zone': timezone,
+            'csrfmiddlewaretoken': '{{csrf_token}}'
+          },
+          success: function (data) {
+            if (data.is_success) {
+              $j(':checkbox').each(function () {
+                this.checked = false;
+              });
+
+              for (var i = 0; i < unique(share_value).length; i++) {
+                $j('#id_date_label_popup' + skigit_id + unique(share_value)[i]).text(data.date)
+              }
+              $j('#share_msg{{ vid.id }}').html("<img width='25' src='{% static 'images/success_icon.png' %}'> You successfully shared this Skigit!").css('color', '#c8f2d1', 'font-family', 'segoe print', 'color', '#c8f2d1', 'font-size', '14px');
+              $j('#button_share{{ vid.id }}').prop('disabled', false);
+              $j('#share_count' + skigit_id).text(parseInt(plug_count) + parseInt(unique(share_value).length));
+              setTimeout(function () {
+                $j('#share_msg{{ vid.id }}').empty()
+              }, 2500)
+            }
+          },
+          error: function (rs, e) {
+            $j("#popup_msg").text("<img width='25' src='{% static 'images/error_icon.png' %}'>Error with Share Skigit Index Page. Please submit a bug report.");
+            $j("#popScreen").show();
+            $j('#button_share{{ vid.id }}').prop('disabled', false)
+          }
+        });
+      }
+      else {
+        $j('#share_msg{{ vid.id }}').html("<img width='25' src='{% static 'images/error_icon.png' %}'>Please check option boxes to share a Skigit with friends").css('color', 'red');
+        $j('#button_share{{ vid.id }}').prop('disabled', false);
+        setTimeout(function () {
+          $j('#share_msg{{ vid.id }}').empty()
+        }, 2500)
+      }
+    };
+
+
+    shareboxx = function (friend_id, video_id) {
+      var share_id = $j('#shareboxx' + video_id + friend_id).attr('id');
+      var skigit_id = video_id;
+
+      if ($j('#select_alll' + video_id).is(':checked')) {
+        $j('#select_alll' + video_id).prop('checked', false)
+      }
+    };
+
+    like_{{ vid.id }}_unlike = function () {
+
+      var skigit_id = $j("#like_" +{{ vid.id }}).attr('data-pid');
+      var post_id = $j("#like_" +{{ vid.id }}).attr('id');
+      var post_clas = $j("#like_" +{{ vid.id }}).attr('class');
+      var like_count = $j.trim($j('#like_count{{  vid.id  }}').text());
+
+      if (post_clas == 'unlike') {
+        $j.ajax({
+          type: "POST",
+          url: "/skigit_i_like/",
+          data: {'skigit_id': skigit_id, 'csrfmiddlewaretoken': '{{csrf_token}}'},
+          success: function (response) {
+            if (response.is_success) {
+              if (response.like == 1 || response.like == '1') {
+                $j("#" + post_id).attr("title", "Unlike");
+                $j("#" + post_id).removeClass("unlike");
+                $j("#" + post_id).addClass("like");
+                $j("#" + post_id + "> img").attr("src",  "{% static 'images/heart_liked.png'%}" );
+                $j('#like_count' +{{  vid.id  }}).text(parseInt(like_count) + 1)
+              }
+            }
+          },
+          error: function (rs, e) {
+            $j("#popup_msg").text("<img width='25' src='{% static 'images/error_icon.png' %}'>An error occurred with this Like/Unlike feature. Please submit a bug report.");
+            $j("#popScreen").show();
+          }
+        });
+      }
+      else if (post_clas == 'like') {
+
+        $j.ajax({
+          type: "POST",
+          url: "/skigit_i_unlike/",
+          data: {'skigit_id': skigit_id, 'csrfmiddlewaretoken': '{{csrf_token}}'},
+          success: function (response) {
+            if (response.is_success) {
+              if (response.unlike == 1 || response.unlike == '1') {
+                $j("#" + post_id).attr("title", "Like");
+                $j("#" + post_id).removeClass("like");
+                $j("#" + post_id).addClass("unlike");
+                $j("#" + post_id + "> img").attr("src", "{% static 'images/heart_unliked.png'%}");
+                $j('#like_count' +{{  vid.id  }}).text(parseInt(like_count) - 1)
+              }
+            }
+          },
+          error: function (rs, e) {
+            $j("#popup_msg").text("<img width='25' src='{% static 'images/error_icon.png' %}'>An error occurred with this Like/Unlike feature. Please submit a bug report.");
+            $j("#popScreen").show();
+          }
+        });
+      }
+    };
+
+
+    returnPicture = function () {
+      $j.ajaxSetup({async: false});
+      current_picture = '';
+      var video_id = "{{vid.id}}";
+      $j.post("/vdo_thumbnail/get/", {video_id: video_id},
+        function (data, status) {
+          if (data.is_success) {
+            msg = data.message;
+            current_picture = data.url;
+          }
+          else {
+            return false;
+          }
+        });
+      $j.ajaxSetup({async: true});
+      return current_picture;
+    };
+
+    get_statistics_count = function (skigit_id, e) {
+      $j.ajax({
+        type: "POST",
+        url: "/skigit_statistics/",
+        data: {'skigit_id': skigit_id, 'csrfmiddlewaretoken': '{{csrf_token}}'},
+        success: function (response) {
+
+          if (response.is_success) {
+            $j('li').find('#id_plug_count').html(response.plug_count);
+            $j('li').find('#id_view_count').html(response.view_count);
+            $j('li').find('#id_favorites').html(response.fav_count);
+            $j('li').find('#id_likes').html(response.like_count);
+            $j('li').find('#id_share').html(response.share_count)
+          }
+        },
+        error: function (rs, e) {
+          $j("#popup_msg").text("<img width='25' src='{% static 'images/error_icon.png' %}'>An error occurred with this Statistics feature. Please submit a bug report.");
+          $j("#popScreen").show();
+        }
+      });
+    };
+
+    openPopup = function () {
+      $j('.msg_success').hide();
+    };
+
+    read_More = function () {
+      $j('#why_rocks_half').hide();
+      $j('#why_rocks_full').show();
+      $j('#read_more').hide();
+      $j('#hide_text').show()
+    };
+
+    hide_Text = function () {
+      $j('#why_rocks_half').show();
+      $j('#why_rocks_full').hide();
+      $j('#read_more').show();
+      $j('#hide_text').hide()
+    };
+  });
+
+</script>
+			 <!--   Friends count display ---->
+			 <div id= "friends_count" >
+			 <span class="f_type flabel_count" id="flabel_count{{ vid.id }}">
+              {{ friend_list|length }} Friends</span>
+		    </div>
+			
+		  <ul class="list-group notification_ul shair_list"
+              id="fshare{{ vid.id }}">
+            {% for friend in friend_list %}
+              <li class="list-group-item col-lg-12 col-md-12 col-sm-12 f_type">
+                  <div class="col-lg-9 col-md-9 col-sm-9" style="padding-right: 0px;">
+                    <a href="{% url 'user_profile_display'  friend.username %}">
+                      <img class="avatar" id="share_avatar" height="30" width="30" src="{{ friend.image }}"/>
+                    </a>
+                    <!--<a><label class="f_type" style="margin-left: 10px;">
+                        {{ friend.name }}</label>
+                    </a>
+                    <label class="f_type share_date" id='id_date_label{{ vid.id }}{{ friend.uid }}'
+                           style="margin-left: 10px; color: #000000;">-->
+
+                     <label class="f_type" style="text-align: left;font-size: 14px;color: #fff ;">{{ friend.name }}</label>
+                     <!--<label class="f_type share_date" id="id_date_label_popup2601" style="Color: #000000;">Just now</label>-->
+                    
+					<label class="f_type share_date" id='id_date_label_popup{{ vid.id }}{{ friend.uid }}'style="margin: -15px 0 0 0;width: 158px;color: #f9bc8d;">
+
+                      {% for ski in skigit_list %}
+                        {% if friend.username == ski.username %}
+                          {% if ski.vid == vid.id %}
+                            {{ ski.share_date|date:"M d" }} at {{ ski.share_date|date:"h:m A" }} 
+                          {% endif %}
+                        {% endif %}
+                      {% endfor %}
+                    </label>
+                  </div>
+
+                  <!--<label class="circle_2"
+                       {% if friend.username not in users %} style="background: #fff !important;"
+                       {% endif %}></label>-->
+
+                  <p id="demo"></p>
+                  <div class="col-lg-3 col-md-3 col-sm-3" style="width: 15px;padding: 0;">
+                      <div class="col-lg-6 col-md-6 col-sm-6"  style="padding: 0;">
+                        <label id="circle" class="circle"{% if friend.uid not in users %} style="background: #c3c3c3;"{% else %} style="background: #a7e3a2;"{% endif %}></label>
+                      </div>
+                  </div>
+				  
+					<div class="col-lg-6 col-md-6 col-sm-6" style="margin: 2px 0 0 6px;width: auto;">
+                          <input class="shareCheckBox" type="checkbox"
+                                 onclick="sharebox({{ friend.uid }},{{ vid.id }})"
+                                 name="sharebox{{ vid.id }}" value="{{ friend.uid }}"
+                                 id="sharebox{{ vid.id }}{{ friend.uid }}">
+                          <label for = "sharebox{{ vid.id }}{{ friend.uid }}" id="sharebox_checkbox" ></label>
+                    </div>
+					  
+					  
+              </li>
+            {% endfor %}
+          </ul>
+
+          <div class="button_share_div" id="share_friends_found" style="display: flex;justify-content: center;">
+
+            <button class="button_share" id="button_share" name="button_share"
+                    onclick="shareToFriends({{ vid.id }})">Share
+            </button>
+            <button class="btn btn-danger" id="button_share" name="button_share"
+                     data-dismiss="modal"  style="margin: 20px 0px 10px 5px;">Cancel
+            </button>
+          </div>
+
+          <div>
+            <label id="msg{{ vid.id }}" class="msg f_type"  style="color: #ff8888!important;font-size: 13px; width:100%;text-align:center;"></label>
+          </div>
+
+        {% else %}
+          <ul class="list-group notification_ul " style="border:1px solid #eee !important;" id="frnd_notification{{ vid.id }}">
+            <li class="f_type" style="align-content: center; text-align: center;">
+              <center><p id="no_friends_message">No friends found in your Friends and Invites page.</p></center>
+            </li>
+          </ul>
+        {% endif %}
+
+        <script>
+          $j = jQuery.noConflict();
+          $j(document).ready(function () {
+            $j(document).on('keyup', '#friend_share_text{{ vid.id }}', function (e) {
+              var currentTimezone = jstz.determine();
+              var timezone = currentTimezone.name();
+                      console.log($j(this).val());
+              $j.ajax({
+                url: "/friends/friend-share-search/",
+                type: "POST",
+                data: {
+                  'search_text': $j(this).val(), 'video_id':{{ vid.id }},
+                  'time_zone': timezone, csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function (data) {
+
+                  if (data.result) {
+                    $j('#fshare{{ vid.id }}').empty();
+                    $j('.shareCheckBox{{ vid.id }}').remove();
+                    if ($j('.select_all{{ vid.id }}').is(':checked')) {
+                      $j('.select_all{{ vid.id }}').prop('checked', false)
+                    }
+                    if (data.search_list.length <= 1) {
+                      $j('.select_all{{ vid.id }}').attr('disabled', 'disable')
+                    }
+                    else {
+                      $j('.select_all{{ vid.id }}').removeAttr('disabled')
+                    }
+                    for (var i = 0; i < data.search_list.length; i++) {
+                      var friends_id = data.search_list[i]['uid'];
+                      var image = data.search_list[i]['image'];
+                      var username = data.search_list[i]['username'];
+                      var share_date = data.search_list[i]['share_date'];
+                      var name = data.search_list[i]['name'];
+                      var logged_indicator = '';
+                      if(!data.search_list[i]['logged_in']) {
+                        var logged_indicator = 'style="background: #fff !important;"';
+                      }
+                      var fshare_list = '<li class="list-group-item col-lg-12 col-md-12 col-sm-12 f_type" style="color:#bbb9b9;font-size: smaller; padding: 9px 3px 3px 3px; margin:0">' +
+                        '<div class="col-lg-9 col-md-9 col-sm-9" style="padding-right: 0px;">' +
+                        '<a href="/profile/' + username + '"><img class="avatar" id="share_avatar" height="30" width="30" src="' + image + '"/></a>' +
+                        '<a href="/profile/' + username + '"><label class="f_type">' + name + '</label></a>' +
+                        '<label class="f_type share_date" style="color: #000000;margin-left: 65px;margin-top: -15px;width: 178px;color: #f9bc8d;">' + share_date + '</label>' +
+                        '</div>' +
+                        '<div class="col-lg-3 col-md-3 col-sm-3" style="width:15px;">' +
+                        '<div class="col-lg-6 col-md-6 col-sm-6" style="float: none; left: 7px;top:15px">' +
+                        '<input class="shareCheckBox" type="checkbox" onclick="sharebox(' + friends_id + ',{{ vid.id }})" name="sharebox{{ vid.id }}" value="' + friends_id + '" id="' + friends_id + '"  />' +
+                        '<label for="' + friends_id + '" </label>' +
+                        '</div>' +
+                        '<div class="col-lg-6 col-md-6 col-sm-6" style="right: 30px;top: -26px;">' +
+                        '<label id="circle" class="circle" ' + logged_indicator + '>' + '</label>' +
+                        '</div>' +
+                        '</div>' +
+                        '</li>';
+                      $j('#fshare{{ vid.id }}').append(fshare_list);
+                    }
+                  }
+                  else {
+                    $j('#fshare{{ vid.id }}').empty();
+                    $j('#flabel_count{{ vid.id }}').html('No friends found')
+                  }
+                  if (data.search_list.length > 0) {
+                    $j('#flabel_count{{ vid.id }}').html(data.search_list.length + ' friends found.')
+                  }
+                  else {
+                    $j('#flabel_count{{ vid.id }}').html('No friends found')
+                  }
+                  e.stopPropagation();
+                  e.preventDefault
+                }
+              });
+            });
+            $j(document).on('change', '.select_all', function (e) {
+              if (this.checked) {
+                // Iterate each checkbox
+                $j(':checkbox').each(function () {
+                  this.checked = true;
+                });
+              }
+              else {
+                $j(':checkbox').each(function () {
+                  this.checked = false;
+                });
+              }
+            });
+          });
+
+        </script>
+      </div>
+
+      <div class="tab-pane share2{{ vid.id }}">
+		<span style="font-size:11px;color: #e5e4e4;margin: 0 5px 5px 5px;display: block;"> * Seperate each address with a comma.</span>
+        <form class="email_share_form{{ vid.id }}">
+          {% csrf_token %}
+          <div class="form-group">
+            <input type="text" autocomplete="off" autocorrect="off" spellcheck="false"
+                   id="idEmailShare{{ vid.id }}" name="emailShareInput{{ vid.id }}"
+                   class="form-control idEmailShare f_type" placeholder="Enter friends email">
+          </div>
+          <div class="form-group">
+            <input type="button" class="button_share email_share_btn" type="button"
+                   style="float:right; margin-bottom: 20px;" value="Share" onclick="shareEmailFriends{{ vid.id }}()" />
+          </div>
+          <center>
+              <label for="idEmailShare{{ vid.id }}" id="errors"
+                     class="f_type share_success_label{{ vid.id }}" >
+              </label>
+          </center>
+          <label for="idEmailShare{{ vid.id }}" class="share_error_label{{ vid.id }} error" style="position: relative;width: 70%;margin-top: 13px;"></label>
+        </form>
+
+        <script type="text/javascript">
+
+          $j = jQuery.noConflict();
+          $j(document).ready(function () {
+
+            $j(window).keydown(function(event){
+              if(event.keyCode == 13) {
+                event.preventDefault();
+                shareEmailFriends{{ vid.id }}();
+                return false;
+              }
+            });
+
+            emailShareValidation{{ vid.id }} = function () {
+              $j.validator.addMethod("multiEmailShare{{ vid.id }}", function (value, element) {
+                if (this.optional(element)) {
+                  return true;
+                }
+                value = value.replace(/(,$)/g, "")
+                var emails = value.split(/,/), valid = true;
+                for (var i = 0, limit = emails.length; i < limit; i++) {
+                  value = emails[i].trim();
+                  valid = valid && jQuery.validator.methods.email.call(this, value, element);
+                }
+      return valid;
+              }, "<img width='25' src='{% static 'images/error_icon.png' %}'>Invalid email format. Please use a comma (,) to separate multiple email addresses.");
+
+<!--required: '<img width="25" src="{% static 'images/error_icon.png' %}" >Yo dah! Enter your friends email'-->
+
+              var emailShareForm = $j(".email_share_form{{ vid.id }}")
+
+              errorLabelContainer: '.share_error_label{{ vid.id }}'
+                emailShareForm.validate({
+                  rules: {
+                    'emailShareInput{{ vid.id }}': {
+                      required: true,
+                      multiEmailShare{{ vid.id }}: true
+                    }
+                  },
+                   messages: {
+                    'emailShareInput{{ vid.id }}': {
+                       required: '<img width="25" src="{% static 'images/error_icon.png' %}" >Yo dah! Enter your friends email.'
+                    }
+                  }
+                });
+              return emailShareForm.valid()
+            };
+
+            shareEmailFriends{{ vid.id }} = function () {
+              emailShareValidation{{ vid.id }}();
+
+              if (emailShareValidation{{ vid.id }}()) {
+                var email_list = ($j('#idEmailShare{{ vid.id }}').val().replace(/(,$)/g, "")).trim()
+                $j('.email_share_btn').attr('disable', 'disabled', 'color', 'black')
+                $j('.share_success_label{{ vid.id }}').empty()
+                $j('.share_success_label{{ vid.id }}').html('Please Wait...').css('color', 'orange')
+                $j('.share_success_label{{ vid.id }}').show()
+                $j.ajax({
+                  url: "/email-share-skigit/",
+                  type: "POST",
+                  data: {
+                    'email_list': email_list, 'video_id': {{ vid.id }},
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                  },
+                  success: function (data) {
+
+                    if (data.is_success) {
+
+                      $j('.share_success_label{{ vid.id }}').html("<img width='25' src='{% static 'images/success_icon.png' %}'> You successfully shared this Skigit!").css('color', '#c8f2d1', 'font-size', '14px' , 'font-family' , 'segoe print')
+                      $j(".email_share_form{{ vid.id }}")[0].reset()
+                      $j('.email_share_btn').removeAttr('disable')
+					  
+
+                      setTimeout(function () {
+                        $j('.share_success_label{{ vid.id }}').empty()
+                        $j('.share_success_label{{ vid.id }}').hide()
+                      }, 2500)
+                    }
+                    else {
+                      $j('.share_success_label{{ vid.id }}').html("<img width='25' src='{% static 'images/error_icon.png' %}'>Your Skigit share failed. Please submit a bug report.").css('color', '#ffa3a3', 'font-size', '14px' , 'font-family' , 'segoe print')
+                      setTimeout(function () {
+                        $j('.share_success_label{{ vid.id }}').empty()
+                        $j('.share_success_label{{ vid.id }}').hide()
+                      }, 2500)
+                    }
+                  }
+                });
+              }
+            };
+          });
+
+        </script>
+		
+
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+

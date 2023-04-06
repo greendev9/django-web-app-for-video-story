@@ -1,0 +1,304 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block main_video_block %}
+{% endblock %}
+
+{% block window_page_title_block %}
+    Upload - Skigit
+{% endblock %}
+{% block window_page_meta_block %}
+    <meta property="og:site_name" content="Skigit" xmlns="http://www.w3.org/1999/html"/>
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content=""/>
+    <meta property="og:title" content="Video Upload - Skigit" />
+
+{% endblock %}
+
+{% block head_inline_css_block %}
+
+{% endblock %}
+
+{% block main_nav_under_css_block %}
+{% endblock %}
+
+{% block main_div_block %}
+
+    <div class="p_body js__p_body"></div>
+    <div id="main">
+        <div class="wrap cf">
+
+            <div id="content" class=" no-padd-form" role="main">
+
+                <div class="post-2110 page type-page status-publish hentry" id="post-2110">
+
+                    <div class="page-content rich-content">
+                        <div class="title">
+                            <h1 class="lao">Upload your Primary skigit</h1>
+                        </div>
+                        <!--<form onsubmit="return upload_video_validation('support')" action="/skigitdev/video-upload/?video_type=root" method="post" name="wpvp-upload-video" enctype="multipart/form-data" id="wpvp-upload-video">-->
+{#                        <form class="form-horizontal" action="{{ post_url }}{{ next_url }}" method="post" enctype="multipart/form-data">#}
+                        <form class="form-horizontal" id="videoform" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <div class="control-label col-sm-3 col-sm-offset-1" for="email">My Skigit Title <span class="red">*</span>
+                                    <div class="dropdown">
+                                        <i><img src="{% static 'images/help.png' %}" width="15"  />  </i>
+                                        <!-- dropdown menu -->
+                                        <ul class="dropdown-menu">
+                                            <div class="pop">
+                                                <h2>My Skigit Title</h2>
+                                                <p>Enter the name that best describes your skigit. The title will display at the top of your skigit thumbnail.</p>
+                                            </div>
+                                        </ul>
+                                    </div></div>
+
+                                <div class="col-sm-4">
+                                    {{form1.title}}
+                                    {{ form1.title.errors }}
+                                </div>
+                                <div class="col-sm-4 small" style="line-height:34px; font-size:11px;">Limit 40 Characters</div>
+                            </div>
+                            <div class="form-group">
+                                <div class="control-label col-sm-3 col-sm-offset-1" for="email">My Skigit Category <span class="red">*</span> <div class="dropdown">
+                                    <!--<i><img src="https://static.skigit.com/images/help.png" width="15"  />  </i>-->
+                                    <!-- dropdown menu -->
+                                    <ul class="dropdown-menu">
+                                        <div class="pop">
+                                            <h2>My Skigit Categorys</h2>
+                                            <p>Enter or select the category that best describes the presentation style of you skigit. Refer to <a href="guidelines/" target="_blank">Guidelines.</a> </p>
+                                        </div>
+                                    </ul>
+                                </div> </div>
+                                <div class="col-sm-4">
+                                    {{form1.category}}
+                                    {{ form1.category.errors }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="control-label col-sm-3 col-sm-offset-1" for="email">My Subject Category <span class="red">*</span>  <div class="dropdown">
+                                    <!--<i><img src="https://static.skigit.com/images/help.png" width="15"  />  </i>-->
+                                    <!-- dropdown menu -->
+                                    <ul class="dropdown-menu">
+                                        <div class="pop">
+                                            <h2>My Subject Category</h2>
+                                            <p>Enter or select the category that best classifies the awesome thing in your skigit. </p>
+                                        </div>
+                                    </ul>
+                                </div>  </div>
+                                <div class="col-sm-4">
+                                    {{form1.subject_category}}
+                                    {{form1.subject_category.errors}}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="control-label col-sm-3 col-sm-offset-1 sel-padd" for="email">My awesome thing was made by <span class="red">*</span> <div class="dropdown">
+                                    <i><img src="{% static 'images/help.png' %}" width="15"  />  </i>
+                                    <!-- dropdown menu -->
+                                    <ul class="dropdown-menu">
+                                        <div class="pop">
+                                            <h2>My awesome thing was made by</h2>
+                                            <p>Enter or select the name of the manufacturer or creator of your awesome thing.
+                                                Add maker, proprietor, establishment or organization name. For people,places, ideas or other, simply add a cool or fun name that best fits the originator of your awesome thing.
+                                                e.g. Awesome Idea; “E=mc2”, maker: “Albert Einstein”<br />
+                                                Awesome Person: “Michael Jordan”, maker: “Deloris and James”
+                                            </p>
+                                        </div>
+                                    </ul>
+                                </div> </div>
+                                <div class="col-sm-4">
+                                    {{form1.made_by}}
+                                </div>
+                            </div>
+                            <div class="col-sm-12 text-center">or</div>
+                            <div class="form-group">
+                                <p class="control-label col-sm-3 col-sm-offset-1" for="email">If not found in the list above, add maker or proprietor name</p>
+                                <div class="col-sm-4">
+                                    {{form1.made_by_option}}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="control-label col-sm-3 col-sm-offset-1" for="email">I bought my awesome thing at <span class="red">*</span>  <div class="dropdown">
+                                    <i><img src="{% static 'images/help.png' %}" width="15"  />  </i>
+                                    <!-- dropdown menu -->
+                                    <ul class="dropdown-menu">
+                                        <div class="pop">
+                                            <h2>I bought my awesome thing at</h2>
+                                            <p>Enter the name of the internet URL of the retailer or website where you purchased your awesome thing. If not a purchased item, enter the item home page or information page where viewers can learn more about your awesome thing.
+                                                e.g.  https//www.amazon.com,  <br/>
+                                                Only enter the URL suffix: amazon.com
+                                            </p>
+                                        </div>
+                                    </ul>
+                                </div> </div>
+                                <div class="col-sm-4">
+                                    {{form1.bought_at}}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="control-label col-sm-3 col-sm-offset-1" for="email">Spice up your Skigit thumbnail by adding your item logo <span>&nbsp</span>  <div class="dropdown">
+                                    <i><img src="{% static 'images/help.png' %}" width="15"  />  </i>
+                                    <!-- dropdown menu -->
+                                    <ul class="dropdown-menu">
+                                        <div class="pop">
+                                            <h2>Spice up your Skigit thumbnail by adding your item logo</h2>
+                                            <p>We recommend add the manufacturer or creators logo to your skigit to spice up your thumbnail. Let others know who made your awesome thing. The logo will be displayed in your thumbnail for the whole world to see!
+                                            </p>
+                                        </div>
+                                    </ul>
+                                </div> </div>
+                                <div class="col-sm-6 main-box radio">
+                                    <label class="radio-inline" style="padding-left:0px; padding-right:20px">
+                                        <div class="radio-box">{{form1.add_logo}}
+                                            <label class="radio-inline small">
+                                                <b class="sperk-logo-n f_type"><img width="120" height="auto"
+                             src="{% static 'images/Skitbits.gif' %}"/>
+                                            </b>Click to see what Skitbits you can earn!
+                                            </label>
+                                            {% if not profile %}
+                                                <ul class="sperk-logo">
+                                                    <li>
+                                                        <div class="sperk-content">
+
+                                                            <span class="glyphicon glyphicon-triangle-top"></span>
+
+                                                            <h2 class="sorry">Rats!</h2>
+                                                            <p>This maker is not offering any Skigit incentives at this time. Check back later!</p>
+                                                            <span id="close-button"></span>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            {% else %}
+                                                <ul class="sperk-logo">
+                                                    <li>
+                                                        <div class="sperk-content">
+
+                                                            <span class="glyphicon glyphicon-triangle-top"></span>
+
+                                                            <center><h2 class="sorry f_type"
+                                  style="color:#A10000 !important;">Rats!</h2></center>
+                             <center><p style="font-family: Segoe_Print !important;">
+                                This maker is not offering any Skigit incentives
+                                at this time. Check back later!</p></center>
+								
+                                                            <span id="close-button"></span>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            {% endif %}
+
+
+                                        </div></label>
+
+
+                                    <div id='show-me' style="padding-left:15px;" >
+                                        <div class="form-group gender">
+                                            {{ form1.receive_donate_sperk }}
+                                            {% if form1.gender.errors %}
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 error_ padd_zero">
+                                                    {{ form1.gender.errors }}
+                                                </div>
+                                            {% endif %}
+                                            <span id='target' style="padding-left:10px; display:none; color:#3abe75; cursor:pointer;">
+
+                                            Select your Cause
+                                            <div class="target-div">
+                                            <span class="glyphicon glyphicon-triangle-top"></span>
+                                            <h2>Donation Options</h2>
+                                            <div class="donation-content">
+                                            <p>
+                                            <label>
+                                            <input type="radio" name="RadioGroup1" value="Station Army" id="RadioGroup1_0">
+                                            Station Army</label>
+                                            <br>
+                                            <label>
+                                            <input type="radio" name="RadioGroup1" value="American Red cross" id="RadioGroup1_1">
+                                            American Red cross</label>
+                                            <br>
+                                            </p>
+{#                                                <span id="close" class="glyphicon glyphicon-remove-sign"></span>#}
+                                            </div>
+                                            </div>
+
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="logo-url" id="logos" style="margin-bottom:20px;">
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="control-label col-sm-3 col-sm-offset-1" for="email">Why my awesome thing rocks!
+                                        <div class="dropdown">
+                                            <i><img src="{% static 'images/help.png' %}" width="15"  />  </i>
+                                            <!-- dropdown menu -->
+                                            <ul class="dropdown-menu">
+                                                <div class="pop">
+                                                    <h2>Why my awesome thing rocks!</h2>
+                                                    <p>Let others know why your awesome thing is so glorious in its awesomeness by adding your personal insights, story and feelings in your own words. Trust us…others want to know!
+                                                    </p>
+                                                </div>
+                                            </ul>
+                                        </div> </div>
+                                    <div class="col-sm-4">
+                                        {{form1.why_rocks}}
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-xs-12" style="font-size:11px; line-height:90px;">Limit 200 characters</div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="control-label col-sm-3 col-sm-offset-1" for="email">Upload or link to your video (max = 20MB) <span class="red">*</span> <div class="dropdown">
+                                        <i><img src="{% static 'images/help.png' %}" width="15"  />  </i>
+                                        <!-- dropdown menu -->
+                                        <ul class="dropdown-menu">
+                                            <div class="pop">
+                                                <h2>Upload or link to your video</h2>
+                                                <p>Upload your skigit from your computer or link to video file from a website URL.
+                                                    Enter the complete URL Paths (http://...). For example: http:///youtube.com/1234278.mp4
+                                                </p>
+                                            </div>
+                                        </ul>
+                                    </div></div>
+                                    <div class="col-sm-4 fileUpload" style="margin:10px 0px;">
+
+                                        <div class="fileUpload btn btn-default " class="file_button" style="margin:0;">
+                                            {{ form.file_on_server }}
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-xs-12" style="font-size:11px;">If a file is uploaded, it will be posted in your skigit. Otherwise, you must enter a valid URL for your video in order to link to it.</div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <p class="control-label col-sm-3 col-sm-offset-1" for="email">Link video from other website <span class="red">*</span></p>
+                                <div class="col-sm-4">
+                                    {{form2.video_link}}
+                                </div>
+                                <div class="col-md-3 col-sm-3 col-xs-12" style="font-size:11px; padding-left:19px;">Enter the complete URL <br/>e.g http://youtube.com/v=ai49dgb_k</div>
+
+                            </div>
+
+                            <div class="col-sm-8 col-sm-offset-4 upload_btn_main upload-btn">
+                                <input name="submit" type="submit"  class="btn" id="wp-submit" value="Post Skigit" onclick="return check();"/>
+                                <input name="cancel" type="submit" value="Cancel"  class="btn" />
+                            </div>
+
+                        </form>
+
+                        <div class="progress">
+    <div class="bar"></div >
+    <div class="percent">0%</div >
+</div>
+
+<div id="status"></div>
+
+
+                        <div class="clearfix"></div>
+                    </div><!--end .hentry-->
+
+                </div><!--end #content-->
+
+            </div>
+
+        </div><!-- end #main -->
+    </div>
+{% endblock %}

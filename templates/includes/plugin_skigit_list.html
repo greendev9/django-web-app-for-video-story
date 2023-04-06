@@ -1,0 +1,97 @@
+{% load static %}
+{% load thumbnail %}
+{% load math %}
+{% if videos_list %}
+  {% for vid in videos_list %}
+    <div class="connection-line connection-line-{{positions|get_position:forloop.counter0}}"></div>
+  {% thumbnail vid.skigit_id.thumbnails.all.0.get_absolute_url "x200" as im %}
+    <div class="circle_skigitvid skigit_content_wrap plugin-skigit skigit-num-{{positions|get_position:forloop.counter0}}"
+        data-skigt="{{ vid.id }}" style="background-image:url({{ im.url }})">
+      <div class="">
+          <div class="box_sonvid"  style="text-align: center;">
+          <span class="plugin-map-skigit-title spn_videoname"
+                style="position: absolute;">{{ vid.title }}</span>
+        </div>
+
+        <div class="mar_zero  skigit_contents">
+          <div class="pull-right skigit_creator_logo">
+            {% if vid.business_logo.id %}
+              {% if vid.made_by and vid.business_logo.is_deleted == False %}
+                {% if request.user.is_authenticated %}
+                  <a onclick="logoclick({{ vid.business_logo.id }},'{% url 'sperk_profile' vid.made_by.id vid.business_logo.id %}')"
+                  id="profile_hover{{ vid.id }}">
+                {% else %}
+                  <a onclick="openMessage()">
+                {% endif %}
+                  {% if vid.business_logo %}
+                    {% thumbnail vid.business_logo.logo "x200" as im %}
+                      <img class="img-responsive image-business lazy"
+                          src="{{ im.url }}" data-vid="{{ vid.id }}"
+                          alt="{{ vid.skigit_id.user.username }}"/>
+                    {% endthumbnail %}
+                  {% endif %}
+                </a>
+              {% else %}
+                {% for def in default_logo %}
+                  {% if def.made_by == vid.made_by.id %}
+                    {% if vid.business_logo %}
+                      {% if request.user.is_authenticated %}
+                        <a href="{% url 'sperk_profile' def.made_by def.business_logo.id %}"
+                        data-vid="{{ vid.id }}"
+                        class="image-business">
+                      {% else %}
+                        <a onclick="openMessage()">
+                      {% endif %}
+                        {% thumbnail def.business_logo.logo "x200" as im %}
+                          <img class="img-responsive"
+                              src="{{ im.url }}" class="lazy"/>
+                        {% endthumbnail %}
+                      </a>
+                    {% endif %}
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
+            {% endif %}
+
+          </div>
+        </div>
+
+            <div class="text-center skigit-icon">
+              <a href="{% url 'skigit_data' vid.pk %}"
+                title="Play {{ vid.title }} Skigit"
+                data-skigit="#{{vid.pk}}">
+                <img src="{% static 'images/Skigit_Logo_AI_master.png' %}"
+                    title="Play Skigit" class="lazy"/>
+              </a>
+            </div>
+
+
+
+      </div>
+      <div class="second-level-plugin skigit_content_wrap {% if vid.second_level_plugins_count < 5 %} d-block {% endif %}" data-skigit-id="{{vid.id }}">
+        {% include "includes/second_level_plugin.html" %}
+      </div>
+    </div>
+            {% endthumbnail %}
+  {% endfor %}
+  <div class="more-skigit-content hidden">
+    <a href="{% url 'skigit_plugins' skigit_id %}">
+      <span class="glyphicon glyphicon-option-horizontal" title="Show me ALL Level 1 Plugins"></span>
+    </a>
+  </div>
+{% else %}
+     <div class="no-plugin">This Skigit has no Plugins at this time!</div>
+{% endif %}
+
+
+<script>
+  $j = jQuery.noConflict();
+  $j(document).ready(function () {
+
+    $j('.plugin-skigit, .main-skigit-inner').mouseenter(function() {
+        $j(this).find('.skigit-icon').show();
+      }).mouseleave(function(e) {
+          $j(this).find('.skigit-icon').hide();
+     });
+   })
+</script>

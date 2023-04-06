@@ -1,0 +1,94 @@
+{% extends 'base.html' %} {% load static %} {% load i18n %} {% load category_list %} {% block content %}
+
+{% block js %} {% include 'profile/analytics_js.html' %} {% endblock js %}
+
+
+<div class="m-1">
+    <!--<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">-->
+	<div class="row profile white-back">
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+            <div class="profile-sidebar" id="adjust_2">
+                <div class="profile-usermenu padd-left ">
+                    <ul class="nav">
+                        <li><a href="{% url 'user_profile' %}">Member Profile </a></li>
+
+                        {% if is_business %}
+                        <div class="hidden-xs hidden-sm" >
+                            <li><a href="/brochure-preview" style="margin-left: 15px;">View/Print Brochure</a></li>
+                            <li><a href="/wall-poster-preview" style="margin-left: 15px;">View/Print Wall Poster</a></li>
+                        </div>
+                        <li><a href="{% url 'user_payment_setup' %}">Invoice History</a></li>
+						 <li class="active"><a href="{% url 'business_analytics' %}">Business Analytics</a></li>
+                        {% endif %}
+
+                        <li><a href="{% url 'password_change' %}">Password and Security</a></li>
+                        <li><a href="{% url 'user_profile_notifications' %}">Notification Settings</a></li>
+                        <li><a href="{% url 'user_profile_delete' %}">Delete My Account</a></li>
+                        <li><a href="{% url 'my_statistics' %}">My Skigistats</a></li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 graph-div">
+            <h3 class="mar margin_bottom_10">Business Analytics</h3>
+            <div class="row total_row">
+                <div class="col-lg-2 col-md-2 col-sm-4 total_col">
+                    <p class="fz-15 m-0">Like</p>
+                    <p class="fz-2 m-0 fw-6" style="color: #6e8d4e">{{like}}</p>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-4 total_col">
+                    <p class="fz-15 m-0">Follow</p>
+                    <p class="fz-2 m-0 fw-6" style="color: #39398d">{{follow}}</p>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-4 total_col">
+                    <p class="fz-15 m-0">Plugged</p>
+                    <p class="fz-2 m-0 fw-6" style="color: brown;">{{plugged}}</p>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-4 total_col">
+                    <p class="fz-15 m-0">Favorite</p>
+                    <p class="fz-2 m-0 fw-6" style="color:rgb(52, 40, 40)">{{favorite}}</p>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-4 total_col">
+                    <p class="fz-15 m-0">Click</p>
+                    <p class="fz-2 m-0 fw-6" style="color: chocolate;">{{click}}</p>
+                </div>
+                <div class="col-lg-3 col-md-2 col-sm-4 total_col">
+                    <p class="fz-15 m-0">Social Share</p>
+                    <p class="fz-2 m-0 fw-6" style="color: #f11d1d;">{{socail_share_count}}</p>
+                </div>
+                <div class="col-lg-3 col-md-2 col-sm-4 col-sm-4 total_col">
+                    <p class="fz-15 m-0">Learn More</p>
+                    <p class="fz-2 m-0 fw-6" style="color: #83138d">{{learnMore}}</p>
+                </div>
+                <div class="col-lg-3 col-md-2 col-sm-4 total_col">
+                    <p class="fz-15 m-0">Display Logo</p>
+                    <p class="fz-2 m-0 fw-6" style="color: rgb(0, 89, 255);">{{display_company_logo}}</p>
+                </div>
+
+            </div>
+
+            <div class="total_row">
+                <div id="gender_chart" class="col-lg-4 col-md-6 col-sm-12 mb-1"></div>
+                <div id="language_chart" class="col-lg-4 col-md-6 col-sm-12 mb-1"> </div>
+                <div id="country_chart" class="col-lg-4 col-md-6 col-sm-12 mb-1"> </div>
+            </div>
+
+            <div class="total_row">
+                <div id="age_chart" class="col-lg-8 col-md-8 col-sm-12 mb-1"> </div>
+                <div id="share_chart" class="col-lg-4 col-md-6 col-sm-12 mb-1"> </div>
+            </div>
+
+            <div class="total_row">
+                <div id="age_share_chart" class="col-lg-8 col-md-8 col-sm-12 mb-1"> </div>
+                <div id="share_gender_chart" class="col-lg-4 col-md-6 col-sm-12 mb-1"> </div>
+            </div>
+        </div>
+
+    </div>
+<!--</div>-->
+</div>
+
+
+
+{% endblock content %}

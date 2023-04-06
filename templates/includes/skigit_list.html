@@ -1,0 +1,260 @@
+{% load static %}
+{% load el_pagination_tags %}
+{% load thumbnail %}
+{% load category_list %}
+
+
+ 
+{% video_lazy_paginate video_detail %}
+{% for vid in video_detail %}
+
+ 
+ 
+<div id="confirmBox{{ vid.id }}" class="confirmBox">
+  <center>
+    <p>
+      <img src="{% static 'images/skigit_logo_master.png' %}" alt="Skigit logo"
+        style="width:80px; height:60px">
+    </p>
+    <p class="genusprofskgits">Are you sure you want to Unembed this Skigit {{ vid.title }}?</p>
+  </center>
+  <div class="del-bott">
+    <button type="button" id="ok_unembed_click_{{ vid.id }}">Yes</button>
+    <button type="button" id="no_unembed_cancel_{{ vid.id }}">Cancel</button>
+  </div>
+</div>
+<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 video-list" id="category_pages" data-skigt="{{ vid.id }}">
+
+  <div class="box_skigitvid" id="latest_skigits">
+
+    <div class="mar_zero skigit_contents coursemeal__div">
+      {% if can_delete %}
+      <img width="30" src="{% static 'images/error.png' %}"
+        onclick="close_skigit({{ vid.id }},{{ vid.skigit_id.id }}, '{{vid.published_at|date_plus_days:30|date:'m/d/Y'}}' {% if vid|delete_disabled %}, true {% endif %})"
+        class="close-skigit">
+      {% elif unembed %}
+      <img width="30" src="{% static 'images/error.png' %}" onclick="un_embed_skigit{{ vid.id }}({{ vid.id }})"
+        class="close-skigit">
+      {% elif my_skigit %}
+      <img width="30" src="{% static 'images/error.png' %}"
+        onclick="close_skigit({{ vid.id }},{{ vid.skigit_id.id }}, '{{vid.published_at|date_plus_days:30|date:'m/d/Y'}}' {% if vid|delete_disabled %}, true {% endif %})"
+        class="close-skigit" id="my_skigit_close">
+      {% endif %}
+      <div class="padd_zero skigit_img">
+        {% thumbnail vid.skigit_id.thumbnails.all.0.get_absolute_url "x200" as im %}
+        <img alt="skigit" src="{{ im.url }}">
+        {% endthumbnail %}
+      </div>
+
+      {% if my_skigit %}
+      <!--must keep-->
+      <div class="text-center" id="skigit_type_my_skigit">
+        <span>
+          {% if vid.is_plugged %}
+          <span id="my_skigit_list_plugin">Plug-in</span>
+          {% else %}
+          <span id="my_skigit_list_primary">Primary</span>
+          {% endif %}
+        </span>
+      </div>
+
+
+      {% endif %}
+
+      <div class="box_sonvid text-center coursemeal-info">
+        <span class="spn_videoname coursemeal-info__link" >
+          <a style="color: #ffffff;"href="{% url 'skigit_data' vid.pk %}" title="Play {{ vid.title }} Skigit"
+            class="skigit_playback hidden-xs hidden-sm" data-skigit="#{{vid.pk}}">{{ vid.title }}</a>
+          <a href="{% url "skigit_data" vid.pk %}" data-skigit="#{{vid.pk}}mobile" data-toggle="mobile"
+            title="Play {{ vid.title }} Skigit" class="skigit_playback hidden-lg hidden-md">{{ vid.title }}</a>
+        </span>
+        <div class="link_list">
+          {% if request.user.is_authenticated %}
+		    
+          <span class="">
+            <a href="{% url 'skigit_plugin' vid.id %}">
+              <img src="{% static 'images/plug_thumb.png' %}" class="plugin text-center" title="Plug-In" />
+            </a>
+          </span>
+          {% if vid.skigit_id.id in video_likes %}
+            {% if video_type == "liked" %}
+            <span class="text-center w-40" >
+              <a class="like" onclick="close_skigit({{ vid.id }},{{ vid.skigit_id.id }})"
+                  id="like_{{ vid.id }}" data-userid="1" title="Unlike" data-pid="{{ vid.skigit_id.id }}">
+                  <img src="{% static 'images/heart_liked_thumb.png' %}" class="img-responsive" id="thumb-hover-icon" />
+              </a>
+            </span>
+            {% else %}
+            <span class="text-center w-40" >
+              <a class="like" onclick="like_unlike_entry('like_{{ vid.skigit_id.id }}',{{ vid.skigit_id.id }})"
+                  id="like_{{ vid.skigit_id.id }}" data-userid="1" title="Unlike" data-pid="{{ vid.skigit_id.id }}">
+                  <img src="{% static 'images/heart_liked_thumb.png' %}" class="img-responsive" id="thumb-hover-icon" />
+              </a>
+            </span>
+            {% endif %}
+          {% else %}
+          <span class="text-center w-40" >
+            <a class="unlike" onclick="like_unlike_entry('like_{{ vid.skigit_id.id }}',{{ vid.skigit_id.id }})"
+              id="like_{{ vid.skigit_id.id }}" data-userid="1" title="Like" data-pid="{{ vid.skigit_id.id }}">
+              <img src="{% static 'images/heart_unliked_thumb.png' %}" class="img-responsive" id="thumb-hover-icon" />
+            </a>
+          </span>
+          {% endif %}
+          <span class="libnk_skigitshair_entry" id="share_entry_overlay">
+            <a data-id="{{ vid.id }}" data-toggle="modal" data-target="#share-modal">
+              <img src="{% static 'images/share_thumb.png' %}" height="40" width="40"
+                class="share text-center img-responsive" id="thumb_share_overlay" title="Share" />
+            </a>
+          </span>
+		  
+		  <!-- <img src="https://static.skigit.com/images/Skigit_Logo_AI_master.png" alt="Skigit logo" id="thumb_skigit_logo" > -->
+		  
+          {% else %}
+          <span>
+            <a onclick="openMessage()">
+              <img src="{% static 'images/plug_thumb.png' %}" height="40" width="60" class="plugin text-center"
+                title="Plug-In" />
+            </a>
+          </span>
+          <span class="text-center">
+            <a class="liked" onclick="openMessage()" data-userid="0" title="Like">
+              <img src="{% static 'images/heart_liked_thumb.png' %}" class="img-responsive" id="thumb-hover-icon" />
+            </a>
+          </span>
+          <span>
+            <a onclick="openMessage()" class="skigit_share">
+              <img src="{% static 'images/share_thumb.png' %}" height="40" width="40"
+                class="share text-center img-responsive" title="Share" />
+            </a>
+          </span>
+          {% endif %}
+
+          <span class="my_awsome_things" id="my_awesome_thing_skigit_list">
+            {% if request.user.is_authenticated %}
+
+            <a onclick="learnMoreClick({{ vid.skigit_id.user.id }}, {{ vid.skigit_id.id }}, '{{ vid.bought_at_url }}')"
+              title="Learn More" id="learn_more_icon"><img src="{% static 'images/learn_more_ovelay_icon.png' %}">
+
+            </a>
+
+            {% else %}
+
+            <a href="#" title="Learn More" onclick="openMessage()" data-toggle="skigit-modal"
+              data-dismiss="skigit-modal" id="learn_more_icon"><img
+                src="{% static 'images/learn_more_ovelay_icon.png' %}">
+            </a>
+
+            {% endif %}
+          </span>
+		  
+		  	<img src="{% static 'images/Skigit_Logo_AI_master.png' %}" alt="Skigit logo" id="thumb_skigit_logo" >
+			<a href="{% url "skigit_data" vid.pk %}" data-skigit="#{{vid.pk}}mobile" data-toggle="mobile"
+            title="Play {{ vid.title }} Skigit" class="skigit_playback hidden-lg hidden-md" id="logo_overlay_click_through" ></a>
+			
+        </div>
+      </div>
+      {% if vid.get_profile_img.business_verified %}
+      <div class="pull-right skigit_creator_logo">
+        {% if vid.business_logo.id %}
+        {% if vid.made_by and vid.business_logo.is_deleted == False %}
+        <a {% if request.user.is_authenticated %}
+          onclick="logoclick({{ vid.business_logo.id }}, '{% url 'sperk_profile' vid.made_by.id vid.business_logo.id %}')"
+          id="profile_hover{{ vid.id }}" {% else %} onclick="openMessage()" {% endif %}>
+          {% if vid.business_logo %}
+          {% thumbnail vid.business_logo.logo "x200" format='PNG' as im %}
+          <img class="img-responsive image-business" style="box-shadow: 2px 2px 2px #8a8a8a;background-color: #fff;"
+            src="{{ im.url }}" data-vid="{{ vid.id }}" alt="{{ vid.skigit_id.user.username }}" />
+          {% endthumbnail %}
+          {% endif %}
+        </a>
+        {% else %}
+        {% if vid.default_logo %}
+        {% if request.user.is_authenticated %}
+        <a href="{% url 'sperk_profile' vid.made_by.id vid.default_logo.id %}" data-vid="{{ vid.id }}"
+          class="image-business">
+          {% else %}
+          <a onclick="openMessage()">
+            {% endif %}
+            {% thumbnail vid.default_logo.logo "x200" format='PNG' as im %}
+            <img class="img-responsive" src="{{ im.url }}" class="lazy" />
+            {% endthumbnail %}
+          </a>
+          {% endif %}
+          {% endif %}
+          {% endif %}
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="row">
+      <div class="col-lg-12 col-xs-12 skigit_social_option" id="share_overlay{{ vid.id }}">
+
+        <div class="name_boxrow">
+          <div class="profile_ski">
+            {% if is_authenticated %}
+            <a href="{% url 'user_profile_display' username=vid.skigit_id.user.username %}">
+              <img class="img-responsive " id="profile_hover_{{ vid.id }}" alt="skigit"
+                {% if vid.skigit_id.user.profile.get_top_profile_img %}src="{{ vid.skigit_id.user.profile.get_top_profile_img }}"
+                {% else %} src='{% static "images/noimage_user.png" %}' {% endif %}">
+            </a>
+            {% else %}
+            <a onclick="openMessage()">
+              <img class="img-responsive lazy" alt="skigit"
+                {% if vid.skigit_id.user.profile.get_top_profile_img %}src="{{ vid.skigit_id.user.profile.get_top_profile_img }}"
+                {% else %} src='{% static "images/noimage_user.jpg" %}' {% endif %}" />
+            </a>
+            {% endif %}
+          </div>
+
+          <div class="skigit_creator">
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+
+  </div>
+</div>
+
+<script type="text/javascript">
+  jQuery(document).ready(function () {
+
+    jQuery("#no_unembed_cancel_{{vid.id}}").click(function () {
+      jQuery("#confirmBox{{ vid.id }}").removeClass('open');
+      jQuery(".overlay").removeClass('open');
+    });
+
+    jQuery("#ok_unembed_click_{{vid.id}}").click(function () {
+      jQuery.ajax({
+        type: "POST",
+        url: "/friends/un-embed-skigit/",
+        data: {
+          'skigit_id': '{{vid.id}}',
+          'csrfmiddlewaretoken': '{{csrf_token}}'
+        },
+        success: function (response) {
+          if (response.is_success) {
+            jQuery("[data-skigt={{ vid.id }}]").css("display", "none");
+            jQuery("#confirmBox{{ vid.id }}").removeClass('open');
+            jQuery(".overlay").removeClass('open');
+          }
+        },
+        error: function (rs, e) {
+          jQuery("#popup_msg").text("Error in Liking this Skigit. Please try again");
+          jQuery("#popScreen").show();
+        }
+      });
+    });
+
+    un_embed_skigit{{vid.id}} = function (vid_id) {
+      jQuery("#confirmBox{{ vid.id }}").addClass('open');
+      jQuery(".overlay").addClass('open');
+    }
+  });
+</script>
+
+{% endfor %}
+<div class="custom_clearfix"></div>
+{% show_more ' ' ' ' 'show-more' %}

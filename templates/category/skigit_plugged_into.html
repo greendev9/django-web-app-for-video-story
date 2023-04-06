@@ -1,0 +1,370 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block title %}{{ block.super }}
+    {%if category_current.cat_name %}
+        {{category_current.cat_name}}
+    {% elif category_current.sub_cat_name %}
+        {{category_current.sub_cat_name}}
+    {% elif skigit_plug %}
+        Plugged Skigits into {{skigit_plug}}
+    {% elif skigit_like %}
+        Liked Skigits by {{skigit_like}}
+    {% else %}
+        Skigits by {{category_current}}
+    {% endif %}
+{% endblock %}
+{% block content %}
+  <div class="row mar_zero" id="main">
+  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="Skigits_I_Plugged_Into">
+
+<style>
+.close-skigit{
+	z-index:1!important;
+	    bottom: 245px;
+}
+
+center.heading-new{
+   /*color: #037BB8 !important;*/
+  font-family: segoe print;
+  font-size: 32px;
+      margin-bottom: 40px;
+}
+
+.del-top p{
+	font-size:16px;
+	font-weight:100;
+	text-align:center;
+	color:#ffffff;
+	
+}
+
+.endless_more{
+	font-size:x-large;
+	display:table;
+	margin:0 auto;
+	clear:both;
+}
+
+.endless_loading{
+	display:table;
+	width:100%;
+}
+
+.follower-header{
+	background:0 0!important;
+	border:none!important
+}
+
+.f_type.box_footer,.name_follow span.name_friend{
+	margin-bottom:10px;
+	margin-top:10px;
+}
+
+.follower_img{
+	margin-bottom:5px;
+	padding:35px 10px
+	margin-bottom: 5px;
+	padding: 25px 0px 10px 0px
+	background-image: url("{% static 'images/following_back_star.png' %}");
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+}
+
+
+.follower_img img {
+	height: 100px;
+    width: 100px;
+    object-fit: contain;
+background: #5b7d61;
+padding: 10px 10px 10px 10px;
+margin: 0 25px 0 25px;
+border-radius: 4px;
+}
+
+.box_img_container{
+	text-align:center;
+	background-color:#444242;
+	border-radius:4px;
+}
+
+.box_img_container:hover{
+background: #3f5042 !important;
+}
+
+
+.icon_follower {
+	height:40px;
+	position:relative;
+	line-height:1;
+}
+
+
+.box_follow{
+	margin: 10px;
+width: 150px;
+float: left;
+}
+
+.heade_follow{
+	font-size:13px;
+	color:#333;
+	overflow:hidden;
+	text-overflow:ellipsis;
+	width:75%;
+	margin-left:15px;
+	margin-top:5px;
+}
+
+.name_follow span{
+	display:block;
+	margin-bottom:5px;
+	text-transform:capitalize;
+		margin-left:auto;
+		margin-right:auto;
+		color:#fff;
+}
+
+
+.box_footer{
+	color:#0a80be;
+	font-size:14px;
+}
+
+.sub_namefollow{
+	color:#A10000;
+	font-size:13px;
+}
+.subhead{
+	font-weight:400!important;
+}
+
+.user_followers{
+	font-size:13px;
+}
+
+@media screen and (max-width:420px){
+
+.box_follow{
+	width:90%;
+	}
+}
+    </style>
+
+    <script>
+        $z = jQuery.noConflict()
+        function close_skigit(vid_id,skigit_Id){
+            $z("#confirmBox").addClass('open');
+            $z(".overlay").addClass('open');
+            {#            current_id = $(this).closest('[data-skigt]').attr('data-skigt');#}
+            current_id = vid_id;
+            skigitId = skigit_Id;
+            $z("#confirmBox").attr('c_id',current_id);
+        }
+
+    </script>
+
+    <script>
+
+        $z(function($){
+
+            $("#no_delete_{{video_type}}").click(function(){
+                $("#confirmBox").removeClass('open');
+                $(".overlay").removeClass('open');
+            });
+
+            $("#ok_delete_{{video_type}}").click(function(){
+                {% if video_type == "liked" %}
+                    var skigit_id = $('#like_'+current_id).attr('data-pid');
+                    $.ajax({
+                        type: "POST",
+                        url: "/skigit_i_unlike/",
+                        data: {'skigit_id': skigit_id, 'csrfmiddlewaretoken': '{{csrf_token}}' },
+                        success: function (response) {},
+                        error: function (rs, e) {
+                            $("#popup_msg").text("An error occured. Please try again");
+                            $("#popScreen").show();
+                        }
+                    });
+                {% elif video_type == "fav" %}
+                    $.ajax({
+                        type: "POST",
+                        url: "/un_favourites/",
+                        data: {'skigit_id': skigitId, 'csrfmiddlewaretoken': '{{csrf_token}}' },
+                        success: function (response) {},
+                        error: function (rs, e) {
+                            $("#popup_msg").text("An error occured on the My Favorite Skigit Page. Please try again.");
+                            $("#popScreen").show();
+                        }
+                    });
+                {% elif video_type == "i_am_following" %}
+                    var follow_id = current_id
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/unfollow/",
+                        data: {'follow_id': follow_id, 'csrfmiddlewaretoken': '{{csrf_token}}' },
+                        success: function (response) {},
+                        error: function (rs, e) {
+                            $("#popup_msg").text("An error occured when Unfollowing. Please try again");
+                            $("#popScreen").show();
+                        }
+                    });
+                {% elif video_type == "plugged" %}
+                    $.ajax({
+                        type: "POST",
+                        url: "/unplug-skigit/",
+                        data: {'skigit_unplug_id': current_id, 'csrfmiddlewaretoken': '{{csrf_token}}' },
+                        success: function (response) {},
+                        error: function (rs, e) {
+                            $("#popup_msg").text("An error occured when Unpluggin your Skigit. Please try again.");
+                            $("#popScreen").show();
+                        }
+                    });
+
+                {% endif %}
+                $("[data-skigt="+current_id+"]").css("display", "none");
+                $("#confirmBox").removeClass('open');
+                $(".overlay").removeClass('open');
+            });
+        });
+
+    </script>
+
+    <script>
+        $j = jQuery.noConflict()
+        $j(document).ready(function($){
+            like_unlike_skigit_plug_into = function(like_class, like_id) {
+
+                var skigit_id = like_id
+                var  post_clas= $("#"+like_class).attr('class');
+                var  post_id= like_class
+                var  like_count = $.trim($('#like_count'+skigit_id).text())
+                {% if video_type == "liked" %}
+                    $("[data-skigt="+skigit_id+"]").css("display", "none");
+                    $(".overlay").removeClass('open');
+                {% endif %}
+                if(post_clas == 'unlike') {
+                    $.ajax({
+                        type: "POST",
+                        url: "/skigit_i_like/",
+                        data: {'skigit_id': skigit_id, 'csrfmiddlewaretoken': '{{csrf_token}}' },
+                        success: function (response) {
+                            if (response.is_success)
+                            {
+                                if (response.like == 1 || response.like == '1')
+                                {
+                                    $("#" + post_id).attr("title", "Unlike");
+                                    $("#" + post_id).removeClass("unlike");
+                                    $("#" + post_id).addClass("like");
+                                    $("#" + post_id + "> img").attr("src", "/static/images/heart.png");
+                                    $('#like_count'+skigit_id).text(parseInt(like_count)+1)
+                                }
+                            }
+                        },
+                        error: function (rs, e) {
+                            $("#popup_msg").text("EAn error occured when Unliking this Skigit. Please try again.");
+                            $("#popScreen").show();
+                        }
+                    });
+                }
+                else if(post_clas == 'like'){
+                    $.ajax({
+                        type: "POST",
+                        url: "/skigit_i_unlike/",
+                        data: {'skigit_id': skigit_id, 'csrfmiddlewaretoken': '{{csrf_token}}' },
+                        success: function (response) {
+                            if (response.is_success)
+                            {
+                                if (response.unlike == 1 || response.unlike == '1')
+                                {
+                                    $("#" + post_id).attr("title", "Like");
+                                    $("#" + post_id).removeClass("like");
+                                    $("#" + post_id).addClass("unlike");
+                                    $("#" + post_id + "> img").attr("src", "/static/images/heart(22x22).png");
+                                    $('#like_count'+skigit_id).text(parseInt(like_count)-1)
+                                }
+                            }
+                        },
+                        error: function (rs, e) {
+                            $("#popup_msg").text("An error occured when Liking this Skigit. Please try again.");
+                            $("#popScreen").show();
+                        }
+                    });
+                }
+            }
+        });
+    </script>
+
+        {% if video_detail %}
+            {% if video_type == "liked" %}
+                <center class="heading-new-seg heading-new" >Skigits I Like</center>
+            {% elif video_type == "plugged" %}
+                <center class="heading-new-seg heading-new">Skigits I Plugged</center>
+            {% elif video_type == "fav" %}
+                <center class="heading-new-seg heading-new">My Favorites</center>
+            {% elif video_type == "sub_cat" %}
+                <center class="heading-new-seg heading-new">{{category_current}}</center>
+            {% elif video_type == "c_o_skigit" %}
+                <center class="heading-new-seg heading-new">Artist's other Skigits!</center>
+            {% elif video_type == "i_am_following" %}
+                <center class="heading-new-seg heading-new">I'm Following</center>
+            {% endif %}
+            <div class="overlay"></div>
+            <div id="confirmBox">
+                <center><p><img src="{% static 'images/Skigit_Logo_AI_master_white.png' %}" alt="Skigit logo" style="width:125px;"></p></center>
+                {% if video_type == "liked" %}
+                    <div class="del-top"><p class="popup-noti">Are you sure you want to Unlike this Skigit?</p></div>
+                {% elif video_type == "plugged" %}
+                    <div class="del-top"><p class="popup-noti">Are you sure you want to Unplug from this Skigit?</p></div>
+                {% elif video_type == "fav" %}
+                    <div class="del-top"><p class="popup-noti">Are you sure you want to Unfavorite this Skigit?</p></div>
+                {% elif video_type == "sub_cat" %}
+                    <div class="del-top"><p class="popup-noti">Are you sure you want to Delete this skigit?</p></div>
+                {% elif video_type == "i_am_following" %}
+                    <div class="del-top"><p class="popup-noti">Are you sure you want to Unfollow this Creator?</p></div>
+                {% endif %}
+                <div class="del-bott">
+                    <button type="button" id="ok_delete_{{ video_type }}">Yes</button>
+                    <button type="button" id="no_delete_{{ video_type }}">Cancel</button>
+                </div>
+            </div>
+          <div class="skigit_content_list" >
+          <div class="row endless_page_template">
+            {% if video_type == "i_am_following" %}
+                {% include 'category/following_body.html' %}
+            {% else %}
+                {% include 'includes/skigit_list.html' %}
+            {% endif %}
+          </div>
+          </div>
+        {% else %}
+            {% if video_type == "liked" %}
+			 <center class="heading-new-seg heading-new" >Skigits I Like</center>
+                <center class="heading-new-seg subhead">It's so sad. You don't Like any Skigits at this time.</center>
+            {% elif video_type == "plugged" %}
+			 <center class="heading-new-seg heading-new">Skigits I Plugged</center>
+                <center class="heading-new-seg subhead">You haven't Plugged any Skigits yet.</center>
+            {% elif video_type == "fav" %}
+				<center class="heading-new-seg heading-new">My Favorites</center>
+                <center class="heading-new-seg subhead">You have no Favorite Skigits at this time.</center>
+            {% elif video_type == "sub_cat" %}
+			<center class="heading-new-seg heading-new">{{category_current}}</center>
+                <center class="heading-new-seg subhead">No Skigits found</center>
+            {% elif video_type == "my_skigit" %}
+                <center class="heading-new-seg subhead">No Skigits found</center>
+            {% elif video_type == "i_am_following" %}
+			<center class="heading-new-seg heading-new">I'm Following</center>
+                <center class="heading-new-seg subhead">You're not following any Creators at this time!</center>
+            {% endif %}
+        {% endif %}
+    </div>
+    <!--<a id="latestinifiniteLoader" style="float:left;display:none;margin:5px 425px;">
+        <img src="{% static 'images/inf_loading.gif' %}" />-->
+    </a>
+  </div>
+{% endblock %}
+{% block js %}
+  {{ block.super }}
+  <script>jQuery.endlessPaginate({paginateOnScroll: true});</script>
+{% endblock %}

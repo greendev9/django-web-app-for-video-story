@@ -1,0 +1,246 @@
+{% extends 'base.html' %} {% load static %} {% load i18n %} {% load category_list %} {% block title %}{{ block.super }}Brochure{% endblock %} {% block css %}
+<link rel="stylesheet" type="text/css" media="screen" href="{% static 'css/brochure_screen.css' %}">
+
+<style>
+
+#cancel_logout:hover {
+  margin-bottom: 10px;
+}
+
+    iframe {
+        display: block;
+        height: 0;
+        width: 0;
+        border: 0;
+    }
+    
+    .contain_broshar {
+        width: 900px;
+        height: 1200px;
+        background-image: url('{{ poster_1 }}') !important;
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+		margin: 0 auto 0 auto;
+    }
+    
+    .list-group-item label {
+        color: #000 !important;
+    }
+	
+	/*--------------wallpaper screen CSS---------------------*/
+	
+    .wl_logo_1 {
+        position: absolute;
+        right: 18%;
+        top: 5.5%;
+        width: 9%;
+        height: 9%;
+        z-index: 100;
+        border-radius: 50%;
+		object-fit: cover;
+      }
+
+      .wl_qr {
+        position: absolute;
+        right: 30%;
+        top: 5.5%;
+        width: 10%;
+        height: 9%;
+        z-index: 100;
+        border-radius: 0.5em;
+      }
+      .img_fit11 {
+        height: 80%;
+        width: 80%!important;
+        border-radius: 0.5em;
+      }
+      .box_wl {
+        margin: 0 auto;
+        display: table;
+        position: relative;
+        text-align: center;
+      }
+</style>
+{% endblock css %} {% block content %}
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+
+<div id="loader-div" style="display: none;">
+  <span class="loader-text">Please Wait ....</span>
+  <span class="loader"></span>
+</div>
+
+<div class="list-group" style="margin-top:15px; background: transparent; border:none;">
+    {% if wall_post_exists %}
+    <section class="list-group-item text-center" style="background: transparent; border: none;" id="id_logo_section">
+        <h3 class="f_type">Select your Business Logo</h3>
+        <div class="logo-url f_type" id="logos" style="margin-bottom:20px;">
+        </div>
+    </section>
+    <section class="list-group-item text-center" style="background: transparent; border: none;" id="id_print_section">
+        <iframe src="/friends/wallpaper-print/" name="frame18x24"></iframe>
+        <input type="button" id="id_print18x24" onclick="window.frames['frame18x24'].print();" value="Print">
+        <a href="{% url 'user_profile' %}" class="btn" style="margin-top: 8px;" id="cancel_logout">Cancel</a>
+
+    </section>
+
+    <section>
+        <ul class="share-ico text-center" id="post_to">
+            <p id="image_post_to_title">Post To</p>
+            <li>
+                <a id="fb_post" title="Facebook" onclick="socialPostImage('facebook');">
+                    <img src="{% static 'images/SN_Post_FB.png' %}" width="60.33px">
+                </a>
+            </li>
+            <li>
+                <a title="Twitter" onclick="socialPostImage('twitter');">
+                    <img src="{% static 'images/SN_Post_Twitter.png' %}" width="60.33px">
+                </a>
+            </li>
+            <li>
+                <a title="Tumblr" onclick="socialPostImage('tumblr');">
+                    <img src="{% static 'images/SN_Post_Tumblr.png' %}" width="60.33px">
+                </a>
+            </li>
+            <li>
+                <a title="Linkedin" onclick="socialPostImage('linkedin');">
+                    <img src="{% static 'images/SN_Post_LinkedIn.png' %}" width="60.33px">
+                </a>
+            </li>
+            <li>
+                <a title="Pinterest" onclick="socialPostImage('pinterest');">
+                    <img src="{% static 'images/SN_Post_Pinterest.png' %}" width="60.33px">
+                </a>
+            </li>
+        </ul>
+        <span class="hide" id="social-share-url">https://{{ request.get_host }}/wall-poster-preview/</span>
+    </section>
+
+    <section id="id_section18x24" style="margin: 15px;">
+      <div class="box_wl" id="post_canvas">
+        <img class="img_fit11" src="{{poster_1}}" id="id_brochure_img"/>
+        <img class="wl_logo_1" id="id_b_brochure"  src="{{ poster_obj.b_logo }}">
+        <img class="wl_qr" id="id_qr_code_1"  src="{% if profile.qr_code %}{{ profile.qr_code.url }}{% else %}#{% endif %}">
+      </div>
+    </section>
+
+    {% else %}
+    <center><label class="f_type">No Wall Poster are Available Now. Coming Soon...</label></center>
+    {% endif %}
+
+</div>
+
+{% endblock %} {% block js %}
+<script>
+    $j = jQuery.noConflict();
+   
+    function setWallPoster() {
+        $j("#loader-div").show();
+        html2canvas($j("#post_canvas"), {
+            useCORS: true,
+            onrendered: function(canvas) {
+                var myImage = canvas.toDataURL();
+                file = myImage.split(';base64,')[1];
+                $j.ajax({
+                    url: '/friends/set_wall_poster/',
+                    type: "POST",
+                    data: {
+                        'content_type': 'image/png',
+                        'file': file
+                    },
+                    success: function(data) {
+                        window.location.reload();
+                        $j("#loader-div").hide();
+                    },
+                    error: function(error) {
+                        console.error('set_wall_poster error', error);
+                    }
+                });
+            }
+        });
+    }
+
+    refreshIframe18x24 = function() {
+        var ifr18x24 = document.getElementsByName('frame18x24')[0];
+        ifr18x24.src = ifr18x24.src;
+    };
+
+    selectLogo = function(logo_id) {
+        var logoImg, url;
+        logoImg = $j("input[type='radio'][name='select_logo']:checked").closest('[data-img]').attr('data-img')
+
+        $j.ajax({
+            url: '/friends/set-poster-b-logo/',
+            type: "POST", // http method
+            data: {
+                'b_logo': logoImg,
+                'logo_id': logo_id,
+                'user_id': {{request.user.id}}
+            }, // data sent with the post request
+            success: function(data) {
+                if (data.is_success) {
+                    $j('#id_b_brochure').attr('src', logoImg);
+                    refreshIframe18x24();
+                }
+                setWallPoster();
+            }
+        });
+    };
+
+    $j(document).ready(function() {
+        $j("#loader-div").hide();
+        $j.getJSON('/friends/wall-poster-b-logos/', function(data) {
+            var idd, check, current_logo, i, imagesCollection, image_div;
+            imagesCollection = data.all_business_logo;
+            if (imagesCollection) {
+
+                for (i = 0; i < imagesCollection.length; i++) {
+                    idd = imagesCollection[i][0];
+                    if ((idd.length == 0)) {
+                        continue;
+                    }
+                    current_logo = '{{ poster_obj.b_logo }}';
+
+                    if (current_logo == imagesCollection[i][1]) {
+                        check = 'checked'
+                    } else {
+                        check = ''
+                    }
+
+                    image_div = ' <input type="radio" class="b_logo_poster"  data-img="' + imagesCollection[i][1] + '" onclick="selectLogo(' + idd + ')" id=' + idd + ' value=' + idd + '  name="select_logo" ' + check + '/>' + '<label for=' + idd + ' class="label"><div class="dz-image"> <img data-dz-thumbnail="" src=' + imagesCollection[i][1] + '></div></label>'
+                    $j('.logo-url').append(image_div);
+                }
+            }
+            if (!'{{poster_img}}') {
+                setWallPoster();
+            }
+        });
+
+    });
+
+    socialPostImage = function(social_type) {
+
+        var title = encodeURIComponent("");
+        var share_url = encodeURIComponent('{{poster_img}}');
+        var video_share_url = encodeURIComponent('{{poster_img}}');
+
+        switch (social_type) {
+            case 'facebook':
+                window.open('https://www.facebook.com/dialog/share?app_id={{facebook_app_id}}&display=popup&href=' + share_url + '&quote=' + title + '&picture=' + video_share_url, 'width=700, height=500, toolbar=0, menubar=0, location=0, status=1, scrollbars=1, resizable=1, left=0, top=0');
+                break;
+            case 'twitter':
+                window.open('https://twitter.com/share?url=' + share_url, 'left=0, top=0, width=550, height=450, personalbar=0, toolbar=0, scrollbars=0, resizable=0');
+                break;
+            case 'linkedin':
+                window.open('https://www.linkedin.com/shareArticle?mini=true&url=' + share_url + '&modal=1&title=' + title + '&source={% if request.is_secure %}https://{% else %}http://{% endif %}{{ request.get_host }}', 'width=700,height=500,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0');
+                break;
+            case 'tumblr':
+                window.open('https://www.tumblr.com/widgets/share/tool?shareSource=legacy&posttype=photo&canonicalUrl=&url=' + share_url + '&content=' + video_share_url + '&caption=' + title + ' (via ' + share_url + ')', 'width=700, height=500, toolbar=0, menubar=0, location=0, status=1, scrollbars=1, resizable=1, left=0, top=0');
+                break;
+            case 'pinterest':
+                window.open('http://pinterest.com/pin/create/link/?url=' + share_url + '&media=' + video_share_url + '&description=' + title, 'width=700,height=500,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0');
+                break;
+        }
+        return true;
+    }
+</script>
+{% endblock js %}

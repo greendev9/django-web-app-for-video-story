@@ -1,0 +1,321 @@
+{% load static %}
+
+<style>
+
+  .box_form_credirt {
+    background-color: #fff;
+  }
+
+label.control-label {
+    color: #fff;
+}
+
+ 
+  .panel {
+    width: 100%;
+  {#        margin: 2em auto;#}
+  }
+
+  .bootstrap-basic {
+    background: #007cb9;
+  }
+
+  .panel-body {
+    width: 100%;
+  {#        margin: 2em auto;#}
+  }
+
+  .profile-form h3 {
+    padding: 0px 0px !important;
+    margin-top: 5px !important;
+  }
+
+  .helper-text {
+
+    color: #8A6D3B;
+    font-size: 12px;
+    margin-top: 5px;
+    height: 12px;
+    display: block;
+  }
+
+  /* Braintree Hosted Fields styling classes*/
+  .braintree-hosted-fields-focused {
+    border: 1px solid #0275d8;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
+  }
+
+  .braintree-hosted-fields-focused.focused-invalid {
+    border: 1px solid #ebcccc;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(100, 100, 0, .6);
+  }
+
+  @media (max-width: 670px) {
+    .form-group {
+      width: 100%;
+    }
+
+    .btn {
+      white-space: normal;
+    }
+  }
+
+</style>
+
+<div class="panel panel-default bootstrap-basic">
+  <div class="panel-heading">
+    <h3 class="panel-title">Enter Card Details</h3>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="form-group col-xs-8">
+        <label class="control-label" style = " color: #fff;" >Card Number</label>
+        <span class="red">*</span>
+        <span style="float:right; color:#fff" id="card-type" ></span>
+        <div class="form-control" id="card-number"></div>
+        <span class="error"></span>
+
+      </div>
+      <div class="form-group col-xs-4">
+        <div class="row">
+          <label class="control-label col-xs-12" style = " color: #fff;" >Expiration Date <span class="red">*</span></label>
+          <div class="col-xs-6">
+            <!--  Hosted Fields div container -->
+            <div class="form-control" id="expiration-month"></div>
+            <span class="error"></span>
+          </div>
+          <div class="col-xs-6">
+            <!--  Hosted Fields div container -->
+            <div class="form-control" id="expiration-year"></div>
+            <span class="error"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+      <div class="form-group col-xs-6">
+        <div class="row">
+          <label class="control-label" style = " color: #fff;"  for="cvv">CVV</label>
+          <span class="red">*</span>
+          <!--  Hosted Fields div container -->
+          <div class="form-control" id="cvv"></div>
+          <span class="error"></span>
+        </div>
+      </div>
+      <div class="form-group col-xs-6">
+        <div class="row">
+          <label class="control-label" style = " color: #fff;" for="card-holder-name">Name On Card</label>
+          <span class="red">*</span>
+          <!--  Hosted Fields div container -->
+
+          <input class="form-control" autocorrect="off" autocomplete="off" spellcheck="false"
+                 style='text-transform:uppercase' placeholder="Name On Card" name="card_holder_name"
+                 id="id_card_holder_name" onkeyup="show_hide_name_error();" onkeydown="return /[a-z A-Z\-]/i.test(event.key)"/>
+          <span class="error"></span>
+        </div>
+      </div>
+
+    <button value="submit" id="submit" class="btn btn-success btn-lg center-block">Save <span id="card-type">Card</span>
+    </button>
+  </div>
+</div>
+
+<!-- Load the required client component. -->
+<script src="https://js.braintreegateway.com/web/3.15.0/js/client.min.js"></script>
+<!-- Load Hosted Fields component. -->
+<script src="https://js.braintreegateway.com/web/3.15.0/js/hosted-fields.min.js"></script>
+
+<script>
+
+  $j = jQuery.noConflict();
+
+  function show_card_error(field) {
+    switch(field) {
+        case 'number':
+          $j('#card-number').next('span').text('Please enter valid card number');
+          break;
+        case 'expirationMonth':
+          $j('#expiration-month').next('span').text('Please enter valid month');
+          break;
+        case 'expirationYear':
+          $j('#expiration-year').next('span').text('Please enter valid year');
+          break;
+        case 'cvv':
+          $j('#cvv').next('span').text('Please enter valid cvv number');
+          break;
+    }
+  }
+
+  braintree.client.create({
+    authorization: '{{ client_token }}'
+  }, function (err, clientInstance) {
+    if (err) {
+      console.error(err);
+      return;
+    }
+
+    braintree.hostedFields.create({
+      client: clientInstance,
+      styles: {
+        'input': {
+          'font-size': '14px',
+          'font-family': 'helvetica, tahoma, calibri, sans-serif',
+          'color': '#3a3a3a'
+        },
+        'input.invalid': {
+          'color': 'red'
+        },
+        'input.valid': {
+          'color': 'green'
+        },
+        'input:focus': {
+          'color': 'black'
+        }
+      },
+      fields: {
+        number: {
+          selector: '#card-number',
+          placeholder: '4111 1111 1111 1111'
+        },
+        cvv: {
+          selector: '#cvv',
+          placeholder: '123'
+        },
+        expirationMonth: {
+          selector: '#expiration-month',
+          placeholder: 'MM'
+        },
+        expirationYear: {
+          selector: '#expiration-year',
+          placeholder: 'YY'
+        }
+
+      }
+    }, function (err, hostedFieldsInstance) {
+      if (err) {
+        console.error(err);
+        return;
+      }
+
+      hostedFieldsInstance.on('validityChange', function (event) {
+        var emitted_by = event.emittedBy;
+        var field = event.fields[emitted_by];
+        if (field.isValid) {
+          switch(emitted_by) {
+              case 'number':
+                $j('#card-number').next('span').text('');
+                break;
+              case 'expirationMonth':
+                $j('#expiration-month').next('span').text('');
+                break;
+              case 'expirationYear':
+                $j('#expiration-year').next('span').text('');
+                break;
+              case 'cvv':
+                $j('#cvv').next('span').text('');
+                break;
+          }
+          if (emitted_by === 'expirationMonth' || emitted_by === 'expirationYear') {
+            if (!event.fields.expirationMonth.isValid || !event.fields.expirationYear.isValid) {
+              return;
+            }
+          }
+
+          // Apply styling for a valid field
+          $j(field.container).parents('.form-group').addClass('has-success');
+        } else if (field.isPotentiallyValid) {
+          // Remove styling  from potentially valid fields
+          //$j(field.container).parents('.form-group').removeClass('has-error');
+          $j(field.container).parents('.form-group').addClass('has-success');
+          if (emitted_by === 'number') {
+            $j('#card-number').next('span').text('Please enter valid card number');
+          }
+        } else {
+          // Add styling to invalid fields
+          $j(field.container).parents('.form-group').addClass('has-error');
+          // Add helper text for an invalid card number
+          show_card_error(emitted_by);
+        }
+      });
+
+      hostedFieldsInstance.on('cardTypeChange', function (event) {
+        // Handle a field's change, such as a change in validity or credit card type
+        if (event.cards.length === 1) {
+          $j('#card-type').text(event.cards[0].niceType);
+        } else {
+          $j('#card-type').text('');
+        }
+      });
+
+      $j('.panel-body').find('#submit').click(function (event) {
+        event.preventDefault();
+        event.defaultPrevented;
+        card_holder_name = $j('#id_card_holder_name').val();
+        if (card_holder_name) {
+          $j('#id_card_holder_name').next('span').text('');
+          hostedFieldsInstance.tokenize(function (err, payload) {
+            var nonce, name, type;
+            if (err) {
+              if (err.code === 'HOSTED_FIELDS_FIELDS_EMPTY') {
+              // display message that all fields are empty
+              // add error class to all fields
+              } else if (err.code === 'HOSTED_FIELDS_FIELDS_INVALID') {
+                var invalidFields = err.details.invalidFieldKeys;
+                invalidFields.forEach(function (field) {
+                  show_card_error(field);
+                });
+              }
+              return;
+            }
+            else {
+              nonce = payload.nonce;
+              type = payload.type;
+              name = jQuery('#id_card_holder_name').val();
+              jQuery.ajax({
+                url: "/invoice/c-c-nonce/",
+                type: "POST",
+                data: {'nonce': nonce, 'name_on_card': name, 'type': type},
+                success: function (data) {
+                  if (data.is_success) {
+                    $j('.card_form').hide();
+                    $j('.box_form_credirt').empty();
+                    $j('.payment_not_exist_error1').hide();
+                    var credit_card_info = '';
+                    credit_card_info += 'Saved Card Detail';
+                    credit_card_info += '<div class="list-group">';
+                    credit_card_info += '<div class="list-group-item" >';
+                    credit_card_info += '<img src="' + data.invoice.card_image + '" />&nbsp;' + data.invoice.card + '';
+                    credit_card_info += '<img width="20" height="20" src="/static/images/close(20x20).png" onclick="removePaymentMethod(\'' + type + '\')" data-type="credit-card-delete" id="card_remove" class="payment_remove" />';
+                    credit_card_info += ' </div> </div>';
+                    $j('.box_form_credirt').append(credit_card_info);
+                  } else {
+                    $j('.box_form_credirt').empty();
+                    var credit_card_info = '';
+                    credit_card_info += '<div class="list-group">';
+                    credit_card_info += '<div class="list-group-item" >';
+                    credit_card_info += '<p>' + data.message + '</p>';
+                    credit_card_info += ' </div> </div>';
+                    $j('.box_form_credirt').append(credit_card_info);
+                  }
+                },
+              });
+            }
+          });
+        }
+        else {
+          if (!$j('#id_card_holder_name').val()) {
+            $j('#id_card_holder_name').next('span').text('All required fields must not be blank.').css('color', '#ffadad');
+          }
+        }
+      });
+    });
+  });
+
+  function show_hide_name_error() {
+    if (!$j("#id_card_holder_name").val()) {
+      $j('#id_card_holder_name').next('span').text('Please enter valid card holder name.').css('color', '#ffadad');
+    } else {
+      $j('#id_card_holder_name').next('span').text('');
+    }
+  }
+
+</script>

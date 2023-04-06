@@ -1,0 +1,59 @@
+{% load static %}
+{% load el_pagination_tags %}
+{% lazy_paginate 10,10 video_detail %}
+
+<div class="nag cf" id="followContent">
+
+  {% for follow in video_detail %}
+
+    <div class="box_follow" data-skigt="{{ follow.follower }}">
+
+      <div class="box_img_container">
+
+        <div class="name_follow">
+          <span class="heade_follow">{{ follow.username }}</span>
+          <span class="sub_namefollow">{{ follow.name }}</span>
+          <span class="user_followers">Followers :&nbsp;{{ follow.count }} </span>
+        </div>
+
+        {% if follow.follower_img %}
+
+          <a href="{% url 'user_profile_display' follow.username %}">
+
+            <div class="follower_img">
+
+              <img alt="skigit" src="{{ follow.follower_img }}"/>
+
+            </div>
+
+          </a>
+
+        {% else %}
+
+          <a href=".">
+
+            <div class="follower_img">
+
+              <img src="{% static 'images/noimage_user.jpg' %}"/>
+
+            </div>
+
+          </a>
+
+        {% endif %}
+
+        <div class="icon_follower">
+          <span class="box_footer" style="padding-bottom: 1px;display:none;">Unfollow</span>
+          <img width="20" height="20"
+               src="{% static 'images/close(32x32).png' %}"
+               class="close-follower" onclick="close_skigit({{ follow.follower }})"/>
+        </div>
+
+      </div>
+
+    </div>
+
+  {% endfor %}
+
+</div>
+<span>{% show_more ' ' ' ' 'show_more' %}</span>

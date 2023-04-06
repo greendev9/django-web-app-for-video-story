@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block title %}{{ block.super }}
+{% endblock %}
+
+{% block content %}
+
+  <style>
+
+    .endless_more {
+      font-size: x-large;
+    }
+
+    .endless_more {
+      display: table;
+      margin: 0 auto;
+      clear: both;
+    }
+
+    .endless_loading {
+      display: table;
+      width: 100%;
+    }
+
+    .close-skigit {
+      z-index: 1 !important;
+    }
+
+	
+	
+	
+  </style>
+
+  <div class="row mar_zero section-box" id="main">
+
+       <div class="row endless_page_template" id="likedcontent">
+         {% include "includes/skigit_list.html" %}
+       </div>
+
+      </div>
+
+    </div><!-- end .section-content -->
+
+    {#        <script type="text/javascript" src="{% static 'js/pageUp.js' %}"></script>#}
+
+  </div>
+
+  <!-- end .section-box -->
+  <!--<a id="latestinifiniteLoader" style="float:left;display:none;margin:5px 425px">
+    <img src="{% static '/images/inf_loading.gif' %}"/>-->
+  </a>
+
+{% endblock %}
+{% block js %}
+  <script>jQuery.endlessPaginate({paginateOnScroll: true});</script>
+{% endblock %}

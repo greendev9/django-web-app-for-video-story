@@ -1,0 +1,396 @@
+{% load static %}
+{% load el_pagination_tags %}
+{% lazy_paginate 10,10 video_detail %}
+{% for vid in video_detail %}
+  <div class="inner_post_box">
+    <div id="skigit_content_list" class="endless_page_template" >
+      <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 skigit_content_wrap" data-skigt="{{ vid.id }}">
+        <input id="fav_{{ vid.id }}" data-fav="{{ vid.skigit_id.id }}" hidden/>
+
+        <div class="box_skigitvid">
+          <p class="box_sonvid">
+            <span class="spn_videoname" style="font-family:segoe_print !important; font-size: small;
+                        osition: absolute;">{{ vid.title }}</span>
+          </p>
+          <div class="name_boxrow">
+            <div class="profile_ski">
+              <a href="{% url 'user_profile_display' vid.skigit_id.user.username %}">
+                {% if vid.get_profile_img.profile_img %}
+                  <img class="img-responsive " id="profile_hover{{ vid.id }}"
+                       src="{{ vid.get_profile_img.profile_img.url }}"
+                       alt="{{ vid.skigit_id.user.username }}"/>
+                {% else %}
+                  <img class="img-responsive" id="profile_hover{{ vid.id }}"
+                       src="{% static 'skigit/detube/images/noimage_user.png' %}"
+                       alt="{{ vid.skigit_id.user.username }}"/>
+                {% endif %}
+              </a>
+            </div>
+            <div class="skigit_creator">
+              <div class="box_skigitname">
+                <a href="{% url 'user_profile_display' vid.skigit_id.user.username %}">
+                  {{ vid.skigit_id.user.user.profile_img }}
+                </a>
+              </div>
+              {% if request.user.is_authenticated %}
+                <div class="box_linkname">
+                  <a href="{% url 'user_profile_display' vid.skigit_id.user.username %}"
+                     title="{{ vid.username }}">
+                                        <span style="font-family:segoe_print !important; font-size: small;">
+                                            {{ vid.skigit_id.user.username }}
+                                        </span>
+                  </a>
+                </div>
+              {% endif %}
+              <div class="my_awsome_things">
+                {% if request.user.is_authenticated %}
+                  <a href="http://
+                      {% if  vid.bought_at_url %}{{ vid.bought_at_url }}{% else %}{{ vid.bought_at_url }}{% endif %}"
+                     title="Learn More About My Awesome Thing">
+                    <img src="{% static 'images/icons/lear_more.png' %}"/>
+                  </a>
+                {% else %}
+                  <a href="#" title="Learn More About My Awesome Thing" onclick="openMessage()" data-toggle="modal"
+                     data-dismiss="modal">
+                    <img src="{% static 'images/icons/lear_more.png' %}"/>
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+          <div class="row mar_zero skigit_contents bord">
+            {% if video_type != "sub_cat" and video_type != "c_o_skigit" %}
+
+              <img width="35" height="35" src="{% static 'images/icons/remove.png' %}"
+                   onclick="close_skigit({{ vid.id }})" class="close-skigit" id="my_skigit_close">
+            {% endif %}
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 padd_zero skigit_img">
+              <img alt="skigit" src="{{ vid.skigit_id.thumbnails.all.0.url }}">
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 skigit_social_option" id="share_overlay{{ vid.id }}">
+                <ul class="list-inline skigit_social_option_container pull-right">
+                  {#                                    <li><a href="{% url 'skigit_plugin' vid.id %}"><img src="{% static 'images/icons/plug(60x40).png' %}" height="40" width="60" class="plugin text-center" title="Plugged In" /></a></li>#}
+                  {% if request.user.is_authenticated %}
+
+                    {% if vid.skigit_id.id in video_likes %}
+                      <li class="text-center "><a class="like"
+                                                  onclick="like_unlike_skigit_plug_into('like_{{ vid.skigit_id.id }}',{{ vid.skigit_id.id }})"
+                                                  id="like_{{ vid.skigit_id.id }}" data-userid="1" title="Unlike"
+                                                  data-fav="{{ vid.id }}" data-pid="{{ vid.skigit_id.id }}"><img
+                          src="{% static 'images/icons/heart_liked(22x22).png' %}"
+                          class="img-responsive"/></a></li>
+                    {% else %}
+                      <li class="text-center"><a class="unlike"
+                                                 onclick="like_unlike_skigit_plug_into('like_{{ vid.skigit_id.id }}',{{ vid.skigit_id.id }})"
+                                                 id="like_{{ vid.skigit_id.id }}" data-userid="1" title="Like"
+                                                 data-fav="{{ vid.id }}" data-pid="{{ vid.skigit_id.id }}"><img
+                          src="{% static 'images/icons/heart(22x22).png' %}" class="img-responsive" style="width: 30px;margin-left: 8px;"/></a>
+                      </li>
+                    {% endif %}
+                  {% else %}
+                    <li class="text-center"><a class="liked" data-userid="0" data-target="#smallModal"
+                                               data-toggle="modal" title="Like"><img
+                        src="{% static 'images/icons/heart(22x22).png' %}" class="img-responsive" style="width: 30px;margin-left: 8px;"/></a></li>
+                  {% endif %}
+                  <li class="libnk_skigitshair"><a class="skigit_share" onclick="get_date({{ vid.id }})"
+                                                   data-toggle="clickover" id="share_popover{{ vid.id }}"><img
+                      src="{% static 'images/icons/sharing(22x22).png' %}" height="22" width="22"
+                      class="share categori text-center" title="Share"/></a></li>
+{#                  {% include 'pages/friends_share.html' %}#}
+                </ul>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center skigit_play" style="margin-top: 34px">
+{#                  <a href="{% url "skigit_data" vid.pk %}"#}
+{#                     title="Play {{ vid.title }} Skigit" class="skigit_playback" data-dismiss="modal"#}
+{#                     data-target="#{{ vid.pk }}" data-toggle="modal"><img#}
+{#                      src="{% static 'images/Skigit_Logo_Glow.png' %}" title="Play Skigit"/></a>#}
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 skigit_content_detail box_contain_viedio">
+
+              <div class="row box_imgname">
+
+                <div class="col-lg-4 col-md-4 col-sm-3 col-xs-3 skigit_creator_logo">
+                  {% if vid.business_logo.id %}
+                    {% if vid.made_by and vid.business_logo.is_deleted == False %}
+{#                      <a onclick="logoclick({{ vid.business_logo.id }}, '{{ request.scheme }}://#}
+{#                          {{ request.get_host }}{% url 'sperk_profile' vid.made_by.id vid.business_logo.id %}')">#}
+{#                        {% if vid.business_logo %}#}
+{#                          <img id="business_hover{{ vid.id }}" class="img-responsive"#}
+{#                               src="{{ vid.business_logo.logo.url }}"/>#}
+{#                        {% endif %}#}
+{#                      </a>#}
+                    {% else %}
+                      {% for def in default_logo %}
+                        {% if def.made_by == vid.made_by.id %}
+                          {% if vid.business_logo and def.business_logo.id %}
+{#                            <a onclick="logoclick({{ def.business_logo.id }}, '{{ request.scheme }}://#}
+{#                                {{ request.get_host }}{% url 'sperk_profile' def.made_by def.business_logo.id %}')">#}
+{#                              <img id="business_hover{{ vid.id }}" class="img-responsive"#}
+{#                                   src="{{ def.business_logo.logo.url }}"/>#}
+{#                            </a>#}
+                          {% endif %}
+                        {% endif %}
+                      {% endfor %}
+                    {% endif %}
+                  {% endif %}
+
+                  {% if vid.business_logo.id %}
+                    <div class="business_enlarge" id="business_enlarge{{ vid.id }}">
+                      {% if vid.made_by and vid.business_logo.is_deleted == False %}
+                        {% if vid.business_logo %}
+                          <img id='business_enlarge_img{{ vid.id }}' src="{{ vid.business_logo.logo.url }}"/>
+                        {% endif %}
+                      {% else %}
+                        {% for def in default_logo %}
+                          {% if def.made_by == vid.made_by.id %}
+                            {% if vid.business_logo %}
+                              <img id='business_enlarge_img{{ vid.id }}' src="{{ def.business_logo.logo.url }}"/>
+                            {% endif %}
+                          {% endif %}
+                        {% endfor %}
+                      {% endif %}
+                    </div>
+                  {% endif %}
+                </div>
+                <div class="col-lg-8 col-md-7 col-sm-9 col-xs-9 ski_creator_logo">
+                  <!--                                    {% if vid.category|safe == 'Dramaskigit' %}
+                                        <img src="{%  static 'images/drama_skigit_logo.png' %}">
+                                    {% elif vid.category|safe == 'Wackiskigit' %}
+                                        <img src="{%  static 'images/wacki-skigit-logo.png' %}">
+                                    {% elif vid.category|safe == 'Demoskigit' %}
+                                        <img src="{%  static 'images/demo-skigit-logo.png' %}">
+                                    {% elif vid.category|safe == 'Vibraskigit' %}
+                                        <img src="{%  static 'images/vibra-skigit-logo.png' %}">
+                                    {% elif vid.category|safe == 'Selfieskigit' %}
+                                        <img src="{%  static 'images/selfie-skigit-logo.png' %}">
+                                    {% endif %}
+-->
+                  {% if vid.category|safe == 'Dramaskigit' %}
+                    <a href="{{ vid.category.get_absolute_url }}"><img
+                        src="{% static 'images/drama_skigit_logo.png' %}"></a>
+                  {% elif vid.category|safe == 'Wackiskigit' %}
+                    <a href="{{ vid.category.get_absolute_url }}"><img
+                        src="{% static 'images/wacki-skigit-logo.png' %}"></a>
+                  {% elif vid.category|safe == 'Demoskigit' %}
+                    <a href="{{ vid.category.get_absolute_url }}"><img
+                        src="{% static 'images/demo-skigit-logo.png' %}"></a>
+                  {% elif vid.category|safe == 'Vibraskigit' %}
+                    <a href="{{ vid.category.get_absolute_url }}"><img
+                        src="{% static 'images/vibra-skigit-logo.png' %}"></a>
+                  {% elif vid.category|safe == 'Selfieskigit' %}
+                    <a href="{{ vid.category.get_absolute_url }}"><img
+                        src="{% static 'images/selfie-skigit-logo.png' %}"></a>
+                  {% endif %}
+                </div>
+
+              </div>
+
+              <div class="row">
+                {#                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 likes_span text-right">#}
+                {#                                    <label class="f_type statistics_color">likes&nbsp;#}
+                {#                                        <span id="like_count{{vid.skigit_id.id}}" data-like="{{vid.skigit_id.id}}">{% for like in like_count %}{% if like.id == vid.id  %}{{ like.count }}{% endif %}{% endfor %}</span>#}
+                {#                                    </label>#}
+                {#                                </div>#}
+                <div class="col-sm-12 col-xs-12 text-center">
+                  <label class="f_type statistics_color">Views&nbsp;<span id="view_count{{ vid.id }}"
+                                                                          data-view="{{ vid.id }}">{{ vid.view_count }}</span></label>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-sm-12 col-xs-12 text-center">
+                  <label class="f_type statistics_color">Plug&nbsp;<span id="plug_count{{ vid.id }}"
+                                                                         data-plug="{{ vid.id }}">{% for plug in video_plug %}
+                    {% if plug.id == vid.id %}{{ plug.count }}{% endif %}{% endfor %}</span></label>
+                </div>
+{#                <div class="col-sm-12 col-xs-12 text-center">#}
+{#                  <a href="{% url 'skigit_plugin' vid.id %}"><img#}
+{#                      src="{% static 'images/icons/plug(60x40).png' %}" height="40" width="60"#}
+{#                      class="plugin text-center" title="Plugged In"/></a>#}
+{#                </div>#}
+
+                {#                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 shares_span text-right">#}
+                {#                                    <label class="f_type statistics_color">Shares&nbsp;<span id="share_count{{ vid.id }}" data-shar="{{ vid.id }}">{% for share in video_share %}{% if share.id == vid.id  %}{{ share.count }}{% endif %}{% endfor %}</span></label>#}
+                {#                                </div>#}
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--
+                {% if video_type == "plugged" %}
+                    <span class="pluge_skigit">
+                        {% for plug in pluged_videos %}
+                            {% if plug.vid_id == vid.id %}
+{#                                <a href="{% url "skigit_data" plug.plug_video_id %}"#}
+{#                                   onclick="viewCount({{ plug.plug_video_id }})"#}
+{#                                   title="Play {{ vid.plugged_skigit.title }} Skigit"#}
+{#                                   class="skigit_playback f_type" data-dismiss="modal"#}
+{#                                   data-target="#{{ plug.plug_video_id }}"#}
+{#                                   data-toggle="modal">#}
+{#                                    {{ vid.plugged_skigit.title }}#}
+{#                                </a>#}
+                            {% endif %}
+                        {% endfor %}
+                    </span>
+                {% endif %}
+-->
+      </div>
+    </div>
+
+    <div aria-hidden="true" id="{{ vid.pk }}" class="modal fade" tabindex="-1" role="dialog"
+         aria-labelledby="Play Video">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content"></div>
+      </div>
+    </div>
+
+    {% if video_type == "plugged" %}
+      {% for plug in pluged_videos %}
+        {% if plug.vid_id == vid.id %}
+          <div aria-hidden="true" id="{{ plug.plug_video_id }}" class=" modal fade" tabindex="-1" role="dialog"
+               aria-labelledby="Play Video">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content"></div>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+
+  </div>
+
+  <script>
+
+    $(document).ready(function ($) {
+
+      $('#business_hover{{ vid.id }}').mouseover(function () {
+        $('#business_enlarge{{ vid.id }}').fadeIn()
+      });
+
+      $('#business_hover{{ vid.id }}').mouseleave(function () {
+        $('#business_enlarge{{ vid.id }}').fadeOut()
+      });
+
+      $("#share_popover{{vid.id}}").popover({
+        html: true,
+        title: 'Share this Skigit with... <img width="20" height="20" title="close" data-toggle="clickover"  src="/static/images/icons/error.png" onclick="shareClose({{ vid.id }});" id="close_skigit{{ vid.id }}" class="close_skigit_share">',
+        placement: 'auto right',
+        cache: true,
+        content: $("#shareContent{{ vid.id }}").html(),
+      }).click(function (e) {
+        $(':checkbox').each(function () {
+          this.checked = false;
+        });
+      });
+
+      $(document).on('hidden.bs.popover', '#share_popover{{ vid.id }}', function () {
+        $("#share_overlay{{ vid.id }}").removeClass("popupdisplay");
+        $(".overlayview").css("display", "none");
+      });
+
+      $(document).on('shown.bs.popover', '#share_popover{{ vid.id }}', function () {
+        $("#share_overlay{{ vid.id }}").addClass("popupdisplay");
+        $(".overlayview").css("display", "block");
+      });
+
+      $("#share_popover{{vid.id}}").on()
+
+      $(document).on('change', '.select_all{{vid.id}}', function (e) {
+
+        if (this.checked) {
+          // Iterate each checkbox
+          $(':checkbox').each(function () {
+            this.checked = true;
+          });
+        }
+        else {
+          $(':checkbox').each(function () {
+            this.checked = false;
+          });
+        }
+      });
+
+      function unique(array) {
+        return $.grep(array, function (el, index) {
+          return index === $.inArray(el, array);
+        });
+      }
+
+      shareToFriends = function (skigit_id) {
+
+        var share_value = [];
+        var plug_count = $.trim($('#share_count' + skigit_id).text())
+        $("input[type=checkbox]:checked").each(function () {
+          if ($('#sharebox' + skigit_id + $(this).val()).is(':checked')) {
+            share_value.push(parseInt($(this).val()));
+          }
+        });
+
+        if (share_value.length > 0) {
+          $('#button_share' + skigit_id).prop('disabled', true);
+          $('#msg' + skigit_id).html('Please Wait...').css('color', 'orange', 'text-aling', 'center')
+          var currentTimezone = jstz.determine();
+          var timezone = currentTimezone.name();
+          $.ajax({
+            type: "POST",
+            url: "/share-skigits/",
+            data: {
+              'vid_id': skigit_id, 'friend_list[]': unique(share_value), 'time_zone': timezone,
+              'csrfmiddlewaretoken': '{{csrf_token}}'
+            },
+            success: function (data) {
+              if (data.is_success) {
+                $(':checkbox').each(function () {
+                  this.checked = false;
+                });
+                $('#msg' + skigit_id).html('Great News! You just shared this Skigit.').css('color', 'green','font-style','italic', 'font-size', '14px')
+                $('#button_share' + skigit_id).prop('disabled', false);
+                $('#share_count' + skigit_id).text(parseInt(plug_count) + parseInt(unique(share_value).length))
+                for (var k = 0; k < unique(share_value).length; k++) {
+                  $('#id_date_label' + skigit_id + unique(share_value)[k]).text(data.date)
+                }
+                setTimeout(function () {
+                  $('#msg' + skigit_id).empty()
+                }, 2500)
+              }
+            },
+            error: function (rs, e) {
+              $("#popup_msg").text("Error into Share Skigit Index Page Please try again");
+              $("#popScreen").show();
+              $('#button_share' + skigit_id).prop('disabled', false);
+            }
+          });
+        }
+        else {
+          $('#msg' + skigit_id).html('Mark options to share a skigit with friends').css('color', 'red')
+          $('#button_share' + skigit_id).prop('disabled', false);
+          setTimeout(function () {
+            $('#msg' + skigit_id).empty()
+          }, 2500)
+        }
+      };
+
+      sharebox = function (friend_id, video_id) {
+        var share_id = $('#sharebox' + video_id + friend_id).attr('id');
+        var skigit_id = video_id
+
+        if ($('#select_all' + video_id).is(':checked')) {
+          $('#select_all' + video_id).prop('checked', false)
+        }
+      }
+
+      $("#share_popover{{vid.id}}").click(function () {
+        $("#share_overlay{{ vid.id }}").addClass("popupdisplay");
+        $(".overlayview").css("display", "block");
+      });
+    });
+
+  </script>
+
+{% endfor %}
+<div class="box_animationdown">
+  <span>{% show_more ' ' ' ' 'show_more' %}</span>
+</div>
+

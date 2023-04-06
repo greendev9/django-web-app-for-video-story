@@ -1,0 +1,100 @@
+{% load static %}
+{% load i18n %}
+{% load meta %}
+
+<html>
+<head>
+  <meta name="p:domain_verify" content="c2aa3a5b7c896fe888ee369a69bbb118"/>
+  <meta name="loadforge-site-verification" content="4ed4d5a975c06a4ae9211500c87e5c5f8c1de7c0e77f86b5703862c091b33b7d255e66cba331b637ebafefcb3b94da1d37740e6df00bb2c12e9522290ccf683b" />
+  <meta name="google-site-verification" content="bsoRwrlCERJ_zkzQV0Kvi-i3GspYgNAn5cSDngtFDfU" />
+  
+  <title>{% block title %}Skigit | {% endblock %}</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes, maximum-scale=1.0, user-scalable=0">
+  {% block extra_meta %}
+      {% include 'meta/meta.html' %}
+  {% endblock extra_meta %}
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@skigit">
+  <meta name="twitter:domain" content="skigit.com">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:width" content="600">
+  <script type="text/javascript" src="{% static 'js/jquery-2.2.4.min.js' %}"></script>
+  <title>
+    Brochure | Skigit
+  </title>
+  <link rel="shortcut icon" href="{% static 'skigit/favicon.ico' %}">
+  <link rel="apple-touch-icon" href="{% static 'skigit/apple-touch-icon.png' %}">
+  <link rel="stylesheet" href="{% static 'skigit/css/app.css' %}">
+</head>
+<style>
+
+/*----------------------Brochure print preview css only-----------------*/
+
+/*----------------------Left side logo-----------------*/
+.brochure_logo_1 {
+  position: absolute;
+  left: 6em;
+  top: 1.5em;
+  width:3.5em;
+  height: 3.5em;
+  z-index: 100;
+ border-radius: 0.5em;
+}
+
+/*----------------------Right side logo-----------------*/
+.brochure_logo_2 {
+  position: absolute;
+  width: 4em;
+  height: 4em;
+  right: 13%;
+  top: 3.5%;
+  z-index: 100;
+  border-radius: 0.5em;
+}
+
+/*----------------------Right side QR Code-----------------*/
+.brochure_qr_1 {
+  position: absolute;
+  width: 7%;
+  height:auto;
+  right: 22%;
+  top: 3.5%;
+  z-index: 100;
+  border-radius: 0.5em;
+}
+
+/*----------------------Left side QR Code-----------------*/
+.brochure_qr_2 {
+  position: absolute;
+  width: 8%;
+  height: 4em;
+  left: 5.2%;
+  top: 18.5em;
+  z-index: 100;
+  border-radius: 0.5em;
+}
+
+.img_fit1 {
+  height: 940px;
+  width: 100%;
+  border-radius: 0.5em;
+}
+</style>
+<body>
+  <section style="margin: 15px;">
+    <div class="box_brocherr" id="post_canvas">
+      <img class="img_fit1" src="{{poster_1}}" id="id_brochure_img" style="height: 650px;"/>
+
+      <img class="brochure_logo_1" id="id_b_brochure"  src="{{ poster_obj.b_logo }}">
+      <img class="brochure_qr_1" id="id_qr_code_1"  src="{% if profile.qr_code %}{{ profile.qr_code.url }}{% else %}#{% endif %}">
+      <img class="brochure_qr_2" id="id_qr_code_2"  src="{% if profile.qr_code %}{{ profile.qr_code.url }}{% else %}#{% endif %}">
+      <img class="brochure_logo_2" id="id_b_brochure2"  src="{{ poster_obj.b_logo }}"/>
+      
+    </div>
+  </section>
+
+</body>
+
+</html>

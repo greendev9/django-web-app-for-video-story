@@ -1,0 +1,79 @@
+
+
+version: '3'
+services:
+  migration:
+    build: 
+      context: .
+      dockerfile: Dockerfile.prod
+    image: skigit_backend
+    command: python manage.py migrate
+    volumes:
+      - ./logs:/opt/logs
+      - ./static:/opt/static
+      - ./media:/opt/media
+    env_file:
+      - ./.env.prod
+    depends_on:
+      - db     
+  skigitbackend:
+    image: skigit_backend
+    container_name: skigit
+    command: gunicorn skigit_project.wsgi:application --bind 0.0.0.0:8000 --workers 5 --timeout 300
+    env_file:
+      - ./.env.prod
+    expose:
+      - 8000
+    volumes:
+      - ./logs:/opt/logs
+      - ./core:/opt/core
+      - ./friends:/opt/friends
+      - ./invoices:/opt/invoices
+      - ./sperks:/opt/sperks
+      - ./skigit_project:/opt/skigit_project
+      - ./social:/opt/social
+      - ./skigit:/opt/skigit
+      - ./mailpost:/opt/mailpost
+      - ./user:/opt/user
+      - ./templates:/opt/templates
+      - ./static:/opt/static
+      - ./media:/opt/media
+    depends_on:
+      - migration
+  celery:
+    container_name: skigit_celery
+    image: skigit_backend
+    command: celery -A skigit_project worker -l info -P eventlet
+    volumes:
+      - ./logs:/opt/logs
+      - ./static:/opt/static
+      - ./media:/opt/media
+    env_file:
+      - ./.env.prod
+    depends_on:
+      - db
+      - redis
+      - skigitbackend
+  nginx:
+    image: nginx:latest
+    ports:
+      - 80:80
+      - 443:443
+    restart: always
+    volumes:
+      - ./data/nginx/live:/etc/nginx/conf.d
+      - ./data/cheapssl/live:/etc/cheapssl/live
+      - ./static:/opt/static
+      - ./media:/opt/media
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+
+  redis:
+    image: redis:alpine
+  db:
+    image: postgres:alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env.prod.db
+volumes:
+  postgres_data:
